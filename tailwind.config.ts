@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,30 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				gold: {
+					50: '#fefcf3',
+					100: '#fef7e0',
+					200: '#fcecc0',
+					300: '#f9d895',
+					400: '#f5c068',
+					500: '#f2a944',
+					600: '#e39429',
+					700: '#bc7b1f',
+					800: '#976220',
+					900: '#7a511e',
+				},
+				bronze: {
+					50: '#faf8f3',
+					100: '#f4ede0',
+					200: '#e7d8c0',
+					300: '#d7bd95',
+					400: '#c59d68',
+					500: '#b88244',
+					600: '#a66d39',
+					700: '#8a5730',
+					800: '#70472b',
+					900: '#5c3c26',
 				}
 			},
 			borderRadius: {
@@ -84,11 +109,68 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'fade-in-up': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateY(30px)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateY(0)'
+					}
+				},
+				'fade-in-left': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateX(-30px)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateX(0)'
+					}
+				},
+				'fade-in-right': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateX(30px)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateX(0)'
+					}
+				},
+				'scale-in': {
+					'0%': {
+						opacity: '0',
+						transform: 'scale(0.9)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'scale(1)'
+					}
+				},
+				'shimmer': {
+					'0%': {
+						transform: 'translateX(-100%)'
+					},
+					'100%': {
+						transform: 'translateX(100%)'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in-up': 'fade-in-up 0.6s ease-out',
+				'fade-in-left': 'fade-in-left 0.6s ease-out',
+				'fade-in-right': 'fade-in-right 0.6s ease-out',
+				'scale-in': 'scale-in 0.6s ease-out',
+				'shimmer': 'shimmer 2s infinite',
+			},
+			fontFamily: {
+				'playfair': ['Playfair Display', 'serif'],
+				'inter': ['Inter', 'sans-serif'],
 			}
 		}
 	},
