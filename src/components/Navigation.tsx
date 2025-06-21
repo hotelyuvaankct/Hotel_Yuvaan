@@ -9,7 +9,7 @@ const Navigation = () => {
 
   useEffect(() => {
     // Set dark theme by default
-    document.documentElement.classList.add('dark');
+    document.documentElement.classList.add('light');
   }, []);
 
   useEffect(() => {
