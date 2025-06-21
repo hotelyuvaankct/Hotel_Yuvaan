@@ -113,29 +113,6 @@ const RoomsSection = () => {
             </div>
           ))}
         </div>
-
-        {/* Booking Platforms */}
-        <div className="mt-16 text-center animate-on-scroll">
-          <h3 className="text-2xl font-bold font-playfair mb-8">Book Through Our Partners</h3>
-          <div className="flex flex-wrap justify-center items-center gap-8">
-            <div className="bg-card p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-              <div className="text-lg font-semibold text-blue-600">MakeMyTrip</div>
-              <div className="text-sm text-muted-foreground">Book Now</div>
-            </div>
-            <div className="bg-card p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-              <div className="text-lg font-semibold text-red-600">Booking.com</div>
-              <div className="text-sm text-muted-foreground">Reserve Room</div>
-            </div>
-            <div className="bg-card p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-              <div className="text-lg font-semibold text-green-600">Agoda</div>
-              <div className="text-sm text-muted-foreground">Best Rates</div>
-            </div>
-            <div className="bg-card p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-              <div className="text-lg font-semibold text-orange-600">Goibibo</div>
-              <div className="text-sm text-muted-foreground">Quick Booking</div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );

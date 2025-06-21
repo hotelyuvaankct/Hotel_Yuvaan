@@ -28,18 +28,7 @@ const HeroSection = () => {
       <Sparkles className="absolute bottom-32 left-24 w-4 h-4 text-gold-300 animate-pulse opacity-70 hidden lg:block" style={{animationDelay: '2.5s'}} />
 
       {/* Content */}
-      <div className="relative z-10 text-center text-white px-4 max-w-5xl mx-auto">
-        {/* Premium Star Rating */}
-        <div className="flex justify-center items-center space-x-1 mb-8 animate-fade-in-up">
-          {[...Array(5)].map((_, i) => (
-            <Star 
-              key={i} 
-              className="w-6 h-6 fill-gold-400 text-gold-400 animate-pulse" 
-              style={{animationDelay: `${i * 0.2}s`}}
-            />
-          ))}
-          <span className="ml-3 text-gold-300 text-sm font-medium">5.0 Premium Rating</span>
-        </div>
+      <div className="relative z-10 text-center text-white px-4 max-w-5xl mx-auto pt-32 pb-10">
 
         {/* Animated Subtitle */}
         <div className="mb-6 animate-fade-in-up" style={{animationDelay: '0.3s'}}>
@@ -103,18 +92,7 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* Premium Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center animate-bounce">
-        <p className="text-white/60 text-xs uppercase tracking-wide mb-2">Discover More</p>
-        <ChevronDown className="w-6 h-6 text-gold-400 mx-auto" />
-      </div>
 
-      {/* Premium Side Info */}
-      <div className="absolute bottom-12 right-8 bg-black/30 backdrop-blur-lg rounded-2xl p-6 text-white hidden lg:block animate-fade-in-right border border-gold-400/20">
-        <div className="text-xs text-gold-300 uppercase tracking-wide mb-2">Reservation</div>
-        <div className="text-2xl font-bold mb-1">+91 98765 43210</div>
-        <div className="text-sm text-white/80">Available 24/7</div>
-      </div>
     </section>
   );
 };

@@ -154,17 +154,6 @@ const FacilitiesSection = () => {
             </div>
           </div>
 
-          {/* Contact for Information */}
-          <div className="text-center mt-12 p-8 bg-primary/5 rounded-2xl">
-            <h4 className="text-xl font-bold font-playfair mb-4">Need More Information?</h4>
-            <p className="text-muted-foreground mb-6">
-              Contact our concierge team for customized service packages and special arrangements.
-            </p>
-            <div className="flex items-center justify-center space-x-4 text-primary">
-              <span className="text-lg">📞</span>
-              <span className="text-lg font-semibold">+91 98765 43210</span>
-            </div>
-          </div>
         </div>
       </div>
     </section>
