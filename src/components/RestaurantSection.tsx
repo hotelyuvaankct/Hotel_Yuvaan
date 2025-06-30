@@ -11,7 +11,7 @@ const RestaurantSection = () => {
           <div className="animate-on-scroll-left">
             <div className="relative">
               <img 
-                src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                src="/lovable-uploads/c7c6b323-a530-4b70-afc9-7b417923c3eb.png"
                 alt="Restaurant Interior"
                 className="w-full h-96 object-cover rounded-2xl shadow-lg"
               />
@@ -23,7 +23,7 @@ const RestaurantSection = () => {
                 </div>
                 <div className="flex items-center space-x-2">
                   <Users className="w-4 h-4" />
-                  <span className="text-sm">Seating for 120 Guests</span>
+                  <span className="text-sm">Seating for 80 Guests</span>
                 </div>
               </div>
             </div>
@@ -39,13 +39,13 @@ const RestaurantSection = () => {
             </h2>
             <p className="text-muted-foreground mb-6">
               Experience culinary excellence at our signature restaurant, where our master chefs 
-              create extraordinary dishes using the finest ingredients. From traditional Indian 
-              cuisine to international delicacies, every meal is a journey of flavors.
+              create extraordinary dishes using the finest ingredients. Our modern dining space 
+              features elegant grey seating and warm wooden tables, perfect for any occasion.
             </p>
             <p className="text-muted-foreground mb-8">
-              Our elegant dining space features contemporary design with warm lighting, 
-              creating the perfect ambiance for intimate dinners, business meetings, or 
-              special celebrations with family and friends.
+              From traditional Indian cuisine to international delicacies, every meal is a journey 
+              of flavors. Our contemporary design with comfortable booth seating creates the perfect 
+              ambiance for intimate dinners, business meetings, or special celebrations.
             </p>
 
             {/* Restaurant Features */}
@@ -64,8 +64,8 @@ const RestaurantSection = () => {
                   <Wine className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-1">Premium Bar</h4>
-                  <p className="text-sm text-muted-foreground">Curated wines & cocktails</p>
+                  <h4 className="font-semibold mb-1">Premium Beverages</h4>
+                  <p className="text-sm text-muted-foreground">Fresh juices & beverages</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
@@ -82,15 +82,51 @@ const RestaurantSection = () => {
                   <Users className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-1">Private Dining</h4>
-                  <p className="text-sm text-muted-foreground">Exclusive dining experiences</p>
+                  <h4 className="font-semibold mb-1">Comfortable Seating</h4>
+                  <p className="text-sm text-muted-foreground">Modern booth & table dining</p>
                 </div>
               </div>
             </div>
 
             <button className="bg-primary text-primary-foreground px-8 py-3 rounded-full hover:bg-primary/90 transition-colors duration-300 font-semibold">
-              LEARN MORE
+              VIEW MENU
             </button>
+          </div>
+        </div>
+
+        {/* Booth Seating Section */}
+        <div className="mt-16 animate-on-scroll">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h3 className="text-2xl md:text-3xl font-bold font-playfair mb-4">
+                Intimate <span className="text-gradient">Booth Dining</span>
+              </h3>
+              <p className="text-muted-foreground mb-6">
+                Enjoy privacy and comfort in our specially designed booth seating areas. 
+                Perfect for couples, families, or small groups looking for a more intimate dining experience.
+              </p>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  <span className="text-sm">Comfortable cushioned seating</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  <span className="text-sm">Perfect for intimate conversations</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  <span className="text-sm">Modern table settings</span>
+                </div>
+              </div>
+            </div>
+            <div className="relative">
+              <img 
+                src="/lovable-uploads/a71224d5-7cb8-434b-b7ab-4fa48cb13072.png"
+                alt="Booth Seating"
+                className="w-full h-80 object-cover rounded-2xl shadow-lg"
+              />
+            </div>
           </div>
         </div>
 

@@ -8,8 +8,8 @@ const RoomsSection = () => {
       id: 1,
       name: 'Deluxe Room',
       price: '₹3,500',
-      image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      description: 'Spacious and elegantly designed rooms with modern amenities and city views.',
+      image: '/lovable-uploads/ae4f399e-f0ff-45fb-a484-1d158f263e96.png',
+      description: 'Spacious and elegantly designed rooms with modern amenities, premium ceiling lighting, and comfortable seating area.',
       amenities: ['1-2 Persons', 'King Bed', 'Free WiFi', 'Breakfast', 'AC'],
       features: [
         { icon: Users, text: '1-2 Persons' },
@@ -20,11 +20,11 @@ const RoomsSection = () => {
     },
     {
       id: 2,
-      name: 'Junior Suite',
-      price: '₹5,200',
-      image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      description: 'Luxurious suites with separate living area, premium furnishings and panoramic views.',
-      amenities: ['1-2 Persons', 'King Bed', 'Living Area', 'Premium Amenities', 'City View'],
+      name: 'Premium Room',
+      price: '₹4,200',
+      image: '/lovable-uploads/76432058-40b3-4a31-8dc7-b01418fbbdf2.png',
+      description: 'Luxurious room with premium furnishings, elegant false ceiling design, and modern amenities for the discerning guest.',
+      amenities: ['1-2 Persons', 'King Bed', 'Premium Amenities', 'City View', 'AC'],
       features: [
         { icon: Users, text: '1-2 Persons' },
         { icon: Bed, text: 'King Bed' },
@@ -34,14 +34,14 @@ const RoomsSection = () => {
     },
     {
       id: 3,
-      name: 'Presidential Suite',
-      price: '₹8,500',
-      image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      description: 'Ultimate luxury experience with private balcony, premium services and exclusive amenities.',
-      amenities: ['2-4 Persons', 'Master Bedroom', 'Private Balcony', 'Butler Service', 'Exclusive Access'],
+      name: 'Twin Bed Room',
+      price: '₹3,800',
+      image: '/lovable-uploads/e1bd4780-5fe7-43f8-beaf-b87d78c0600f.png',
+      description: 'Perfect for friends or colleagues, featuring two comfortable beds with elegant interiors and modern conveniences.',
+      amenities: ['2-3 Persons', 'Twin Beds', 'Premium Lighting', 'Modern Decor', 'AC'],
       features: [
-        { icon: Users, text: '2-4 Persons' },
-        { icon: Bed, text: 'Master Suite' },
+        { icon: Users, text: '2-3 Persons' },
+        { icon: Bed, text: 'Twin Beds' },
         { icon: Wifi, text: 'Free WiFi' },
         { icon: Utensils, text: 'Room Service' },
       ]
@@ -54,14 +54,14 @@ const RoomsSection = () => {
         {/* Header */}
         <div className="text-center mb-16 animate-on-scroll">
           <p className="text-primary text-sm tracking-[0.2em] uppercase mb-4">
-            HOTEL YUVAAN LUXURY HOTEL
+            HOTEL YUVAAN LUXURY ACCOMMODATION
           </p>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold font-playfair mb-6">
             Rooms & <span className="text-gradient">Suites</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Experience luxury and comfort in our elegantly designed rooms and suites, 
-            each offering premium amenities and exceptional service.
+            Experience luxury and comfort in our elegantly designed rooms, 
+            each offering premium amenities and exceptional service with modern interiors.
           </p>
         </div>
 

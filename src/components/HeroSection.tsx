@@ -5,16 +5,16 @@ import { Star, ChevronDown, Sparkles } from 'lucide-react';
 const HeroSection = () => {
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
+      {/* Background Image - Using actual hotel exterior photo */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-105"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')"
+          backgroundImage: "url('/lovable-uploads/a78aa5f3-1e73-4908-b921-18923de829cf.png')"
         }}
       />
       
       {/* Premium Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
       {/* Floating Premium Elements */}
@@ -33,10 +33,10 @@ const HeroSection = () => {
         {/* Animated Subtitle */}
         <div className="mb-6 animate-fade-in-up" style={{animationDelay: '0.3s'}}>
           <p className="text-gold-300 text-sm md:text-base tracking-[0.4em] uppercase font-medium">
-            The Ultimate
+            Welcome to
           </p>
           <p className="text-gold-200 text-lg md:text-xl tracking-[0.3em] uppercase font-light mt-1">
-            Luxury Experience
+            Luxury & Comfort
           </p>
         </div>
 
@@ -53,9 +53,9 @@ const HeroSection = () => {
 
         {/* Premium Description */}
         <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-3xl mx-auto font-light leading-relaxed animate-fade-in-up" style={{animationDelay: '1.4s'}}>
-          Where <span className="text-gold-300 font-medium">elegance</span> meets <span className="text-gold-300 font-medium">comfort</span>.
+          Where <span className="text-gold-300 font-medium">modern elegance</span> meets <span className="text-gold-300 font-medium">warm hospitality</span>.
           <br className="hidden md:block" />
-          Experience world-class hospitality in pure luxury.
+          Experience premium accommodation and fine dining in the heart of the city.
         </p>
 
         {/* Premium CTA Buttons */}
@@ -64,35 +64,33 @@ const HeroSection = () => {
             href="#rooms"
             className="group bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-white px-10 py-4 rounded-full text-lg font-semibold transition-all duration-500 transform hover:scale-110 hover:shadow-2xl w-full sm:w-auto text-center relative overflow-hidden"
           >
-            <span className="relative z-10">EXPLORE SUITES</span>
+            <span className="relative z-10">EXPLORE ROOMS</span>
             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
           </a>
           <a 
             href="#restaurant"
             className="group border-2 border-gold-400 text-gold-300 hover:bg-gold-400 hover:text-black px-10 py-4 rounded-full text-lg font-semibold transition-all duration-500 transform hover:scale-110 w-full sm:w-auto text-center relative overflow-hidden"
           >
-            <span className="relative z-10">FINE DINING</span>
+            <span className="relative z-10">DINE WITH US</span>
           </a>
         </div>
 
         {/* Premium Hotel Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-fade-in-up" style={{animationDelay: '1.8s'}}>
           <div className="text-center group">
-            <div className="text-4xl font-bold text-gold-400 mb-2 group-hover:scale-110 transition-transform duration-300">50+</div>
-            <div className="text-sm text-white/80 uppercase tracking-wide">Luxury Suites</div>
+            <div className="text-4xl font-bold text-gold-400 mb-2 group-hover:scale-110 transition-transform duration-300">25+</div>
+            <div className="text-sm text-white/80 uppercase tracking-wide">Premium Rooms</div>
           </div>
           <div className="text-center group">
-            <div className="text-4xl font-bold text-gold-400 mb-2 group-hover:scale-110 transition-transform duration-300">4.9★</div>
+            <div className="text-4xl font-bold text-gold-400 mb-2 group-hover:scale-110 transition-transform duration-300">4.8★</div>
             <div className="text-sm text-white/80 uppercase tracking-wide">Guest Rating</div>
           </div>
           <div className="text-center group">
             <div className="text-4xl font-bold text-gold-400 mb-2 group-hover:scale-110 transition-transform duration-300">24/7</div>
-            <div className="text-sm text-white/80 uppercase tracking-wide">Concierge</div>
+            <div className="text-sm text-white/80 uppercase tracking-wide">Service</div>
           </div>
         </div>
       </div>
-
-
     </section>
   );
 };

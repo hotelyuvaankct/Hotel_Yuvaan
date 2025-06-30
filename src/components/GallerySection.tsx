@@ -8,59 +8,66 @@ const GallerySection = () => {
   const galleryImages = [
     {
       id: 1,
-      src: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      alt: 'Hotel Exterior',
-      category: 'Hotel'
+      src: '/lovable-uploads/2ff300aa-0daf-4918-afc4-f8d62684b86e.png',
+      alt: 'Hotel Reception Area',
+      category: 'Reception'
     },
     {
       id: 2,
-      src: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      alt: 'Luxury Room',
-      category: 'Rooms'
-    },
-    {
-      id: 3,
-      src: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      alt: 'Restaurant Interior',
+      src: '/lovable-uploads/a71224d5-7cb8-434b-b7ab-4fa48cb13072.png',
+      alt: 'Restaurant Booth Seating',
       category: 'Restaurant'
     },
     {
+      id: 3,
+      src: '/lovable-uploads/d04692ca-4952-401b-9033-f790ef48b1d9.png',
+      alt: 'Birthday Event Decoration',
+      category: 'Events'
+    },
+    {
       id: 4,
-      src: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      alt: 'Hotel Suite',
-      category: 'Rooms'
+      src: '/lovable-uploads/c7c6b323-a530-4b70-afc9-7b417923c3eb.png',
+      alt: 'Main Restaurant Dining Area',
+      category: 'Restaurant'
     },
     {
       id: 5,
-      src: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      alt: 'Hotel Lobby',
-      category: 'Hotel'
+      src: '/lovable-uploads/ae4f399e-f0ff-45fb-a484-1d158f263e96.png',
+      alt: 'Deluxe Room Suite',
+      category: 'Rooms'
     },
     {
       id: 6,
-      src: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      alt: 'Spa Center',
-      category: 'Spa'
+      src: '/lovable-uploads/0942bd15-be5d-4e7c-9040-91ebd3e54c87.png',
+      alt: 'Standard Room',
+      category: 'Rooms'
     },
     {
       id: 7,
-      src: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      alt: 'Swimming Pool',
-      category: 'Facilities'
+      src: '/lovable-uploads/a78aa5f3-1e73-4908-b921-18923de829cf.png',
+      alt: 'Hotel Yuvaan Exterior Night View',
+      category: 'Exterior'
     },
     {
       id: 8,
-      src: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      alt: 'Presidential Suite',
+      src: '/lovable-uploads/76432058-40b3-4a31-8dc7-b01418fbbdf2.png',
+      alt: 'Premium Room Interior',
       category: 'Rooms'
     },
     {
       id: 9,
-      src: 'https://images.unsplash.com/photo-1551538827-9c037cb4f32a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      alt: 'Fine Dining',
-      category: 'Restaurant'
+      src: '/lovable-uploads/e1bd4780-5fe7-43f8-beaf-b87d78c0600f.png',
+      alt: 'Twin Bed Room',
+      category: 'Rooms'
     }
   ];
+
+  const categories = ['All', 'Reception', 'Restaurant', 'Rooms', 'Events', 'Exterior'];
+  const [activeCategory, setActiveCategory] = useState('All');
+
+  const filteredImages = activeCategory === 'All' 
+    ? galleryImages 
+    : galleryImages.filter(image => image.category === activeCategory);
 
   return (
     <section id="gallery" className="py-16 md:py-24 bg-background">
@@ -75,13 +82,32 @@ const GallerySection = () => {
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Take a visual tour of our luxurious facilities, elegant rooms, fine dining spaces, 
-            and world-class amenities.
+            and world-class amenities at Hotel Yuvaan.
           </p>
+        </div>
+
+        {/* Gallery Categories */}
+        <div className="mb-12 animate-on-scroll">
+          <div className="flex flex-wrap justify-center gap-4">
+            {categories.map((category) => (
+              <button 
+                key={category}
+                onClick={() => setActiveCategory(category)}
+                className={`px-6 py-2 rounded-full border transition-all duration-300 ${
+                  activeCategory === category
+                    ? 'bg-primary text-primary-foreground border-primary'
+                    : 'border-primary text-primary hover:bg-primary hover:text-primary-foreground'
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Gallery Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {galleryImages.map((image, index) => (
+          {filteredImages.map((image, index) => (
             <div 
               key={image.id}
               className={`relative group overflow-hidden rounded-2xl cursor-pointer animate-on-scroll-${index % 2 === 0 ? 'left' : 'right'}`}
@@ -103,31 +129,15 @@ const GallerySection = () => {
           ))}
         </div>
 
-        {/* Gallery Categories */}
-        <div className="mt-16 animate-on-scroll">
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-bold font-playfair mb-4">Explore by Category</h3>
-          </div>
-          <div className="flex flex-wrap justify-center gap-4">
-            {['All', 'Hotel', 'Rooms', 'Restaurant', 'Spa', 'Facilities'].map((category) => (
-              <button 
-                key={category}
-                className="px-6 py-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors duration-300"
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-        </div>
-
         {/* Virtual Tour CTA */}
         <div className="mt-16 text-center p-8 bg-muted/50 rounded-2xl animate-on-scroll">
-          <h3 className="text-2xl font-bold font-playfair mb-4">Take a Virtual Tour</h3>
+          <h3 className="text-2xl font-bold font-playfair mb-4">Experience Hotel Yuvaan</h3>
           <p className="text-muted-foreground mb-6">
-            Experience Hotel Yuvaan from the comfort of your home with our immersive 360° virtual tour.
+            Discover the perfect blend of luxury and comfort at Hotel Yuvaan. 
+            Our elegant interiors and premium amenities await your arrival.
           </p>
           <button className="bg-primary text-primary-foreground px-8 py-3 rounded-full hover:bg-primary/90 transition-colors duration-300">
-            Start Virtual Tour
+            Book Your Stay
           </button>
         </div>
       </div>
