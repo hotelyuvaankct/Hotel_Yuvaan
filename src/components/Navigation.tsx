@@ -9,7 +9,7 @@ const Navigation = () => {
 
   useEffect(() => {
     // Set dark theme by default
-    document.documentElement.classList.add('dark');
+    document.documentElement.classList.add('light');
   }, []);
 
   useEffect(() => {
@@ -23,7 +23,6 @@ const Navigation = () => {
   const toggleTheme = () => {
     setIsDark(!isDark);
     document.documentElement.classList.toggle('dark');
-    document.documentElement.classList.toggle('light');
   };
 
   const navItems = [
@@ -37,14 +36,6 @@ const Navigation = () => {
     { name: 'Contact', href: '#contact' },
   ];
 
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-    setIsMenuOpen(false);
-  };
-
   return (
     <nav className={`fixed w-full z-50 transition-all duration-500 ${
       isScrolled 
@@ -55,37 +46,30 @@ const Navigation = () => {
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <h1 className={`text-xl md:text-2xl lg:text-3xl font-bold font-playfair transition-all duration-500 ${
+            <h1 className={`text-2xl md:text-3xl font-bold font-playfair transition-all duration-500 ${
               isScrolled ? 'text-foreground' : 'text-white'
             }`}>
               Hotel <span className="text-gradient">Yuvaan</span>
             </h1>
-            <div className="flex flex-col">
-              <p className={`text-xs tracking-widest transition-all duration-500 ${
-                isScrolled ? 'text-muted-foreground' : 'text-white/80'
-              }`}>
-                LUXURY EXPERIENCE
-              </p>
-              <p className={`text-xs font-semibold text-emerald-500 transition-all duration-500 ${
-                isScrolled ? 'text-emerald-600' : 'text-emerald-400'
-              }`}>
-                🌿 Pure Vegetarian
-              </p>
-            </div>
+            <p className={`text-xs tracking-widest transition-all duration-500 ${
+              isScrolled ? 'text-muted-foreground' : 'text-white/80'
+            }`}>
+              LUXURY EXPERIENCE
+            </p>
           </div>
 
           {/* Desktop Menu */}
-          <div className="hidden lg:flex items-center space-x-6 xl:space-x-8">
+          <div className="hidden lg:flex items-center space-x-8">
             {navItems.map((item) => (
-              <button
+              <a
                 key={item.name}
-                onClick={() => scrollToSection(item.href)}
+                href={item.href}
                 className={`font-medium transition-all duration-300 hover:text-primary hover:scale-105 ${
                   isScrolled ? 'text-foreground' : 'text-white'
                 }`}
               >
                 {item.name}
-              </button>
+              </a>
             ))}
             
             {/* Theme Toggle */}
@@ -100,20 +84,20 @@ const Navigation = () => {
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
             </button>
             
-            <button className="bg-primary text-primary-foreground px-6 py-2 rounded-full hover:bg-primary/90 transition-all duration-300 hover:scale-105 text-sm lg:text-base">
+            <button className="bg-primary text-primary-foreground px-6 py-2 rounded-full hover:bg-primary/90 transition-all duration-300 hover:scale-105">
               Book Now
             </button>
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="lg:hidden flex items-center space-x-3">
+          <div className="lg:hidden flex items-center space-x-4">
             <button
               onClick={toggleTheme}
               className={`p-2 rounded-full transition-all duration-300 ${
                 isScrolled ? 'text-foreground' : 'text-white'
               }`}
             >
-              {isDark ? <Sun size={18} /> : <Moon size={18} />}
+              {isDark ? <Sun size={20} /> : <Moon size={20} />}
             </button>
             <button
               className={`p-2 transition-colors duration-300 ${
@@ -128,31 +112,25 @@ const Navigation = () => {
       </div>
 
       {/* Mobile Menu */}
-      <div className={`lg:hidden transition-all duration-300 ease-in-out ${
-        isMenuOpen 
-          ? 'max-h-96 opacity-100' 
-          : 'max-h-0 opacity-0 overflow-hidden'
-      } bg-background/95 backdrop-blur-lg border-t border-border/50`}>
-        <div className="container mx-auto px-4 py-4">
-          <div className="space-y-1">
+      {isMenuOpen && (
+        <div className="lg:hidden bg-background/95 backdrop-blur-lg border-t border-border/50">
+          <div className="container mx-auto px-4 py-4">
             {navItems.map((item) => (
-              <button
+              <a
                 key={item.name}
-                onClick={() => scrollToSection(item.href)}
-                className="block w-full text-left py-3 px-2 text-foreground hover:text-primary hover:bg-accent/50 transition-colors duration-300 rounded-md"
+                href={item.href}
+                className="block py-3 text-foreground hover:text-primary transition-colors duration-300"
+                onClick={() => setIsMenuOpen(false)}
               >
                 {item.name}
-              </button>
+              </a>
             ))}
+            <button className="w-full mt-4 bg-primary text-primary-foreground py-3 rounded-full hover:bg-primary/90 transition-colors duration-300">
+              Book Now
+            </button>
           </div>
-          <button 
-            onClick={() => setIsMenuOpen(false)}
-            className="w-full mt-4 bg-primary text-primary-foreground py-3 rounded-full hover:bg-primary/90 transition-colors duration-300"
-          >
-            Book Now
-          </button>
         </div>
-      </div>
+      )}
     </nav>
   );
 };
