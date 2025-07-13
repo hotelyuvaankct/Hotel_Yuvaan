@@ -1,27 +1,54 @@
-
-import React, { useState } from 'react';
-import { MapPin, Phone, Mail, Clock, Star } from 'lucide-react';
+import React, { useState } from "react";
+import { MapPin, Phone, Mail, Clock, Star } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import emailjs from "@emailjs/browser";
+import { useRef } from "react";
+import { FaArrowRightToBracket, FaArrowRotateRight } from "react-icons/fa6";
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
+    name: "",
+    email: "",
     rating: 5,
-    review: ''
+    review: "",
   });
+  const { toast } = useToast();
+  const formRef = useRef<HTMLFormElement>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Review submitted:', formData);
-    // Handle form submission here
-    alert('Thank you for your review! We appreciate your feedback.');
-    setFormData({ name: '', email: '', rating: 5, review: '' });
+    if (!formRef.current) return;
+    setLoading(true);
+    try {
+      await emailjs.sendForm(
+        "service_vy6wrib",
+        "template_5v0708o",
+        formRef.current,
+        "W3jCYsRbFbajqTNUz"
+      );
+      toast({
+        title: "Thank you for your review!",
+        description: "Your feedback has been sent successfully.",
+      });
+      setFormData({ name: "", email: "", rating: 5, review: "" });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description:
+          "There was a problem sending your review. Please try again later.",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -37,16 +64,18 @@ const ContactSection = () => {
             Contact <span className="text-gradient">Us</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            We're here to assist you with reservations, inquiries, and to make your stay memorable. 
-            Reach out to us anytime.
+            We're here to assist you with reservations, inquiries, and to make
+            your stay memorable. Reach out to us anytime.
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Information */}
           <div className="animate-on-scroll-left">
-            <h3 className="text-2xl font-bold font-playfair mb-8">Get in Touch</h3>
-            
+            <h3 className="text-2xl font-bold font-playfair mb-8">
+              Get in Touch
+            </h3>
+
             <div className="space-y-6 mb-8">
               <div className="flex items-start space-x-4">
                 <div className="bg-primary/10 p-3 rounded-lg">
@@ -55,9 +84,8 @@ const ContactSection = () => {
                 <div>
                   <h4 className="font-semibold mb-1">Address</h4>
                   <p className="text-muted-foreground">
-                    123 Luxury Avenue<br />
-                    City Center, State 12345<br />
-                    India
+                    4VQ4+R9V, Station Rd,
+                    <br /> Kuchaman City, Rajasthan 341508
                   </p>
                 </div>
               </div>
@@ -69,9 +97,7 @@ const ContactSection = () => {
                 <div>
                   <h4 className="font-semibold mb-1">Phone</h4>
                   <p className="text-muted-foreground">
-                    Reception: +91 98765 43210<br />
-                    Restaurant: +91 98765 43211<br />
-                    Events: +91 98765 43212
+                    Reception : +91 77427 13129
                   </p>
                 </div>
               </div>
@@ -82,47 +108,39 @@ const ContactSection = () => {
                 </div>
                 <div>
                   <h4 className="font-semibold mb-1">Email</h4>
-                  <p className="text-muted-foreground">
-                    info@hotelyuvaan.com<br />
-                    reservations@hotelyuvaan.com<br />
-                    events@hotelyuvaan.com
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="bg-primary/10 p-3 rounded-lg">
-                  <Clock className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <h4 className="font-semibold mb-1">Hours</h4>
-                  <p className="text-muted-foreground">
-                    Reception: 24/7<br />
-                    Restaurant: 7:00 AM - 11:00 PM<br />
-                    Room Service: 24/7
-                  </p>
+                  <p className="text-muted-foreground">info@hotelyuvaan.com</p>
                 </div>
               </div>
             </div>
 
             {/* Map Placeholder */}
-            <div className="bg-muted rounded-2xl h-64 flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="w-12 h-12 text-primary mx-auto mb-4" />
-                <p className="text-muted-foreground">Interactive Map</p>
-                <p className="text-sm text-muted-foreground">Click to view on Google Maps</p>
-              </div>
+            <div className="bg-muted rounded-2xl overflow-hidden h-96 flex items-center justify-center">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d221.90814049455088!2d74.85594625750201!3d27.139602085838558!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396b7900248144b5%3A0x510e857c14fc625c!2sHotel%20yuvaan%20and%20restaurant!5e0!3m2!1sen!2sin!4v1752412252235!5m2!1sen!2sin"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen={true}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Hotel Yuvaan Location"
+              ></iframe>
             </div>
           </div>
 
           {/* Review Form */}
           <div className="animate-on-scroll-right">
             <div className="bg-card rounded-2xl p-8 shadow-lg">
-              <h3 className="text-2xl font-bold font-playfair mb-6">Leave a Review</h3>
-              
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <h3 className="text-2xl font-bold font-playfair mb-6">
+                Leave a Review
+              </h3>
+
+              <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-semibold mb-2">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-semibold mb-2"
+                  >
                     Your Name
                   </label>
                   <input
@@ -138,7 +156,10 @@ const ContactSection = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-semibold mb-2">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-semibold mb-2"
+                  >
                     Email Address
                   </label>
                   <input
@@ -162,14 +183,16 @@ const ContactSection = () => {
                       <button
                         key={star}
                         type="button"
-                        onClick={() => setFormData({ ...formData, rating: star })}
+                        onClick={() =>
+                          setFormData({ ...formData, rating: star })
+                        }
                         className="p-1"
                       >
-                        <Star 
+                        <Star
                           className={`w-6 h-6 ${
-                            star <= formData.rating 
-                              ? 'fill-gold-400 text-gold-400' 
-                              : 'text-muted'
+                            star <= formData.rating
+                              ? "fill-gold-400 text-gold-400"
+                              : "text-muted"
                           }`}
                         />
                       </button>
@@ -178,7 +201,10 @@ const ContactSection = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="review" className="block text-sm font-semibold mb-2">
+                  <label
+                    htmlFor="review"
+                    className="block text-sm font-semibold mb-2"
+                  >
                     Your Review
                   </label>
                   <textarea
@@ -193,32 +219,61 @@ const ContactSection = () => {
                   />
                 </div>
 
-                <button
-                  type="submit"
-                  className="w-full bg-primary text-primary-foreground py-3 rounded-lg hover:bg-primary/90 transition-colors duration-300 font-semibold"
-                >
-                  Submit Review
-                </button>
+                <input type="hidden" name="rating" value={formData.rating} />
+                <div className="flex justify-between gap-4">
+                  <button
+                    type="reset"
+                    disabled={loading}
+                    className="w-full bg-secondary text-secondary-foreground py-3 rounded-lg font-semibold transition-colors duration-300 border border-secondary hover:bg-secondary/80 hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
+                    onClick={() =>
+                      setFormData({
+                        name: "",
+                        email: "",
+                        rating: 5,
+                        review: "",
+                      })
+                    }
+                  >
+                    <div className="flex items-center justify-center space-x-2">
+                      <FaArrowRotateRight size={20} />
+                      <p>Reset Form</p>
+                    </div>
+                  </button>
+                  <button
+                    type="submit"
+                    className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold transition-colors duration-300 border border-primary hover:bg-primary/90 hover:border-secondary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary disabled:opacity-60 disabled:cursor-not-allowed shadow-sm flex items-center justify-center"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <svg
+                        className="animate-spin h-5 w-5 mr-2 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8z"
+                        ></path>
+                      </svg>
+                    ) : (
+                      <div className="p-2">
+                        <FaArrowRightToBracket size={20} />
+                      </div>
+                    )}
+                    {loading ? "Sending..." : "Submit Review"}
+                  </button>
+                </div>
               </form>
-            </div>
-
-            {/* Quick Contact */}
-            <div className="mt-8 p-6 bg-primary/5 rounded-2xl">
-              <h4 className="text-lg font-bold font-playfair mb-4">Quick Contact</h4>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <a 
-                  href="tel:+919876543210"
-                  className="flex-1 bg-primary text-primary-foreground text-center py-3 rounded-lg hover:bg-primary/90 transition-colors duration-300 font-semibold"
-                >
-                  Call Now
-                </a>
-                <a 
-                  href="mailto:info@hotelyuvaan.com"
-                  className="flex-1 border border-primary text-primary text-center py-3 rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors duration-300 font-semibold"
-                >
-                  Email Us
-                </a>
-              </div>
             </div>
           </div>
         </div>

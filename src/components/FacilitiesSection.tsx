@@ -71,7 +71,7 @@ const FacilitiesSection = () => {
         </div>
 
         {/* Extra Services */}
-        <div className="mt-20 animate-on-scroll">
+        {/* <div className="mt-20 animate-on-scroll">
           <div className="text-center mb-12">
             <p className="text-primary text-sm tracking-[0.2em] uppercase mb-4">
               BEST PRICES
@@ -85,7 +85,6 @@ const FacilitiesSection = () => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {/* Room Cleaning Service */}
             <div className="bg-card rounded-2xl overflow-hidden shadow-lg">
               <div className="flex flex-col md:flex-row">
                 <div className="md:w-1/2">
@@ -119,7 +118,6 @@ const FacilitiesSection = () => {
               </div>
             </div>
 
-            {/* Drinks Package */}
             <div className="bg-card rounded-2xl overflow-hidden shadow-lg">
               <div className="flex flex-col md:flex-row">
                 <div className="md:w-1/2">
@@ -154,7 +152,7 @@ const FacilitiesSection = () => {
             </div>
           </div>
 
-        </div>
+        </div> */}
       </div>
     </section>
   );

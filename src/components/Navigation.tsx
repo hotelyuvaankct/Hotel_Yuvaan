@@ -73,7 +73,7 @@ const Navigation = () => {
             ))}
             
             {/* Theme Toggle */}
-            <button
+            {/* <button
               onClick={toggleTheme}
               className={`p-2 rounded-full transition-all duration-300 hover:scale-110 ${
                 isScrolled 
@@ -82,7 +82,7 @@ const Navigation = () => {
               }`}
             >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
-            </button>
+            </button> */}
             
             <button className="bg-primary text-primary-foreground px-6 py-2 rounded-full hover:bg-primary/90 transition-all duration-300 hover:scale-105">
               Book Now
@@ -91,14 +91,14 @@ const Navigation = () => {
 
           {/* Mobile Menu Button */}
           <div className="lg:hidden flex items-center space-x-4">
-            <button
+            {/* <button
               onClick={toggleTheme}
               className={`p-2 rounded-full transition-all duration-300 ${
                 isScrolled ? 'text-foreground' : 'text-white'
               }`}
             >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
-            </button>
+            </button> */}
             <button
               className={`p-2 transition-colors duration-300 ${
                 isScrolled ? 'text-foreground' : 'text-white'

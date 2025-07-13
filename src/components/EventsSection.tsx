@@ -108,7 +108,7 @@ const EventsSection = () => {
         </div>
 
         {/* Upcoming Events */}
-        <div className="animate-on-scroll">
+        {/* <div className="animate-on-scroll">
           <div className="text-center mb-12">
             <h3 className="text-2xl md:text-3xl font-bold font-playfair mb-4">
               Upcoming <span className="text-gradient">Events</span>
@@ -139,7 +139,6 @@ const EventsSection = () => {
             ))}
           </div>
 
-          {/* Event Booking CTA */}
           <div className="text-center mt-12 p-8 bg-primary/5 rounded-2xl">
             <h4 className="text-xl font-bold font-playfair mb-4">Host Your Event With Us</h4>
             <p className="text-muted-foreground mb-6">
@@ -155,7 +154,7 @@ const EventsSection = () => {
               </button>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

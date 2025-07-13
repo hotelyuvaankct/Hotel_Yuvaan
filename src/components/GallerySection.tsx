@@ -81,8 +81,8 @@ const GallerySection = () => {
             Hotel <span className="text-gradient">Gallery</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Take a visual tour of our luxurious facilities, elegant rooms, fine dining spaces, 
-            and world-class amenities at Hotel Yuvaan.
+            Take a visual tour of our luxurious facilities, elegant rooms, fine
+            dining spaces, and world-class amenities at Hotel Yuvaan.
           </p>
         </div>
 
@@ -90,13 +90,13 @@ const GallerySection = () => {
         <div className="mb-12 animate-on-scroll">
           <div className="flex flex-wrap justify-center gap-4">
             {categories.map((category) => (
-              <button 
+              <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
                 className={`px-6 py-2 rounded-full border transition-all duration-300 ${
                   activeCategory === category
-                    ? 'bg-primary text-primary-foreground border-primary'
-                    : 'border-primary text-primary hover:bg-primary hover:text-primary-foreground'
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "border-primary text-primary hover:bg-primary hover:text-primary-foreground"
                 }`}
               >
                 {category}
@@ -108,13 +108,15 @@ const GallerySection = () => {
         {/* Gallery Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredImages.map((image, index) => (
-            <div 
+            <div
               key={image.id}
-              className={`relative group overflow-hidden rounded-2xl cursor-pointer animate-on-scroll-${index % 2 === 0 ? 'left' : 'right'}`}
-              style={{animationDelay: `${index * 0.1}s`}}
+              className={`relative group overflow-hidden rounded-2xl cursor-pointer animate-on-scroll-${
+                index % 2 === 0 ? "left" : "right"
+              }`}
+              style={{ animationDelay: `${index * 0.1}s` }}
               onClick={() => setSelectedImage(image.src)}
             >
-              <img 
+              <img
                 src={image.src}
                 alt={image.alt}
                 className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
@@ -128,33 +130,21 @@ const GallerySection = () => {
             </div>
           ))}
         </div>
-
-        {/* Virtual Tour CTA */}
-        <div className="mt-16 text-center p-8 bg-muted/50 rounded-2xl animate-on-scroll">
-          <h3 className="text-2xl font-bold font-playfair mb-4">Experience Hotel Yuvaan</h3>
-          <p className="text-muted-foreground mb-6">
-            Discover the perfect blend of luxury and comfort at Hotel Yuvaan. 
-            Our elegant interiors and premium amenities await your arrival.
-          </p>
-          <button className="bg-primary text-primary-foreground px-8 py-3 rounded-full hover:bg-primary/90 transition-colors duration-300">
-            Book Your Stay
-          </button>
-        </div>
       </div>
 
       {/* Lightbox Modal */}
       {selectedImage && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
           onClick={() => setSelectedImage(null)}
         >
           <div className="relative max-w-4xl max-h-full">
-            <img 
+            <img
               src={selectedImage}
               alt="Gallery Image"
               className="max-w-full max-h-full object-contain rounded-lg"
             />
-            <button 
+            <button
               onClick={() => setSelectedImage(null)}
               className="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors duration-300"
             >
