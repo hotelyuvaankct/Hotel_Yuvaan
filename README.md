@@ -1,73 +1,70 @@
-# Welcome to your Lovable project
+# Hotel Yuvaan
 
-## Project info
+Welcome to the official repository of **Hotel Yuvaan**.
 
-**URL**: https://lovable.dev/projects/446c62cf-6ec0-422e-93a6-7ef6afb90f3e
+## Project Overview
 
-## How can I edit this code?
+Hotel Yuvaan is a modern and user-friendly website designed to provide seamless booking experiences and showcase the amenities of the hotel.
 
-There are several ways of editing your application.
+## Features
 
-**Use Lovable**
+- Online room booking system
+- Photo gallery of the hotel
+- Information about services and amenities
+- Contact form for inquiries
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/446c62cf-6ec0-422e-93a6-7ef6afb90f3e) and start prompting.
+## Technologies Used
 
-Changes made via Lovable will be committed automatically to this repo.
+- HTML5, CSS3, JavaScript
+- Backend: [Specify your backend technology, e.g., Node.js, Django]
+- Database: [Specify your database, e.g., MySQL, MongoDB]
 
-**Use your preferred IDE**
+## Installation
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/rajveer6000/Hotel_Yuvaan.git
+    ```
+2. Navigate to the project directory:
+    ```bash
+    cd Hotel_Yuvaan
+    ```
+3. Install dependencies:
+    ```bash
+    [Add installation command, e.g., npm install]
+    ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Usage
 
-Follow these steps:
+1. Start the development server:
+    ```bash
+    [Add command to start the server, e.g., npm start]
+    ```
+2. Open your browser and visit `http://localhost:3000`.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Contributing
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+Contributions are welcome! Please follow these steps:
 
-# Step 3: Install the necessary dependencies.
-npm i
+1. Fork the repository.
+2. Create a new branch:
+    ```bash
+    git checkout -b feature-name
+    ```
+3. Commit your changes:
+    ```bash
+    git commit -m "Add feature-name"
+    ```
+4. Push to the branch:
+    ```bash
+    git push origin feature-name
+    ```
+5. Open a pull request.
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+## License
 
-**Edit a file directly in GitHub**
+This project is licensed under the [MIT License](LICENSE).
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Contact
 
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/446c62cf-6ec0-422e-93a6-7ef6afb90f3e) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+For any inquiries, please contact [rajveerjdh2021@gmail.com].

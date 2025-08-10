@@ -78,7 +78,7 @@ const HeroSection = () => {
         {/* Premium Hotel Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-fade-in-up" style={{ animationDelay: '1.8s' }}>
           <div className="text-center group">
-            <div className="text-4xl font-bold text-gold-400 mb-2 group-hover:scale-110 transition-transform duration-300">25+</div>
+            <div className="text-4xl font-bold text-gold-400 mb-2 group-hover:scale-110 transition-transform duration-300">16+</div>
             <div className="text-sm text-white/80 uppercase tracking-wide">Premium Rooms</div>
           </div>
           <div className="text-center group">

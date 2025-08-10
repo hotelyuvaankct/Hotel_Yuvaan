@@ -68,12 +68,12 @@ const AboutSection = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
               {[
                 {
-                  value: "25+",
+                  value: "16+",
                   label: "Luxury Rooms",
                   icon: <Award className="w-5 h-5 text-gold-500" />,
                 },
                 {
-                  value: "5+",
+                  value: "2+",
                   label: "Years Experience",
                   icon: <Clock className="w-5 h-5 text-gold-500" />,
                 },
