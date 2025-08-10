@@ -17,7 +17,7 @@ const Index = () => {
   useScrollAnimation();
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-hidden">
       <Navigation />
       <HeroSection />
       <AboutSection />

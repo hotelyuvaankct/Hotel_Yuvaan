@@ -1,11 +1,49 @@
-import React, { useState, useEffect } from "react";
-import { Menu, X, Sun, Moon, Instagram } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+// ✨ 1. Import motion and AnimatePresence from Framer Motion
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Menu,
+  X,
+  Sun,
+  Moon,
+  Instagram,
+  Home,
+  User,
+  Bed,
+  Utensils,
+  Wifi,
+  Calendar,
+  Image,
+  Phone,
+} from "lucide-react";
 
 const Navigation = () => {
   // Set initial theme to light mode. false = light, true = dark.
   const [isDark, setIsDark] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const menuRef = useRef(null);
+  const buttonRef = useRef(null);
+
+  // ✨ 2. Define animation variants for the mobile menu
+  const menuVariants = {
+    hidden: {
+      opacity: 0,
+      scale: 0.95,
+      transition: {
+        duration: 0.2,
+        ease: "easeOut",
+      },
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.2,
+        ease: "easeIn",
+      },
+    },
+  };
 
   // Effect to handle theme changes
   useEffect(() => {
@@ -25,19 +63,47 @@ const Navigation = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Effect to handle clicks outside the menu
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        isMenuOpen &&
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target)
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMenuOpen]);
+
   const toggleTheme = () => {
     setIsDark(!isDark);
   };
 
   const navItems = [
-    { name: "Home", href: "#home" },
-    { name: "About", href: "#about" },
-    { name: "Rooms", href: "#rooms" },
-    { name: "Restaurant", href: "#restaurant" },
-    { name: "Facilities", href: "#facilities" },
-    { name: "Events", href: "#events" },
-    { name: "Gallery", href: "#gallery" },
-    { name: "Contact", href: "#contact" },
+    { name: "Home", href: "#home", icon: <Home className="w-5 h-5" /> },
+    { name: "About", href: "#about", icon: <User className="w-5 h-5" /> },
+    { name: "Rooms", href: "#rooms", icon: <Bed className="w-5 h-5" /> },
+    {
+      name: "Restaurant",
+      href: "#restaurant",
+      icon: <Utensils className="w-5 h-5" />,
+    },
+    {
+      name: "Facilities",
+      href: "#facilities",
+      icon: <Wifi className="w-5 h-5" />,
+    },
+    // { name: "Events", href: "#events", icon: <Calendar className="w-5 h-5" /> },
+    { name: "Gallery", href: "#gallery", icon: <Image className="w-5 h-5" /> },
+    { name: "Contact", href: "#contact", icon: <Phone className="w-5 h-5" /> },
   ];
 
   return (
@@ -84,8 +150,6 @@ const Navigation = () => {
                 {item.name}
               </a>
             ))}
-
-            {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
               className={`p-2 rounded-full transition-all duration-300 hover:scale-110 ${
@@ -96,7 +160,6 @@ const Navigation = () => {
             >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
             </button>
-
             <a
               href="https://www.instagram.com/hotelyuvaan/"
               target="_blank"
@@ -109,52 +172,112 @@ const Navigation = () => {
 
           {/* Mobile Menu Button & Theme Toggle */}
           <div className="lg:hidden flex items-center space-x-2 xs:space-x-4">
+            {/* Theme Toggle - Desktop */}
             <button
               onClick={toggleTheme}
-              className={`p-2 rounded-full transition-all duration-300 ${
-                isScrolled ? "text-foreground" : "text-white"
+              className={`relative flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300 ${
+                isScrolled
+                  ? "hover:bg-accent text-foreground"
+                  : "hover:bg-white/10 text-white"
               }`}
+              aria-label="Toggle theme"
             >
-              {isDark ? <Sun size={24} /> : <Moon size={24} />}
+              <AnimatePresence mode="wait" initial={false}>
+                {isDark ? (
+                  <motion.div
+                    key="sun"
+                    initial={{ opacity: 0, scale: 0.5, rotate: -90 }}
+                    animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                    exit={{ opacity: 0, scale: 0.5, rotate: 90 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                  >
+                    <Sun size={20} />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="moon"
+                    initial={{ opacity: 0, scale: 0.5, rotate: -90 }}
+                    animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                    exit={{ opacity: 0, scale: 0.5, rotate: 90 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                  >
+                    <Moon size={20} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </button>
+            {/* ✨ Add ref to the button to help with outside click detection */}
             <button
-              className={`p-2 transition-colors duration-300 ${
+              ref={buttonRef}
+              className={`relative h-8 w-8 transition-colors duration-300 ${
                 isScrolled ? "text-foreground" : "text-white"
               }`}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle Menu"
             >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                <span
+                  className={`block absolute h-0.5 w-6 transform bg-current transition-all duration-300 ease-in-out ${
+                    isMenuOpen ? "rotate-45" : "-translate-y-2"
+                  }`}
+                ></span>
+                <span
+                  className={`block absolute h-0.5 w-6 transform bg-current transition-all duration-300 ease-in-out ${
+                    isMenuOpen ? "opacity-0" : ""
+                  }`}
+                ></span>
+                <span
+                  className={`block absolute h-0.5 w-6 transform bg-current transition-all duration-300 ease-in-out ${
+                    isMenuOpen ? "-rotate-45" : "translate-y-2"
+                  }`}
+                ></span>
+              </div>
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div className="lg:hidden bg-background/95 backdrop-blur-lg border-t border-border/50">
-          <div className="container mx-auto px-4 py-8 flex flex-col gap-3 min-h-[calc(100vh-64px)] justify-center">
-            {navItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="flex justify-center items-center py-4 text-lg text-primary hover:text-white transition-colors duration-300 w-full rounded-full border border-primary bg-primary/10 hover:bg-primary"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {item.name}
-              </a>
-            ))}
-            <a
-              href="https://www.instagram.com/hotelyuvaan/"
-              className="flex justify-center items-center py-4 text-lg text-white hover:text-primary transition-colors duration-300 w-full rounded-full border border-primary bg-primary hover:bg-primary/10"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setIsMenuOpen(false)}
+        {/* ✨ 3. Wrap the conditional rendering with AnimatePresence */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            // ✨ 4. Change div to motion.div and add animation props
+            <motion.div
+              ref={menuRef}
+              className="lg:hidden absolute right-4 mt-2 w-64 bg-background/95 backdrop-blur-lg rounded-xl border border-border/50 shadow-lg z-50 overflow-hidden origin-top-right"
+              variants={menuVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
             >
-              <Instagram className="w-5 h-5" />
-            </a>
-          </div>
-        </div>
-      )}
+              <div className="grid grid-cols-4 gap-1 p-2">
+                {navItems.map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    className="flex flex-col items-center justify-center p-3 text-primary hover:text-white transition-colors duration-300 rounded-lg hover:bg-primary/20"
+                    onClick={() => setIsMenuOpen(false)}
+                    title={item.name}
+                  >
+                    {item.icon}
+                    <span className="text-xs mt-1">{item.name}</span>
+                  </a>
+                ))}
+              </div>
+              <div className="border-t border-border/50 p-2">
+                <a
+                  href="https://www.instagram.com/hotelyuvaan/"
+                  className="flex items-center justify-center p-3 text-white hover:text-primary transition-colors duration-300 rounded-lg bg-primary hover:bg-primary/10"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <Instagram className="w-5 h-5" />
+                  <span className="text-sm ml-2">Follow Us</span>
+                </a>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </nav>
   );
 };
