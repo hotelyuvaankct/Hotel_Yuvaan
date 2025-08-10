@@ -4,11 +4,11 @@ import { Car, Wifi, Coffee, Waves, Utensils, MapPin } from 'lucide-react';
 
 const FacilitiesSection = () => {
   const facilities = [
-    {
-      icon: Car,
-      title: 'Pick Up & Drop',
-      description: 'Complimentary airport transfers and local transportation services for your convenience.',
-    },
+    // {
+    //   icon: Car,
+    //   title: 'Pick Up & Drop',
+    //   description: 'Complimentary airport transfers and local transportation services for your convenience.',
+    // },
     {
       icon: MapPin,
       title: 'Parking Space',
@@ -26,7 +26,7 @@ const FacilitiesSection = () => {
     },
     {
       icon: Wifi,
-      title: 'Fibre Internet',
+      title: 'Internet',
       description: 'High-speed complimentary WiFi throughout the hotel for seamless connectivity.',
     },
     {

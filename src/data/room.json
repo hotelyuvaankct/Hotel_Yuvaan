@@ -1,0 +1,119 @@
+[
+    {
+        "type": "super-deluxe",
+        "name": "Super Deluxe Room",
+        "size": "180 sq.ft (17 sq.mt)",
+        "bed": "1 King Bed",
+        "view": "City View",
+        "bathroom": "1 Bathroom",
+        "price": "₹3,000",
+        "description": "Indulge in the luxury of our Super Deluxe Room, featuring exquisite decor, modern amenities, and a stunning view of the city.",
+        "features": [
+            "1-2 Persons",
+            "King Bed",
+            "Free WiFi",
+            "Breakfast"
+        ],
+        "amenities": [
+            "Mineral Water",
+            "Air Conditioning",
+            "Iron/Ironing Board",
+            "Bathroom",
+            "Telephone",
+            "Closet",
+            "Chair",
+            "Work Desk",
+            "Safe",
+            "TV",
+            "Hairdryer",
+            "Toiletries",
+            "Hot & Cold Water",
+            "Kettle"
+        ],
+        "bookingUrl": "https://www.agoda.com/en-gb/hotel-yuvaan/hotel/kuchaman-in.html",
+        "images": [
+            "image/Single Superior/room_3.png",
+            "image/Single Superior/room_2.png",
+            "image/Single Superior/bathroom.png"
+        ]
+    },
+    {
+        "type": "deluxe",
+        "name": "Deluxe Room",
+        "size": "165 sq.ft (15 sq.mt)",
+        "bed": "1 King Bed",
+        "view": "Premium City View",
+        "bathroom": "1 Bathroom",
+        "price": "₹2,000",
+        "description": "Experience comfort and style in our Deluxe Room, designed for relaxation with modern furnishings and a beautiful city view.",
+        "features": [
+            "1-2 Persons",
+            "King Bed",
+            "Premium Amenities",
+            "City View"
+        ],
+        "amenities": [
+            "Mineral Water",
+            "Air Conditioning",
+            "Iron/Ironing Board",
+            "Bathroom",
+            "Telephone",
+            "Closet",
+            "Chair",
+            "Work Desk",
+            "Safe",
+            "TV",
+            "Hairdryer",
+            "Toiletries",
+            "Hot & Cold Water",
+            "Kettle",
+            "Premium Bedding",
+            "Enhanced Room Service"
+        ],
+        "bookingUrl": "https://www.agoda.com/en-gb/hotel-yuvaan/hotel/kuchaman-in.html",
+        "images": [
+            "image/Gallery/Standard_Room.png",
+            "image/Deluxe Double or Twin/room_2.png",
+            "image/Deluxe Double or Twin/bathroom.png"
+        ]
+    },
+    {
+        "type": "twin",
+        "name": "Twin Bed Room",
+        "size": "165 sq.ft (15 sq.mt)",
+        "bed": "2 Single Beds",
+        "view": "City View",
+        "bathroom": "1 Bathroom",
+        "price": "₹2,000",
+        "description": "Perfect for friends or colleagues, featuring two comfortable beds with elegant interiors and modern conveniences.",
+        "features": [
+            "2-3 Persons",
+            "Twin Beds",
+            "Premium Lighting",
+            "Modern Decor"
+        ],
+        "amenities": [
+            "Mineral Water",
+            "Air Conditioning",
+            "Iron/Ironing Board",
+            "Bathroom",
+            "Telephone",
+            "Closet",
+            "Chair",
+            "Work Desk",
+            "Safe",
+            "TV",
+            "Hairdryer",
+            "Toiletries",
+            "Hot & Cold Water",
+            "Kettle"
+        ],
+        "bookingUrl": "https://www.agoda.com/en-gb/hotel-yuvaan/hotel/kuchaman-in.html",
+        "images": [
+            "image/Gallery/Twin_Bed_Room.png",
+            "image/Deluxe Double or Twin/room_2.png",
+            "image/Deluxe Double or Twin/bathroom.png"
+        ],
+        "extraperson": "₹500"
+    }
+]

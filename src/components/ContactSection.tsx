@@ -53,7 +53,7 @@ const ContactSection = () => {
   };
 
   return (
-    <section id="contact" className="py-16 md:py-24 bg-muted/30">
+    <section id="contact" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16 animate-on-scroll">
@@ -69,52 +69,56 @@ const ContactSection = () => {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12">
+        <div className="flex flex-col lg:flex-row gap-12 items-stretch">
           {/* Contact Information */}
-          <div className="animate-on-scroll-left">
-            <h3 className="text-2xl font-bold font-playfair mb-8">
-              Get in Touch
-            </h3>
+          <div className="flex-1 animate-on-scroll-left flex flex-col justify-between">
+            <div>
+              <h3 className="text-2xl font-bold font-playfair mb-8">
+                Get in Touch
+              </h3>
 
-            <div className="space-y-6 mb-8">
-              <div className="flex items-start space-x-4">
-                <div className="bg-primary/10 p-3 rounded-lg">
-                  <MapPin className="w-6 h-6 text-primary" />
+              <div className="space-y-6 mb-8">
+                <div className="flex items-start space-x-4">
+                  <div className="bg-primary/10 p-3 rounded-lg">
+                    <MapPin className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-1">Address</h4>
+                    <p className="text-muted-foreground">
+                      4VQ4+R9V, Station Rd,
+                      <br /> Kuchaman City, Rajasthan 341508
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-semibold mb-1">Address</h4>
-                  <p className="text-muted-foreground">
-                    4VQ4+R9V, Station Rd,
-                    <br /> Kuchaman City, Rajasthan 341508
-                  </p>
-                </div>
-              </div>
 
-              <div className="flex items-start space-x-4">
-                <div className="bg-primary/10 p-3 rounded-lg">
-                  <Phone className="w-6 h-6 text-primary" />
+                <div className="flex items-start space-x-4">
+                  <div className="bg-primary/10 p-3 rounded-lg">
+                    <Phone className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-1">Phone</h4>
+                    <p className="text-muted-foreground">
+                      Reception : +91 87695675067
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-semibold mb-1">Phone</h4>
-                  <p className="text-muted-foreground">
-                    Reception : +91 87695675067
-                  </p>
-                </div>
-              </div>
 
-              <div className="flex items-start space-x-4">
-                <div className="bg-primary/10 p-3 rounded-lg">
-                  <Mail className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <h4 className="font-semibold mb-1">Email</h4>
-                  <p className="text-muted-foreground">hotelyuvaankct@gmail.com</p>
+                <div className="flex items-start space-x-4">
+                  <div className="bg-primary/10 p-3 rounded-lg">
+                    <Mail className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-1">Email</h4>
+                    <p className="text-muted-foreground">
+                      hotelyuvaankct@gmail.com
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Map Placeholder */}
-            <div className="bg-muted rounded-2xl overflow-hidden h-96 flex items-center justify-center">
+            <div className="bg-muted rounded-2xl overflow-hidden h-72 md:h-80 flex items-center justify-center mt-auto">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d221.90814049455088!2d74.85594625750201!3d27.139602085838558!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396b7900248144b5%3A0x510e857c14fc625c!2sHotel%20yuvaan%20and%20restaurant!5e0!3m2!1sen!2sin!4v1752412252235!5m2!1sen!2sin"
                 width="100%"
@@ -129,8 +133,8 @@ const ContactSection = () => {
           </div>
 
           {/* Review Form */}
-          <div className="animate-on-scroll-right">
-            <div className="bg-card rounded-2xl p-8 shadow-lg">
+          <div className="flex-1 animate-on-scroll-right flex items-center">
+            <div className="bg-card rounded-2xl p-8 shadow-lg w-full">
               <h3 className="text-2xl font-bold font-playfair mb-6">
                 Leave a Review
               </h3>
@@ -175,32 +179,6 @@ const ContactSection = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold mb-2">
-                    Your Rating
-                  </label>
-                  <div className="flex space-x-1">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <button
-                        key={star}
-                        type="button"
-                        onClick={() =>
-                          setFormData({ ...formData, rating: star })
-                        }
-                        className="p-1"
-                      >
-                        <Star
-                          className={`w-6 h-6 ${
-                            star <= formData.rating
-                              ? "fill-gold-400 text-gold-400"
-                              : "text-muted"
-                          }`}
-                        />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
                   <label
                     htmlFor="review"
                     className="block text-sm font-semibold mb-2"
@@ -220,11 +198,11 @@ const ContactSection = () => {
                 </div>
 
                 <input type="hidden" name="rating" value={formData.rating} />
-                <div className="flex justify-between gap-4">
+                <div className="flex flex-col md:flex-row justify-between gap-4">
                   <button
                     type="reset"
                     disabled={loading}
-                    className="w-full bg-secondary text-secondary-foreground py-3 rounded-lg font-semibold transition-colors duration-300 border border-secondary hover:bg-secondary/80 hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
+                    className="w-full md:w-1/2 bg-secondary text-secondary-foreground py-3 rounded-lg font-semibold transition-colors duration-300 border border-secondary hover:bg-secondary/80 hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary disabled:opacity-60 disabled:cursor-not-allowed shadow-sm mb-2 md:mb-0"
                     onClick={() =>
                       setFormData({
                         name: "",
@@ -241,7 +219,7 @@ const ContactSection = () => {
                   </button>
                   <button
                     type="submit"
-                    className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold transition-colors duration-300 border border-primary hover:bg-primary/90 hover:border-secondary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary disabled:opacity-60 disabled:cursor-not-allowed shadow-sm flex items-center justify-center"
+                    className="w-full md:w-1/2 bg-primary text-primary-foreground py-3 rounded-lg font-semibold transition-colors duration-300 border border-primary hover:bg-primary/90 hover:border-secondary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary disabled:opacity-60 disabled:cursor-not-allowed shadow-sm flex items-center justify-center"
                     disabled={loading}
                   >
                     {loading ? (

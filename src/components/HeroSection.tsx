@@ -9,7 +9,7 @@ const HeroSection = () => {
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-105"
         style={{
-          backgroundImage: `url('${import.meta.env.BASE_URL}lovable-uploads/a78aa5f3-1e73-4908-b921-18923de829cf.png')`
+          backgroundImage: `url('${import.meta.env.BASE_URL}image/Gallery/Night_View.png')`
         }}
       />
 

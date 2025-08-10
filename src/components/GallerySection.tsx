@@ -1,6 +1,5 @@
-
-import React, { useState } from 'react';
-import { X } from 'lucide-react';
+import React, { useState } from "react";
+import { X } from "lucide-react";
 
 const GallerySection = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -8,66 +7,95 @@ const GallerySection = () => {
   const galleryImages = [
     {
       id: 1,
-      src: `${import.meta.env.BASE_URL}lovable-uploads/2ff300aa-0daf-4918-afc4-f8d62684b86e.png`,
-      alt: 'Hotel Reception Area',
-      category: 'Reception'
+      src: `${
+        import.meta.env.BASE_URL
+      }image/Gallery/Hotel_Reception_Area.png`,
+      alt: "Hotel Reception Area",
+      category: "Reception",
     },
     {
       id: 2,
-      src: `${import.meta.env.BASE_URL}lovable-uploads/a71224d5-7cb8-434b-b7ab-4fa48cb13072.png`,
-      alt: 'Restaurant Booth Seating',
-      category: 'Restaurant'
+      src: `${
+        import.meta.env.BASE_URL
+      }image/Gallery/Restaurant_Booth_Seating.png`,
+      alt: "Restaurant Booth Seating",
+      category: "Restaurant",
     },
     {
       id: 3,
-      src: `${import.meta.env.BASE_URL}lovable-uploads/d04692ca-4952-401b-9033-f790ef48b1d9.png`,
-      alt: 'Birthday Event Decoration',
-      category: 'Events'
+      src: `${
+        import.meta.env.BASE_URL
+      }image/Gallery/Birthday_Event_Decoration.png`,
+      alt: "Birthday Event Decoration",
+      category: "Events",
     },
     {
       id: 4,
-      src: `${import.meta.env.BASE_URL}lovable-uploads/c7c6b323-a530-4b70-afc9-7b417923c3eb.png`,
-      alt: 'Main Restaurant Dining Area',
-      category: 'Restaurant'
+      src: `${
+        import.meta.env.BASE_URL
+      }image/Gallery/Main_Restaurant_Dining_Area.png`,
+      alt: "Main Restaurant Dining Area",
+      category: "Restaurant",
     },
     {
       id: 5,
-      src: `${import.meta.env.BASE_URL}lovable-uploads/ae4f399e-f0ff-45fb-a484-1d158f263e96.png`,
-      alt: 'Deluxe Room Suite',
-      category: 'Rooms'
+      src: `${
+        import.meta.env.BASE_URL
+      }image/Gallery/Deluxe_Room_Suite.png`,
+      alt: "Deluxe Room Suite",
+      category: "Rooms",
     },
     {
       id: 6,
-      src: `${import.meta.env.BASE_URL}lovable-uploads/0942bd15-be5d-4e7c-9040-91ebd3e54c87.png`,
-      alt: 'Standard Room',
-      category: 'Rooms'
+      src: `${
+        import.meta.env.BASE_URL
+      }image/Gallery/Standard_Room.png`,
+      alt: "Standard Room",
+      category: "Rooms",
     },
     {
       id: 7,
-      src: `${import.meta.env.BASE_URL}lovable-uploads/a78aa5f3-1e73-4908-b921-18923de829cf.png`,
-      alt: 'Hotel Yuvaan Exterior Night View',
-      category: 'Exterior'
+      src: `${
+        import.meta.env.BASE_URL
+      }image/Gallery/Night_View.png`,
+      alt: "Hotel Yuvaan Exterior Night View",
+      category: "Exterior",
     },
     {
       id: 8,
-      src: `${import.meta.env.BASE_URL}lovable-uploads/76432058-40b3-4a31-8dc7-b01418fbbdf2.png`,
-      alt: 'Premium Room Interior',
-      category: 'Rooms'
+      src: `${
+        import.meta.env.BASE_URL
+      }image/Gallery/Interior.png`,
+      alt: "Premium Room Interior",
+      category: "Rooms",
     },
     {
       id: 9,
-      src: `${import.meta.env.BASE_URL}lovable-uploads/e1bd4780-5fe7-43f8-beaf-b87d78c0600f.png`,
-      alt: 'Twin Bed Room',
-      category: 'Rooms'
-    }
+      src: `${import.meta.env.BASE_URL
+      }image/Gallery/Twin_Bed_Room.png`,
+      alt: "Twin Bed Room",
+      category: "Rooms",
+    },
   ];
 
-  const categories = ['All', 'Reception', 'Restaurant', 'Rooms', 'Events', 'Exterior'];
-  const [activeCategory, setActiveCategory] = useState('All');
+  const categories = [
+    "All",
+    "Reception",
+    "Restaurant",
+    "Rooms",
+    "Events",
+    "Exterior",
+  ];
+  const [activeCategory, setActiveCategory] = useState("All");
 
-  const filteredImages = activeCategory === 'All'
-    ? galleryImages
-    : galleryImages.filter(image => image.category === activeCategory);
+  const filteredImages = React.useMemo(() => {
+    if (activeCategory === "All") return galleryImages;
+    return galleryImages.filter(
+      (image) =>
+        image.category.trim().toLowerCase() ===
+        activeCategory.trim().toLowerCase()
+    );
+  }, [activeCategory, galleryImages]);
 
   return (
     <section id="gallery" className="py-16 md:py-24 bg-background">
@@ -87,30 +115,32 @@ const GallerySection = () => {
         </div>
 
         {/* Gallery Categories */}
-        <div className="mb-12 animate-on-scroll">
+        {/* <div className="mb-12 animate-on-scroll">
           <div className="flex flex-wrap justify-center gap-4">
             {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
-                className={`px-6 py-2 rounded-full border transition-all duration-300 ${activeCategory === category
+                className={`px-6 py-2 rounded-full border transition-all duration-300 ${
+                  activeCategory === category
                     ? "bg-primary text-primary-foreground border-primary"
                     : "border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                  }`}
+                }`}
               >
                 {category}
               </button>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Gallery Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredImages.map((image, index) => (
             <div
               key={image.id}
-              className={`relative group overflow-hidden rounded-2xl cursor-pointer animate-on-scroll-${index % 2 === 0 ? "left" : "right"
-                }`}
+              className={`relative group overflow-hidden rounded-2xl cursor-pointer animate-on-scroll-${
+                index % 2 === 0 ? "left" : "right"
+              }`}
               style={{ animationDelay: `${index * 0.1}s` }}
               onClick={() => setSelectedImage(image.src)}
             >

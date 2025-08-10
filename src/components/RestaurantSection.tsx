@@ -1,173 +1,239 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { Clock, Users, Utensils, Wine, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
 
-import React from 'react';
-import { Clock, Users, Utensils, Wine } from 'lucide-react';
+const fadeIn = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+};
+
+const menuHighlights = [
+  {
+    img: `${import.meta.env.BASE_URL}image/menu/mint_mojito.png`,
+    name: "Mint Mojito",
+    desc: "Refreshing mocktail with mint and lime",
+    price: "₹115",
+  },
+  {
+    img: `${import.meta.env.BASE_URL}image/menu/paneer_tikka.png`,
+    name: "Paneer Tikka",
+    desc: "Grilled cottage cheese with spices",
+    price: "₹250",
+  },
+  {
+    img: `${import.meta.env.BASE_URL}image/menu/aloo_paratha.png`,
+    name: "Aloo Paratha",
+    desc: "Stuffed flatbread served with curd",
+    price: "₹115",
+  },
+];
 
 const RestaurantSection = () => {
+  const navigate = useNavigate();
   return (
     <section id="restaurant" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
+        {/* Main Restaurant Section */}
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Restaurant Image */}
-          <div className="animate-on-scroll-left">
-            <div className="relative">
-              <img
-                src={`${import.meta.env.BASE_URL}lovable-uploads/c7c6b323-a530-4b70-afc9-7b417923c3eb.png`}
-                alt="Restaurant Interior"
-                className="w-full h-96 object-cover rounded-2xl shadow-lg"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-2xl" />
-              <div className="absolute bottom-6 left-6 text-white">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Clock className="w-4 h-4" />
-                  <span className="text-sm">Open Daily 7:00 AM - 11:00 PM</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Users className="w-4 h-4" />
-                  <span className="text-sm">Seating for 80 Guests</span>
-                </div>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeIn}
+            className="relative group"
+          >
+            <img
+              src={`${import.meta.env.BASE_URL}image/Gallery/Interior.png`}
+              alt="Restaurant Interior"
+              className="w-full h-96 object-cover rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-500 border border-primary"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-2xl" />
+            <div className="absolute bottom-6 left-6 text-white space-y-3">
+              <div className="flex items-center space-x-2 bg-black/30 backdrop-blur-sm px-4 py-2 rounded-full">
+                <Clock className="w-5 h-5 text-gold-400" />
+                <span>Open Daily 7:00 AM - 11:00 PM</span>
+              </div>
+              <div className="flex items-center space-x-2 bg-black/30 backdrop-blur-sm px-4 py-2 rounded-full">
+                <Users className="w-5 h-5 text-gold-400" />
+                <span>Seating for 80 Guests</span>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Restaurant Content */}
-          <div className="animate-on-scroll-right">
-            <p className="text-primary text-sm tracking-[0.2em] uppercase mb-4">
-              DISCOVER
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeIn}
+            transition={{ delay: 0.2 }}
+          >
+            <p className="text-gold-500 text-sm tracking-widest uppercase mb-4">
+              CULINARY EXPERIENCE
             </p>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold font-playfair mb-6">
-              The <span className="text-gradient">Restaurant</span>
+            <h2 className="text-4xl md:text-5xl font-bold font-playfair mb-6">
+              Our <span className="text-gold-500">Restaurant</span>
             </h2>
             <p className="text-muted-foreground mb-6">
-              Experience culinary excellence at our signature restaurant, where our master chefs
-              create extraordinary dishes using the finest ingredients. Our modern dining space
-              features elegant grey seating and warm wooden tables, perfect for any occasion.
-            </p>
-            <p className="text-muted-foreground mb-8">
-              From traditional Indian cuisine to international delicacies, every meal is a journey
-              of flavors. Our contemporary design with comfortable booth seating creates the perfect
-              ambiance for intimate dinners, business meetings, or special celebrations.
+              Experience culinary excellence where our chefs craft extraordinary
+              dishes using the finest seasonal ingredients.
             </p>
 
             {/* Restaurant Features */}
-            <div className="grid grid-cols-2 gap-6 mb-8">
-              <div className="flex items-start space-x-3">
-                <div className="bg-primary/10 p-2 rounded-lg">
-                  <Utensils className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <h4 className="font-semibold mb-1">Multi-Cuisine</h4>
-                  <p className="text-sm text-muted-foreground">Indian, Chinese, Continental</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <div className="bg-primary/10 p-2 rounded-lg">
-                  <Wine className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <h4 className="font-semibold mb-1">Premium Beverages</h4>
-                  <p className="text-sm text-muted-foreground">Fresh juices & beverages</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <div className="bg-primary/10 p-2 rounded-lg">
-                  <Clock className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <h4 className="font-semibold mb-1">Extended Hours</h4>
-                  <p className="text-sm text-muted-foreground">7:00 AM - 11:00 PM Daily</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <div className="bg-primary/10 p-2 rounded-lg">
-                  <Users className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <h4 className="font-semibold mb-1">Comfortable Seating</h4>
-                  <p className="text-sm text-muted-foreground">Modern booth & table dining</p>
-                </div>
-              </div>
+            <div className="grid grid-cols-2 gap-4 mb-8">
+              {[
+                {
+                  icon: <Utensils className="w-5 h-5" />,
+                  title: "Multi-Cuisine",
+                  desc: "Indian & International",
+                },
+                {
+                  icon: <Wine className="w-5 h-5" />,
+                  title: "Premium Bar",
+                  desc: "Crafted cocktails",
+                },
+                {
+                  icon: <Clock className="w-5 h-5" />,
+                  title: "All Day Dining",
+                  desc: "7AM - 11PM",
+                },
+                {
+                  icon: <Users className="w-5 h-5" />,
+                  title: "Private Dining",
+                  desc: "For special occasions",
+                },
+              ].map((feature, index) => (
+                <motion.div
+                  key={index}
+                  whileHover={{ y: -5 }}
+                  className="p-4 bg-gradient-to-br from-background to-muted/50 rounded-xl border border-muted hover:border-gold-300 transition-all"
+                >
+                  <div className="w-10 h-10 mb-2 bg-gold-500/10 rounded-lg flex items-center justify-center text-gold-500">
+                    {feature.icon}
+                  </div>
+                  <h4 className="font-semibold">{feature.title}</h4>
+                  <p className="text-sm text-muted-foreground">
+                    {feature.desc}
+                  </p>
+                </motion.div>
+              ))}
             </div>
-
-            <button className="bg-primary text-primary-foreground px-8 py-3 rounded-full hover:bg-primary/90 transition-colors duration-300 font-semibold">
-              VIEW MENU
-            </button>
-          </div>
+          </motion.div>
         </div>
 
         {/* Booth Seating Section */}
-        <div className="mt-16 animate-on-scroll">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeIn}
+          className="mt-24"
+        >
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h3 className="text-2xl md:text-3xl font-bold font-playfair mb-4">
-                Intimate <span className="text-gradient">Booth Dining</span>
+              <h3 className="text-3xl font-bold font-playfair mb-6">
+                Intimate <span className="text-gold-500">Booth Dining</span>
               </h3>
-              <p className="text-muted-foreground mb-6">
-                Enjoy privacy and comfort in our specially designed booth seating areas.
-                Perfect for couples, families, or small groups looking for a more intimate dining experience.
+              <p className="text-muted-foreground mb-8">
+                Our specially designed booths offer privacy and comfort, perfect
+                for romantic dinners or small gatherings.
               </p>
               <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  <span className="text-sm">Comfortable cushioned seating</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  <span className="text-sm">Perfect for intimate conversations</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  <span className="text-sm">Modern table settings</span>
-                </div>
+                {[
+                  "Comfortable cushioned seating",
+                  "Perfect for intimate conversations",
+                  "Elegant table settings",
+                  "Dedicated service",
+                ].map((item, index) => (
+                  <motion.div
+                    key={index}
+                    whileHover={{ x: 5 }}
+                    className="flex items-center space-x-3"
+                  >
+                    <div className="w-2 h-2 bg-gold-500 rounded-full flex-shrink-0"></div>
+                    <span>{item}</span>
+                  </motion.div>
+                ))}
               </div>
             </div>
-            <div className="relative">
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              className="relative rounded-2xl overflow-hidden shadow-lg"
+            >
               <img
-                src={`${import.meta.env.BASE_URL}lovable-uploads/a71224d5-7cb8-434b-b7ab-4fa48cb13072.png`}
+                src={`${
+                  import.meta.env.BASE_URL
+                }image/Gallery/Restaurant_Booth_Seating.png`}
                 alt="Booth Seating"
-                className="w-full h-80 object-cover rounded-2xl shadow-lg"
+                className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700"
               />
-            </div>
+              <div className="absolute bottom-4 left-4 z-20">
+                <p className="text-white font-medium">
+                  Elegant Dining Experience
+                </p>
+              </div>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Menu Highlights */}
-        <div className="mt-16 animate-on-scroll">
+        {/* Menu Highlights with Images */}
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeIn}
+          className="mt-24"
+        >
           <div className="text-center mb-12">
-            <h3 className="text-2xl md:text-3xl font-bold font-playfair mb-4">
-              Signature <span className="text-gradient">Dishes</span>
+            <p className="text-gold-500 text-sm tracking-widest mb-2">
+              TASTE THE DIFFERENCE
+            </p>
+            <h3 className="text-3xl font-bold font-playfair mb-4">
+              Menu <span className="text-gold-500">Highlights</span>
             </h3>
-            <p className="text-muted-foreground">Taste the finest culinary creations by our expert chefs</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-card rounded-xl p-6 text-center hover:shadow-lg transition-shadow duration-300">
-              <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
-                <span className="text-2xl">🍛</span>
-              </div>
-              <h4 className="text-lg font-semibold mb-2">Royal Biryani</h4>
-              <p className="text-muted-foreground text-sm mb-3">Aromatic basmati rice with tender meat and exotic spices</p>
-              <div className="text-primary font-semibold">₹450</div>
-            </div>
-
-            <div className="bg-card rounded-xl p-6 text-center hover:shadow-lg transition-shadow duration-300">
-              <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
-                <span className="text-2xl">🥘</span>
-              </div>
-              <h4 className="text-lg font-semibold mb-2">Butter Chicken</h4>
-              <p className="text-muted-foreground text-sm mb-3">Creamy tomato-based curry with tender chicken pieces</p>
-              <div className="text-primary font-semibold">₹380</div>
-            </div>
-
-            <div className="bg-card rounded-xl p-6 text-center hover:shadow-lg transition-shadow duration-300">
-              <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
-                <span className="text-2xl">🍰</span>
-              </div>
-              <h4 className="text-lg font-semibold mb-2">Gulab Jamun</h4>
-              <p className="text-muted-foreground text-sm mb-3">Traditional Indian dessert in aromatic sugar syrup</p>
-              <div className="text-primary font-semibold">₹180</div>
-            </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {menuHighlights.map((dish, index) => (
+              <motion.div
+                key={index}
+                whileHover={{ y: -10 }}
+                className="bg-card rounded-xl p-6 text-center border border-muted hover:border-gold-300 transition-all hover:shadow-md"
+              >
+                <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-2 border-gold-300 flex items-center justify-center bg-gold-500/10">
+                  <img
+                    src={dish.img}
+                    alt={dish.name}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+                <h4 className="text-lg font-semibold mb-2">{dish.name}</h4>
+                <p className="text-muted-foreground text-sm mb-3">
+                  {dish.desc}
+                </p>
+                <div className="text-gold-500 font-semibold">{dish.price}</div>
+              </motion.div>
+            ))}
           </div>
-        </div>
+        </motion.div>
+        <a
+          href="https://drive.google.com/file/d/1o3e9A316SvHd_okVKtFU9J4hAEHLK-xH/view?usp=sharing"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <div className="flex justify-center mt-12">
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-2 bg-gold-500/10 border border-gold-300 text-gold-600 px-8 py-3 rounded-full font-medium hover:shadow-md transition-all
+            hover:bg-gold-500/20 "
+            >
+              View Full Menu
+              <ChevronRight className="w-5 h-5" />
+            </motion.button>
+          </div>
+        </a>
       </div>
     </section>
   );
