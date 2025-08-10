@@ -2,15 +2,21 @@ import React, { useState, useEffect } from "react";
 import { Menu, X, Sun, Moon, Instagram } from "lucide-react";
 
 const Navigation = () => {
+  // Set initial theme to light mode. false = light, true = dark.
+  const [isDark, setIsDark] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isDark, setIsDark] = useState(true);
 
+  // Effect to handle theme changes
   useEffect(() => {
-    // Set dark theme by default
-    document.documentElement.classList.add("light");
-  }, []);
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [isDark]);
 
+  // Effect to handle scroll detection
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -21,7 +27,6 @@ const Navigation = () => {
 
   const toggleTheme = () => {
     setIsDark(!isDark);
-    document.documentElement.classList.toggle("dark");
   };
 
   const navItems = [
@@ -48,20 +53,22 @@ const Navigation = () => {
         <div className="flex justify-between items-center py-4 md:py-4 sm:py-6 min-h-[64px] md:min-h-[72px] lg:min-h-[80px]">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <h1
-              className={`text-xl xs:text-2xl md:text-3xl font-bold font-playfair transition-all duration-500 ${
-                isScrolled ? "text-foreground" : "text-white"
-              }`}
-            >
-              Hotel <span className="text-gradient">Yuvaan</span>
-            </h1>
-            <p
-              className={`text-[10px] xs:text-xs tracking-widest transition-all duration-500 ${
-                isScrolled ? "text-muted-foreground" : "text-white/80"
-              }`}
-            >
-              LUXURY EXPERIENCE
-            </p>
+            <a href="#home" className="cursor-pointer">
+              <h1
+                className={`text-xl xs:text-2xl md:text-3xl font-bold font-playfair transition-all duration-500 ${
+                  isScrolled ? "text-foreground" : "text-white"
+                }`}
+              >
+                Hotel <span className="text-gradient">Yuvaan</span>
+              </h1>
+              <p
+                className={`text-[10px] xs:text-xs tracking-widest transition-all duration-500 ${
+                  isScrolled ? "text-muted-foreground" : "text-white/80"
+                }`}
+              >
+                LUXURY EXPERIENCE
+              </p>
+            </a>
           </div>
 
           {/* Desktop Menu */}
@@ -94,15 +101,22 @@ const Navigation = () => {
               href="https://www.instagram.com/hotelyuvaan/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex py-3 text-white hover:text-primary transition-colors duration-300 h-10 w-10 text-center
-            p-2 rounded-full border justify-center items-center bg-primary hover:bg-primary/10 border-primary"
+              className="flex justify-center items-center h-10 w-10 p-2 rounded-full border text-white bg-primary hover:bg-primary/10 border-primary hover:text-primary transition-colors duration-300"
             >
               <Instagram className="w-5 h-5" />
             </a>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button & Theme Toggle */}
           <div className="lg:hidden flex items-center space-x-2 xs:space-x-4">
+            <button
+              onClick={toggleTheme}
+              className={`p-2 rounded-full transition-all duration-300 ${
+                isScrolled ? "text-foreground" : "text-white"
+              }`}
+            >
+              {isDark ? <Sun size={24} /> : <Moon size={24} />}
+            </button>
             <button
               className={`p-2 transition-colors duration-300 ${
                 isScrolled ? "text-foreground" : "text-white"
@@ -118,12 +132,12 @@ const Navigation = () => {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="lg:hidden bg-background/95 backdrop-blur-lg border-t border-border/50">
-          <div className="container mx-auto px-4 py-8 gap-3 flex flex-col min-h-[60vh] justify-center">
+          <div className="container mx-auto px-4 py-8 flex flex-col gap-3 min-h-[calc(100vh-64px)] justify-center">
             {navItems.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className="flex py-4 text-lg hover:text-white text-primary transition-colors duration-300 w-full text-center p-2 rounded-full border justify-center items-center hover:bg-primary bg-primary/10 border-primary"
+                className="flex justify-center items-center py-4 text-lg text-primary hover:text-white transition-colors duration-300 w-full rounded-full border border-primary bg-primary/10 hover:bg-primary"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.name}
@@ -131,9 +145,10 @@ const Navigation = () => {
             ))}
             <a
               href="https://www.instagram.com/hotelyuvaan/"
-              className="flex py-4 text-lg text-white hover:text-primary transition-colors duration-300 w-full text-center p-2 rounded-full border justify-center items-center bg-primary hover:bg-primary/10 border-primary"
+              className="flex justify-center items-center py-4 text-lg text-white hover:text-primary transition-colors duration-300 w-full rounded-full border border-primary bg-primary hover:bg-primary/10"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => setIsMenuOpen(false)}
             >
               <Instagram className="w-5 h-5" />
             </a>
