@@ -8,55 +8,55 @@ const GallerySection = () => {
   const galleryImages = [
     {
       id: 1,
-      src: '/lovable-uploads/2ff300aa-0daf-4918-afc4-f8d62684b86e.png',
+      src: `${import.meta.env.BASE_URL}lovable-uploads/2ff300aa-0daf-4918-afc4-f8d62684b86e.png`,
       alt: 'Hotel Reception Area',
       category: 'Reception'
     },
     {
       id: 2,
-      src: '/lovable-uploads/a71224d5-7cb8-434b-b7ab-4fa48cb13072.png',
+      src: `${import.meta.env.BASE_URL}lovable-uploads/a71224d5-7cb8-434b-b7ab-4fa48cb13072.png`,
       alt: 'Restaurant Booth Seating',
       category: 'Restaurant'
     },
     {
       id: 3,
-      src: '/lovable-uploads/d04692ca-4952-401b-9033-f790ef48b1d9.png',
+      src: `${import.meta.env.BASE_URL}lovable-uploads/d04692ca-4952-401b-9033-f790ef48b1d9.png`,
       alt: 'Birthday Event Decoration',
       category: 'Events'
     },
     {
       id: 4,
-      src: '/lovable-uploads/c7c6b323-a530-4b70-afc9-7b417923c3eb.png',
+      src: `${import.meta.env.BASE_URL}lovable-uploads/c7c6b323-a530-4b70-afc9-7b417923c3eb.png`,
       alt: 'Main Restaurant Dining Area',
       category: 'Restaurant'
     },
     {
       id: 5,
-      src: '/lovable-uploads/ae4f399e-f0ff-45fb-a484-1d158f263e96.png',
+      src: `${import.meta.env.BASE_URL}lovable-uploads/ae4f399e-f0ff-45fb-a484-1d158f263e96.png`,
       alt: 'Deluxe Room Suite',
       category: 'Rooms'
     },
     {
       id: 6,
-      src: '/lovable-uploads/0942bd15-be5d-4e7c-9040-91ebd3e54c87.png',
+      src: `${import.meta.env.BASE_URL}lovable-uploads/0942bd15-be5d-4e7c-9040-91ebd3e54c87.png`,
       alt: 'Standard Room',
       category: 'Rooms'
     },
     {
       id: 7,
-      src: '/lovable-uploads/a78aa5f3-1e73-4908-b921-18923de829cf.png',
+      src: `${import.meta.env.BASE_URL}lovable-uploads/a78aa5f3-1e73-4908-b921-18923de829cf.png`,
       alt: 'Hotel Yuvaan Exterior Night View',
       category: 'Exterior'
     },
     {
       id: 8,
-      src: '/lovable-uploads/76432058-40b3-4a31-8dc7-b01418fbbdf2.png',
+      src: `${import.meta.env.BASE_URL}lovable-uploads/76432058-40b3-4a31-8dc7-b01418fbbdf2.png`,
       alt: 'Premium Room Interior',
       category: 'Rooms'
     },
     {
       id: 9,
-      src: '/lovable-uploads/e1bd4780-5fe7-43f8-beaf-b87d78c0600f.png',
+      src: `${import.meta.env.BASE_URL}lovable-uploads/e1bd4780-5fe7-43f8-beaf-b87d78c0600f.png`,
       alt: 'Twin Bed Room',
       category: 'Rooms'
     }
@@ -65,8 +65,8 @@ const GallerySection = () => {
   const categories = ['All', 'Reception', 'Restaurant', 'Rooms', 'Events', 'Exterior'];
   const [activeCategory, setActiveCategory] = useState('All');
 
-  const filteredImages = activeCategory === 'All' 
-    ? galleryImages 
+  const filteredImages = activeCategory === 'All'
+    ? galleryImages
     : galleryImages.filter(image => image.category === activeCategory);
 
   return (
@@ -93,11 +93,10 @@ const GallerySection = () => {
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
-                className={`px-6 py-2 rounded-full border transition-all duration-300 ${
-                  activeCategory === category
+                className={`px-6 py-2 rounded-full border transition-all duration-300 ${activeCategory === category
                     ? "bg-primary text-primary-foreground border-primary"
                     : "border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                }`}
+                  }`}
               >
                 {category}
               </button>
@@ -110,9 +109,8 @@ const GallerySection = () => {
           {filteredImages.map((image, index) => (
             <div
               key={image.id}
-              className={`relative group overflow-hidden rounded-2xl cursor-pointer animate-on-scroll-${
-                index % 2 === 0 ? "left" : "right"
-              }`}
+              className={`relative group overflow-hidden rounded-2xl cursor-pointer animate-on-scroll-${index % 2 === 0 ? "left" : "right"
+                }`}
               style={{ animationDelay: `${index * 0.1}s` }}
               onClick={() => setSelectedImage(image.src)}
             >

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Sun, Moon } from 'lucide-react';
+import { Menu, X, Sun, Moon, Instagram } from 'lucide-react';
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -37,23 +37,29 @@ const Navigation = () => {
   ];
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-500 ${
-      isScrolled 
-        ? 'bg-background/95 backdrop-blur-lg shadow-2xl border-b border-border/50' 
-        : 'bg-transparent'
-    }`}>
+    <nav
+      className={`fixed w-full z-50 transition-all duration-500 ${
+        isScrolled
+          ? "bg-background/95 backdrop-blur-lg shadow-2xl border-b border-border/50"
+          : "bg-transparent"
+      }`}
+    >
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <h1 className={`text-2xl md:text-3xl font-bold font-playfair transition-all duration-500 ${
-              isScrolled ? 'text-foreground' : 'text-white'
-            }`}>
+            <h1
+              className={`text-2xl md:text-3xl font-bold font-playfair transition-all duration-500 ${
+                isScrolled ? "text-foreground" : "text-white"
+              }`}
+            >
               Hotel <span className="text-gradient">Yuvaan</span>
             </h1>
-            <p className={`text-xs tracking-widest transition-all duration-500 ${
-              isScrolled ? 'text-muted-foreground' : 'text-white/80'
-            }`}>
+            <p
+              className={`text-xs tracking-widest transition-all duration-500 ${
+                isScrolled ? "text-muted-foreground" : "text-white/80"
+              }`}
+            >
               LUXURY EXPERIENCE
             </p>
           </div>
@@ -65,13 +71,13 @@ const Navigation = () => {
                 key={item.name}
                 href={item.href}
                 className={`font-medium transition-all duration-300 hover:text-primary hover:scale-105 ${
-                  isScrolled ? 'text-foreground' : 'text-white'
+                  isScrolled ? "text-foreground" : "text-white"
                 }`}
               >
                 {item.name}
               </a>
             ))}
-            
+
             {/* Theme Toggle */}
             {/* <button
               onClick={toggleTheme}
@@ -83,25 +89,23 @@ const Navigation = () => {
             >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
             </button> */}
-            
-            <button className="bg-primary text-primary-foreground px-6 py-2 rounded-full hover:bg-primary/90 transition-all duration-300 hover:scale-105">
-              Book Now
-            </button>
+
+            <a
+              href="https://www.instagram.com/hotelyuvaan/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex py-3 text-white hover:text-primary transition-colors duration-300 h-10 w-10 text-center
+            p-2 rounded-full border justify-center items-center bg-primary hover:bg-primary/10 border-primary"
+            >
+              <Instagram className="w-5 h-5" />
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="lg:hidden flex items-center space-x-4">
-            {/* <button
-              onClick={toggleTheme}
-              className={`p-2 rounded-full transition-all duration-300 ${
-                isScrolled ? 'text-foreground' : 'text-white'
-              }`}
-            >
-              {isDark ? <Sun size={20} /> : <Moon size={20} />}
-            </button> */}
             <button
               className={`p-2 transition-colors duration-300 ${
-                isScrolled ? 'text-foreground' : 'text-white'
+                isScrolled ? "text-foreground" : "text-white"
               }`}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
@@ -114,20 +118,27 @@ const Navigation = () => {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="lg:hidden bg-background/95 backdrop-blur-lg border-t border-border/50">
-          <div className="container mx-auto px-4 py-4">
+          <div className="container mx-auto px-4 py-4 gap-2 flex flex-col">
             {navItems.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className="block py-3 text-foreground hover:text-primary transition-colors duration-300"
+                className="flex py-3 hover:text-white text-primary transition-colors duration-300 w-full text-center
+            p-2 rounded-full border justify-center items-center hover:bg-primary bg-primary/10 border-primar"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.name}
               </a>
             ))}
-            <button className="w-full mt-4 bg-primary text-primary-foreground py-3 rounded-full hover:bg-primary/90 transition-colors duration-300">
-              Book Now
-            </button>
+            <a
+              href="https://www.instagram.com/hotelyuvaan/"
+              className="flex py-3 text-white hover:text-primary transition-colors duration-300 w-full text-center
+            p-2 rounded-full border justify-center items-center bg-primary hover:bg-primary/10 border-primary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Instagram className="w-5 h-5" />
+            </a>
           </div>
         </div>
       )}

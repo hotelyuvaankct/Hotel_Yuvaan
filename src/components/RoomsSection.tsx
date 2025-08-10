@@ -8,7 +8,7 @@ const RoomsSection = () => {
       id: 1,
       name: 'Deluxe Room',
       price: '₹3,500',
-      image: '/lovable-uploads/ae4f399e-f0ff-45fb-a484-1d158f263e96.png',
+      image: `${import.meta.env.BASE_URL}lovable-uploads/ae4f399e-f0ff-45fb-a484-1d158f263e96.png`,
       description: 'Spacious and elegantly designed rooms with modern amenities, premium ceiling lighting, and comfortable seating area.',
       amenities: ['1-2 Persons', 'King Bed', 'Free WiFi', 'Breakfast', 'AC'],
       features: [
@@ -22,7 +22,7 @@ const RoomsSection = () => {
       id: 2,
       name: 'Premium Room',
       price: '₹4,200',
-      image: '/lovable-uploads/76432058-40b3-4a31-8dc7-b01418fbbdf2.png',
+      image: `${import.meta.env.BASE_URL}lovable-uploads/76432058-40b3-4a31-8dc7-b01418fbbdf2.png`,
       description: 'Luxurious room with premium furnishings, elegant false ceiling design, and modern amenities for the discerning guest.',
       amenities: ['1-2 Persons', 'King Bed', 'Premium Amenities', 'City View', 'AC'],
       features: [
@@ -36,7 +36,7 @@ const RoomsSection = () => {
       id: 3,
       name: 'Twin Bed Room',
       price: '₹3,800',
-      image: '/lovable-uploads/e1bd4780-5fe7-43f8-beaf-b87d78c0600f.png',
+      image: `${import.meta.env.BASE_URL}lovable-uploads/e1bd4780-5fe7-43f8-beaf-b87d78c0600f.png`,
       description: 'Perfect for friends or colleagues, featuring two comfortable beds with elegant interiors and modern conveniences.',
       amenities: ['2-3 Persons', 'Twin Beds', 'Premium Lighting', 'Modern Decor', 'AC'],
       features: [
@@ -60,7 +60,7 @@ const RoomsSection = () => {
             Rooms & <span className="text-gradient">Suites</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Experience luxury and comfort in our elegantly designed rooms, 
+            Experience luxury and comfort in our elegantly designed rooms,
             each offering premium amenities and exceptional service with modern interiors.
           </p>
         </div>
@@ -68,14 +68,14 @@ const RoomsSection = () => {
         {/* Rooms Grid */}
         <div className="grid lg:grid-cols-3 gap-8">
           {rooms.map((room, index) => (
-            <div 
-              key={room.id} 
+            <div
+              key={room.id}
               className={`bg-card rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 animate-on-scroll-${index % 2 === 0 ? 'left' : 'right'}`}
-              style={{animationDelay: `${index * 0.2}s`}}
+              style={{ animationDelay: `${index * 0.2}s` }}
             >
               {/* Room Image */}
               <div className="relative overflow-hidden">
-                <img 
+                <img
                   src={room.image}
                   alt={room.name}
                   className="w-full h-64 object-cover hover:scale-110 transition-transform duration-700"

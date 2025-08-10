@@ -9,7 +9,7 @@ const EventsSection = () => {
       category: 'RESTAURANT',
       title: 'Historic Restaurant Renovated',
       date: 'DEC 02',
-      image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      image: `${import.meta.env.BASE_URL}assets/images/events/event-1.jpg`,
       description: 'Grand reopening of our historic restaurant featuring new contemporary design while preserving the classic elegance.',
     },
     {
@@ -17,7 +17,7 @@ const EventsSection = () => {
       category: 'SPA',
       title: 'Benefits of Spa Treatments',
       date: 'DEC 04',
-      image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      image: `${import.meta.env.BASE_URL}assets/images/events/event-2.jpg`,
       description: 'Wellness workshop focusing on the therapeutic benefits of our signature spa treatments and relaxation techniques.',
     },
     {
@@ -25,7 +25,7 @@ const EventsSection = () => {
       category: 'ROOMS',
       title: 'Hotel Room Collections',
       date: 'DEC 06',
-      image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      image: `${import.meta.env.BASE_URL}assets/images/events/event-3.jpg`,
       description: 'Showcase of our newly designed luxury suite collections featuring premium amenities and modern furnishings.',
     },
   ];
@@ -66,7 +66,7 @@ const EventsSection = () => {
             Recent <span className="text-gradient">Events</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Stay updated with our latest events, celebrations, and special announcements 
+            Stay updated with our latest events, celebrations, and special announcements
             from Hotel Yuvaan.
           </p>
         </div>
@@ -74,14 +74,14 @@ const EventsSection = () => {
         {/* Recent Events */}
         <div className="grid lg:grid-cols-3 gap-8 mb-16">
           {events.map((event, index) => (
-            <div 
+            <div
               key={event.id}
               className={`bg-card rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 animate-on-scroll-${index % 2 === 0 ? 'left' : 'right'}`}
-              style={{animationDelay: `${index * 0.2}s`}}
+              style={{ animationDelay: `${index * 0.2}s` }}
             >
               {/* Event Image */}
               <div className="relative overflow-hidden">
-                <img 
+                <img
                   src={event.image}
                   alt={event.title}
                   className="w-full h-64 object-cover hover:scale-110 transition-transform duration-700"

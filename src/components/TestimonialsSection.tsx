@@ -11,7 +11,7 @@ const TestimonialsSection = () => {
       name: 'Emily Brown',
       role: 'Guest Review',
       rating: 5,
-      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b002?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+      image: `${import.meta.env.BASE_URL}images/testimonials/emily-brown.jpg`,
       review: "Hotel Yuvaan exceeded all expectations. The service was impeccable, rooms were luxurious, and the restaurant served the most delicious food. The staff went above and beyond to make our anniversary celebration memorable. Highly recommended for anyone seeking a premium hotel experience."
     },
     {
@@ -19,7 +19,7 @@ const TestimonialsSection = () => {
       name: 'Rajesh Sharma',
       role: 'Business Traveler',
       rating: 5,
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+      image: `${import.meta.env.BASE_URL}images/testimonials/rajesh-sharma.jpg`,
       review: "Perfect for business stays. The hotel offers excellent conference facilities, high-speed internet, and professional service. The location is convenient and the rooms are well-appointed. I've stayed here multiple times and it never disappoints."
     },
     {
@@ -27,7 +27,7 @@ const TestimonialsSection = () => {
       name: 'Priya Patel',
       role: 'Family Vacation',
       rating: 5,
-      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+      image: `${import.meta.env.BASE_URL}images/testimonials/priya-patel.jpg`,
       review: "Amazing experience with family! The kids loved the swimming pool, and we enjoyed the spacious family rooms. The staff was incredibly helpful and accommodating. The breakfast buffet was excellent with great variety. Will definitely return!"
     }
   ];
@@ -43,13 +43,13 @@ const TestimonialsSection = () => {
   return (
     <section className="py-16 md:py-24 bg-background relative overflow-hidden">
       {/* Background Image */}
-      <div 
+      <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10"
         style={{
           backgroundImage: "url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')"
         }}
       />
-      
+
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div className="text-center mb-16 animate-on-scroll">
@@ -79,7 +79,7 @@ const TestimonialsSection = () => {
 
               {/* Author */}
               <div className="flex items-center justify-center space-x-4">
-                <img 
+                <img
                   src={testimonials[currentTestimonial].image}
                   alt={testimonials[currentTestimonial].name}
                   className="w-16 h-16 rounded-full object-cover"
@@ -93,27 +93,26 @@ const TestimonialsSection = () => {
 
             {/* Navigation */}
             <div className="flex items-center justify-center space-x-6">
-              <button 
+              <button
                 onClick={prevTestimonial}
                 className="p-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors duration-300"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
-              
+
               {/* Dots */}
               <div className="flex space-x-2">
                 {testimonials.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentTestimonial(index)}
-                    className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-                      index === currentTestimonial ?  'bg-primary' : 'bg-muted'
-                    }`}
+                    className={`w-2 h-2 rounded-full transition-colors duration-300 ${index === currentTestimonial ? 'bg-primary' : 'bg-muted'
+                      }`}
                   />
                 ))}
               </div>
-              
-              <button 
+
+              <button
                 onClick={nextTestimonial}
                 className="p-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors duration-300"
               >
@@ -141,7 +140,7 @@ const TestimonialsSection = () => {
               <div className="text-2xl font-bold mb-1">4.8</div>
               <div className="text-sm text-muted-foreground">500+ Reviews</div>
             </div>
-            
+
             <div className="bg-card p-6 rounded-xl text-center hover:shadow-lg transition-shadow duration-300">
               <div className="text-lg font-bold text-blue-800 mb-2">Booking.com</div>
               <div className="flex justify-center space-x-1 mb-2">
@@ -152,7 +151,7 @@ const TestimonialsSection = () => {
               <div className="text-2xl font-bold mb-1">9.2</div>
               <div className="text-sm text-muted-foreground">Superb Rating</div>
             </div>
-            
+
             <div className="bg-card p-6 rounded-xl text-center hover:shadow-lg transition-shadow duration-300">
               <div className="text-lg font-bold text-red-600 mb-2">MakeMyTrip</div>
               <div className="flex justify-center space-x-1 mb-2">
@@ -163,7 +162,7 @@ const TestimonialsSection = () => {
               <div className="text-2xl font-bold mb-1">4.7</div>
               <div className="text-sm text-muted-foreground">Excellent</div>
             </div>
-            
+
             <div className="bg-card p-6 rounded-xl text-center hover:shadow-lg transition-shadow duration-300">
               <div className="text-lg font-bold text-orange-600 mb-2">TripAdvisor</div>
               <div className="flex justify-center space-x-1 mb-2">

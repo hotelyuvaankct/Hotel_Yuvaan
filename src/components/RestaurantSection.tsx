@@ -10,8 +10,8 @@ const RestaurantSection = () => {
           {/* Restaurant Image */}
           <div className="animate-on-scroll-left">
             <div className="relative">
-              <img 
-                src="/lovable-uploads/c7c6b323-a530-4b70-afc9-7b417923c3eb.png"
+              <img
+                src={`${import.meta.env.BASE_URL}lovable-uploads/c7c6b323-a530-4b70-afc9-7b417923c3eb.png`}
                 alt="Restaurant Interior"
                 className="w-full h-96 object-cover rounded-2xl shadow-lg"
               />
@@ -38,13 +38,13 @@ const RestaurantSection = () => {
               The <span className="text-gradient">Restaurant</span>
             </h2>
             <p className="text-muted-foreground mb-6">
-              Experience culinary excellence at our signature restaurant, where our master chefs 
-              create extraordinary dishes using the finest ingredients. Our modern dining space 
+              Experience culinary excellence at our signature restaurant, where our master chefs
+              create extraordinary dishes using the finest ingredients. Our modern dining space
               features elegant grey seating and warm wooden tables, perfect for any occasion.
             </p>
             <p className="text-muted-foreground mb-8">
-              From traditional Indian cuisine to international delicacies, every meal is a journey 
-              of flavors. Our contemporary design with comfortable booth seating creates the perfect 
+              From traditional Indian cuisine to international delicacies, every meal is a journey
+              of flavors. Our contemporary design with comfortable booth seating creates the perfect
               ambiance for intimate dinners, business meetings, or special celebrations.
             </p>
 
@@ -102,7 +102,7 @@ const RestaurantSection = () => {
                 Intimate <span className="text-gradient">Booth Dining</span>
               </h3>
               <p className="text-muted-foreground mb-6">
-                Enjoy privacy and comfort in our specially designed booth seating areas. 
+                Enjoy privacy and comfort in our specially designed booth seating areas.
                 Perfect for couples, families, or small groups looking for a more intimate dining experience.
               </p>
               <div className="space-y-4">
@@ -121,8 +121,8 @@ const RestaurantSection = () => {
               </div>
             </div>
             <div className="relative">
-              <img 
-                src="/lovable-uploads/a71224d5-7cb8-434b-b7ab-4fa48cb13072.png"
+              <img
+                src={`${import.meta.env.BASE_URL}lovable-uploads/a71224d5-7cb8-434b-b7ab-4fa48cb13072.png`}
                 alt="Booth Seating"
                 className="w-full h-80 object-cover rounded-2xl shadow-lg"
               />
@@ -148,7 +148,7 @@ const RestaurantSection = () => {
               <p className="text-muted-foreground text-sm mb-3">Aromatic basmati rice with tender meat and exotic spices</p>
               <div className="text-primary font-semibold">₹450</div>
             </div>
-            
+
             <div className="bg-card rounded-xl p-6 text-center hover:shadow-lg transition-shadow duration-300">
               <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
                 <span className="text-2xl">🥘</span>
@@ -157,7 +157,7 @@ const RestaurantSection = () => {
               <p className="text-muted-foreground text-sm mb-3">Creamy tomato-based curry with tender chicken pieces</p>
               <div className="text-primary font-semibold">₹380</div>
             </div>
-            
+
             <div className="bg-card rounded-xl p-6 text-center hover:shadow-lg transition-shadow duration-300">
               <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
                 <span className="text-2xl">🍰</span>

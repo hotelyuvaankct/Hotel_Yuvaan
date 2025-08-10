@@ -16,27 +16,27 @@ const AboutSection = () => {
                 ))}
               </div>
             </div>
-            
+
             <p className="text-primary text-sm tracking-[0.2em] uppercase mb-4">
               HOTEL YUVAAN LUXURY HOTEL
             </p>
-            
+
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold font-playfair mb-6 text-foreground">
               Enjoy a Luxury<br />
               <span className="text-gradient">Experience</span>
             </h2>
-            
+
             <div className="space-y-4 text-muted-foreground mb-8">
               <p>
-                Welcome to the best five-star deluxe hotel in the heart of the city. Hotel Yuvaan 
-                offers unparalleled luxury and comfort with world-class amenities and exceptional 
+                Welcome to the best five-star deluxe hotel in the heart of the city. Hotel Yuvaan
+                offers unparalleled luxury and comfort with world-class amenities and exceptional
                 hospitality that creates unforgettable memories for our distinguished guests.
               </p>
-              
+
               <p>
-                Our hotel features elegantly appointed rooms and suites, each designed with 
-                contemporary furnishings and premium amenities. Experience fine dining at our 
-                signature restaurant, relax at our spa, or host your special events in our 
+                Our hotel features elegantly appointed rooms and suites, each designed with
+                contemporary furnishings and premium amenities. Experience fine dining at our
+                signature restaurant, relax at our spa, or host your special events in our
                 sophisticated venues.
               </p>
             </div>
@@ -78,15 +78,15 @@ const AboutSection = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-4">
                 <div className="relative overflow-hidden rounded-lg">
-                  <img 
-                    src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                  <img
+                    src={`${import.meta.env.BASE_URL}/images/hotel-restaurant.jpg`}
                     alt="Hotel Restaurant"
                     className="w-full h-48 object-cover hover:scale-110 transition-transform duration-700"
                   />
                 </div>
                 <div className="relative overflow-hidden rounded-lg">
-                  <img 
-                    src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                  <img
+                    src={`${import.meta.env.BASE_URL}/images/hotel-room.jpg`}
                     alt="Hotel Room"
                     className="w-full h-64 object-cover hover:scale-110 transition-transform duration-700"
                   />
@@ -94,15 +94,15 @@ const AboutSection = () => {
               </div>
               <div className="space-y-4 mt-8">
                 <div className="relative overflow-hidden rounded-lg">
-                  <img 
-                    src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                  <img
+                    src={`${import.meta.env.BASE_URL}/images/hotel-bedroom.jpg`}
                     alt="Hotel Bedroom"
                     className="w-full h-64 object-cover hover:scale-110 transition-transform duration-700"
                   />
                 </div>
                 <div className="relative overflow-hidden rounded-lg">
-                  <img 
-                    src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                  <img
+                    src={`${import.meta.env.BASE_URL}/images/hotel-lobby.jpg`}
                     alt="Hotel Lobby"
                     className="w-full h-48 object-cover hover:scale-110 transition-transform duration-700"
                   />
@@ -119,7 +119,7 @@ const AboutSection = () => {
           </div>
           <div className="flex flex-col md:flex-row items-center justify-center space-y-6 md:space-y-0 md:space-x-8">
             <div className="w-32 h-32 rounded-full overflow-hidden">
-              <img 
+              <img
                 src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
                 alt="General Manager"
                 className="w-full h-full object-cover"
@@ -129,7 +129,7 @@ const AboutSection = () => {
               <h4 className="text-xl font-semibold mb-2">Rajesh Kumar</h4>
               <p className="text-primary mb-3">General Manager</p>
               <p className="text-muted-foreground max-w-md">
-                "With over 20 years of experience in hospitality management, I ensure that every guest 
+                "With over 20 years of experience in hospitality management, I ensure that every guest
                 experiences the finest in luxury and comfort. Welcome to Hotel Yuvaan - your home away from home."
               </p>
             </div>

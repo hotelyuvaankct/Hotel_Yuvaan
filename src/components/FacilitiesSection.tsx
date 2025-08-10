@@ -48,7 +48,7 @@ const FacilitiesSection = () => {
             Hotel <span className="text-gradient">Facilities</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Experience world-class amenities and services designed to make your stay 
+            Experience world-class amenities and services designed to make your stay
             comfortable, convenient, and memorable.
           </p>
         </div>
@@ -56,10 +56,10 @@ const FacilitiesSection = () => {
         {/* Facilities Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {facilities.map((facility, index) => (
-            <div 
+            <div
               key={index}
               className={`bg-card rounded-2xl p-8 text-center hover:shadow-lg transition-all duration-500 transform hover:-translate-y-2 animate-on-scroll-${index % 2 === 0 ? 'left' : 'right'}`}
-              style={{animationDelay: `${index * 0.1}s`}}
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="w-16 h-16 mx-auto mb-6 bg-primary/10 rounded-full flex items-center justify-center">
                 <facility.icon className="w-8 h-8 text-primary" />
@@ -89,7 +89,7 @@ const FacilitiesSection = () => {
               <div className="flex flex-col md:flex-row">
                 <div className="md:w-1/2">
                   <img 
-                    src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                    src={`${import.meta.env.BASE_URL}/images/room-cleaning.jpg`}
                     alt="Room Cleaning"
                     className="w-full h-48 md:h-full object-cover"
                   />
@@ -122,7 +122,7 @@ const FacilitiesSection = () => {
               <div className="flex flex-col md:flex-row">
                 <div className="md:w-1/2">
                   <img 
-                    src="https://images.unsplash.com/photo-1551538827-9c037cb4f32a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                    src={`${import.meta.env.BASE_URL}/images/drinks-package.jpg`}
                     alt="Drinks Package"
                     className="w-full h-48 md:h-full object-cover"
                   />
