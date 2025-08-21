@@ -10,22 +10,28 @@ const fadeIn = {
 
 const menuHighlights = [
   {
-    img: `${import.meta.env.BASE_URL}image/menu/mint_mojito.png`,
-    name: "Mint Mojito",
-    desc: "Refreshing mocktail with mint and lime",
-    price: "₹115",
+    img: `${import.meta.env.BASE_URL}image/menu/Hotel_Yuvaan_special_thali.jpeg`,
+    name: "Hotel Yuvaan Special Thali",
+    desc: "A lavish spread of Indian delicacies",
+    price: "₹400/-",
   },
+  // {
+  //   img: `${import.meta.env.BASE_URL}image/menu/mint_mojito.png`,
+  //   name: "Mint Mojito",
+  //   desc: "Refreshing mocktail with mint and lime",
+  //   price: "₹115",
+  // },
   {
-    img: `${import.meta.env.BASE_URL}image/menu/paneer_tikka.png`,
+    img: `${import.meta.env.BASE_URL}image/menu/paneer_tikka.jpeg`,
     name: "Paneer Tikka",
     desc: "Grilled cottage cheese with spices",
-    price: "₹250",
+    price: "₹250/-",
   },
   {
     img: `${import.meta.env.BASE_URL}image/menu/aloo_paratha.png`,
     name: "Aloo Paratha",
     desc: "Stuffed flatbread served with curd",
-    price: "₹115",
+    price: "₹115/-",
   },
 ];
 
@@ -88,11 +94,6 @@ const RestaurantSection = () => {
                   icon: <Utensils className="w-5 h-5" />,
                   title: "Multi-Cuisine",
                   desc: "Indian & International",
-                },
-                {
-                  icon: <Wine className="w-5 h-5" />,
-                  title: "Premium Bar",
-                  desc: "Crafted cocktails",
                 },
                 {
                   icon: <Clock className="w-5 h-5" />,

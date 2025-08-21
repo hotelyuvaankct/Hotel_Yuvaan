@@ -4,79 +4,82 @@ import { X } from "lucide-react";
 const GallerySection = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  const galleryImages = [
-    {
-      id: 1,
-      src: `${
-        import.meta.env.BASE_URL
-      }image/Gallery/Hotel_Reception_Area.png`,
-      alt: "Hotel Reception Area",
-      category: "Reception",
-    },
-    {
-      id: 2,
-      src: `${
-        import.meta.env.BASE_URL
-      }image/Gallery/Restaurant_Booth_Seating.png`,
-      alt: "Restaurant Booth Seating",
-      category: "Restaurant",
-    },
-    {
-      id: 3,
-      src: `${
-        import.meta.env.BASE_URL
-      }image/Gallery/Birthday_Event_Decoration.png`,
-      alt: "Birthday Event Decoration",
-      category: "Events",
-    },
-    {
-      id: 4,
-      src: `${
-        import.meta.env.BASE_URL
-      }image/Gallery/Main_Restaurant_Dining_Area.png`,
-      alt: "Main Restaurant Dining Area",
-      category: "Restaurant",
-    },
-    {
-      id: 5,
-      src: `${
-        import.meta.env.BASE_URL
-      }image/Gallery/Deluxe_Room_Suite.png`,
-      alt: "Deluxe Room Suite",
-      category: "Rooms",
-    },
-    {
-      id: 6,
-      src: `${
-        import.meta.env.BASE_URL
-      }image/Gallery/Standard_Room.png`,
-      alt: "Standard Room",
-      category: "Rooms",
-    },
-    {
-      id: 7,
-      src: `${
-        import.meta.env.BASE_URL
-      }image/Gallery/Night_View.png`,
-      alt: "Hotel Yuvaan Exterior Night View",
-      category: "Exterior",
-    },
-    {
-      id: 8,
-      src: `${
-        import.meta.env.BASE_URL
-      }image/Gallery/Interior.png`,
-      alt: "Premium Room Interior",
-      category: "Rooms",
-    },
-    {
-      id: 9,
-      src: `${import.meta.env.BASE_URL
-      }image/Gallery/Twin_Bed_Room.png`,
-      alt: "Twin Bed Room",
-      category: "Rooms",
-    },
-  ];
+const galleryImages = [
+  {
+    id: 1,
+    src: `${import.meta.env.BASE_URL}image/Gallery/Hotel_Reception_Area.png`,
+    alt: "Hotel Reception Area",
+    category: "Reception",
+  },
+  {
+    id: 2,
+    src: `${import.meta.env.BASE_URL}image/Gallery/Restaurant_Booth_Seating.png`,
+    alt: "Restaurant Booth Seating",
+    category: "Restaurant",
+  },
+  {
+    id: 3,
+    src: `${import.meta.env.BASE_URL}image/Gallery/Birthday_Event_Decoration.png`,
+    alt: "Birthday Event Decoration",
+    category: "Events",
+  },
+  {
+    id: 4,
+    src: `${import.meta.env.BASE_URL}image/Gallery/Main_Restaurant_Dining_Area.png`,
+    alt: "Main Restaurant Dining Area",
+    category: "Restaurant",
+  },
+  {
+    id: 5,
+    src: `${import.meta.env.BASE_URL}image/Gallery/Deluxe_Room_Suite.png`,
+    alt: "Deluxe Room Suite",
+    category: "Rooms",
+  },
+  {
+    id: 6,
+    src: `${import.meta.env.BASE_URL}image/Gallery/Standard_Room.png`,
+    alt: "Standard Room",
+    category: "Rooms",
+  },
+  {
+    id: 7,
+    src: `${import.meta.env.BASE_URL}image/Gallery/Night_View.png`,
+    alt: "Hotel Yuvaan Exterior Night View",
+    category: "Exterior",
+  },
+  {
+    id: 8,
+    src: `${import.meta.env.BASE_URL}image/Gallery/Interior.png`,
+    alt: "Premium Room Interior",
+    category: "Rooms",
+  },
+  {
+    id: 9,
+    src: `${import.meta.env.BASE_URL}image/Gallery/Twin_Bed_Room.png`,
+    alt: "Twin Bed Room",
+    category: "Rooms",
+  },
+  // Newly added images
+  {
+    id: 10,
+    src: `${import.meta.env.BASE_URL}image/Gallery/room.jpeg`,
+    alt: "Room (Generic)",
+    category: "Rooms",
+  },
+  {
+    id: 11,
+    src: `${import.meta.env.BASE_URL}image/Gallery/event.jpeg`,
+    alt: "Event Celebration",
+    category: "Events",
+  },
+  {
+    id: 12,
+    src: `${import.meta.env.BASE_URL}image/Gallery/restaurant_1.jpeg`,
+    alt: "Restaurant View",
+    category: "Restaurant",
+  },
+];
+
 
   const categories = [
     "All",

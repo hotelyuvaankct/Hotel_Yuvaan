@@ -136,10 +136,6 @@ const FacilitiesSection = () => {
                       Premium beverages included
                     </li>
                     <li className="flex items-center">
-                      <span className="text-green-500 mr-2">✓</span>
-                      Mini bar access
-                    </li>
-                    <li className="flex items-center">
                       <span className="text-red-500 mr-2">✗</span>
                       Limited premium spirits
                     </li>
