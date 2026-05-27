@@ -94,7 +94,7 @@ const Navigation = () => {
   };
 
   const navItems = [
-    { name: "Home", href: "/#home", icon: <Home className="w-5 h-5" /> },
+    // { name: "Home", href: "/#home", icon: <Home className="w-5 h-5" /> },
     { name: "About", href: "/#about", icon: <User className="w-5 h-5" /> },
     { name: "Rooms", href: "/#rooms", icon: <Bed className="w-5 h-5" /> },
     {
