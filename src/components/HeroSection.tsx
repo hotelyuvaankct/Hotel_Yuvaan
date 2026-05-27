@@ -131,7 +131,7 @@ const HeroSection = () => {
           <motion.a
             href="#restaurant"
             className="group border border-primary text-primary hover:bg-primary hover:text-background px-6 sm:px-8 md:px-10 py-3 sm:py-4 rounded-full text-sm sm:text-base md:text-lg font-semibold transition-colors duration-300 w-full sm:w-auto text-center"
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.05 }} 
             whileTap={{ scale: 0.95 }}
           >
             <span className="relative z-10">DINE WITH US</span>

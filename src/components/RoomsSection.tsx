@@ -2,6 +2,12 @@ import React, { useState } from "react";
 import { Users, Bed, Wifi, Coffee, Award, Star } from "lucide-react";
 import roomData from "../data/room.json";
 import RoomPopup from "./RoomPopup";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "./ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 const featureIcons: Record<string, any> = {
   "1-2 Persons": Users,
@@ -70,22 +76,41 @@ const RoomsSection = () => {
               }`}
               style={{ animationDelay: `${index * 0.2}s` }}
             >
-              {/* Room Image */}
-              <div className="relative overflow-hidden group">
-                <img
-                  src={`${import.meta.env.BASE_URL}${room.images[0]}`}
-                  alt={room.name}
-                  className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700 cursor-pointer"
-                  onClick={() => {
-                    setSelectedRoom(room);
-                    setPopupOpen(true);
-                  }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="absolute top-4 left-4 bg-gradient-to-r from-gold-600 to-gold-400 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
+              {/* Room Image Carousel */}
+              <div className="relative group">
+                <Carousel 
+                  className="w-full"
+                  opts={{ loop: true }}
+                  plugins={[
+                    Autoplay({
+                      delay: 3000,
+                    }),
+                  ]}
+                >
+                  <CarouselContent className="m-0">
+                    {room.images.map((image: string, imgIndex: number) => (
+                      <CarouselItem key={imgIndex} className="p-0">
+                        <div className="relative overflow-hidden">
+                          <img
+                            src={`${import.meta.env.BASE_URL}${image}`}
+                            alt={`${room.name} - Image ${imgIndex + 1}`}
+                            className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700 cursor-pointer"
+                            onClick={() => {
+                              setSelectedRoom(room);
+                              setPopupOpen(true);
+                            }}
+                          />
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                </Carousel>
+                
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                <div className="absolute top-4 left-4 bg-gradient-to-r from-gold-600 to-gold-400 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg z-10 pointer-events-none">
                   {room.price} / Night
                 </div>
-                <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs font-medium">
+                <div className="absolute top-4 right-4 bg-black/30 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs font-medium z-10 pointer-events-none">
                   {room.size}
                 </div>
               </div>

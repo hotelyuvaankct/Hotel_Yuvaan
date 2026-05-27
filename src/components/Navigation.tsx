@@ -150,7 +150,7 @@ const Navigation = () => {
                 {item.name}
               </a>
             ))}
-            <button
+            {/* <button
               onClick={toggleTheme}
               className={`p-2 rounded-full transition-all duration-300 hover:scale-110 ${
                 isScrolled
@@ -159,7 +159,7 @@ const Navigation = () => {
               }`}
             >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
-            </button>
+            </button> */}
             <a
               href="https://www.instagram.com/hotelyuvaan/"
               target="_blank"

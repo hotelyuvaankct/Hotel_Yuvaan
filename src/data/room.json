@@ -33,8 +33,9 @@
         "bookingUrl": "https://www.agoda.com/en-gb/hotel-yuvaan/hotel/kuchaman-in.html",
         "images": [
             "image/Single Superior/room_0.jpeg",
+            "image/Single Superior/room_1.png",
             "image/Single Superior/room_2.png",
-            "image/Single Superior/bathroom.png"
+            "image/Single Superior/room_3.png"
         ]
     },
     {
@@ -72,9 +73,10 @@
         ],
         "bookingUrl": "https://www.agoda.com/en-gb/hotel-yuvaan/hotel/kuchaman-in.html",
         "images": [
+            "image/Single Deluxe/room_3.png",
+            "image/Single Deluxe/room_2.png",
             "image/Single Deluxe/room_0.jpeg",
-            "image/Single Deluxe/room_1.jpeg",
-            "image/Single Deluxe/bathroom.png"
+            "image/Single Deluxe/room.png"
         ]
     },
     {
@@ -112,7 +114,7 @@
         "images": [
             "image/Gallery/Twin_Bed_Room.png",
             "image/Deluxe Double or Twin/room_2.png",
-            "image/Deluxe Double or Twin/bathroom.png"
+            "image/Deluxe Double or Twin/room_1.png"
         ],
         "extraperson": "₹500"
     }
