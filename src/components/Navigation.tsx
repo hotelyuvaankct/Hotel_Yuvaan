@@ -17,12 +17,17 @@ import {
   Phone,
 } from "lucide-react";
 import bannerData from "../data/banner.json";
+import { useLocation } from "react-router-dom";
 
 const Navigation = () => {
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
+
   // Set initial theme to light mode. false = light, true = dark.
   const [isDark, setIsDark] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const solidNav = isScrolled || !isHomePage;
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
 
@@ -110,8 +115,8 @@ const Navigation = () => {
   return (
     <nav
       className={`fixed w-full z-50 transition-all duration-500 flex flex-col ${
-        isScrolled
-          ? "bg-background/95 backdrop-blur-lg shadow-2xl border-b border-border/50"
+        solidNav
+          ? "bg-background/95 backdrop-blur-lg shadow-sm border-b border-border/50"
           : "bg-transparent"
       }`}
       style={{ minHeight: "64px" }}
@@ -139,14 +144,14 @@ const Navigation = () => {
             <a href="/#home" className="cursor-pointer">
               <h1
                 className={`text-xl xs:text-2xl md:text-3xl font-bold font-playfair transition-all duration-500 ${
-                  isScrolled ? "text-foreground" : "text-white"
+                  solidNav ? "text-foreground" : "text-white"
                 }`}
               >
                 Hotel <span className="text-gradient">Yuvaan</span>
               </h1>
               <p
                 className={`text-[10px] xs:text-xs tracking-widest transition-all duration-500 ${
-                  isScrolled ? "text-muted-foreground" : "text-white/80"
+                  solidNav ? "text-muted-foreground" : "text-white/80"
                 }`}
               >
                 LUXURY EXPERIENCE
@@ -161,7 +166,7 @@ const Navigation = () => {
                 key={item.name}
                 href={item.href}
                 className={`font-medium transition-all duration-300 hover:text-primary hover:scale-105 ${
-                  isScrolled ? "text-foreground" : "text-white"
+                  solidNav ? "text-foreground" : "text-white"
                 }`}
               >
                 {item.name}
@@ -190,10 +195,10 @@ const Navigation = () => {
           {/* Mobile Menu Button & Theme Toggle */}
           <div className="lg:hidden flex items-center space-x-2 xs:space-x-4">
             {/* Theme Toggle - Desktop */}
-            <button
+            {/* <button
               onClick={toggleTheme}
               className={`relative flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300 ${
-                isScrolled
+                solidNav
                   ? "hover:bg-accent text-foreground"
                   : "hover:bg-white/10 text-white"
               }`}
@@ -222,12 +227,12 @@ const Navigation = () => {
                   </motion.div>
                 )}
               </AnimatePresence>
-            </button>
+            </button> */}
             {/* ✨ Add ref to the button to help with outside click detection */}
             <button
               ref={buttonRef}
               className={`relative h-8 w-8 transition-colors duration-300 ${
-                isScrolled ? "text-foreground" : "text-white"
+                solidNav ? "text-foreground" : "text-white"
               }`}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle Menu"
