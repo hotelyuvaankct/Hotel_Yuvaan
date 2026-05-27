@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "src": "image/Gallery/Hotel_Reception_Area.png",
+    "alt": "Hotel Reception Area",
+    "category": "Reception"
+  },
+  {
+    "id": 2,
+    "src": "image/Gallery/Restaurant_Booth_Seating.png",
+    "alt": "Restaurant Booth Seating",
+    "category": "Restaurant"
+  },
+  {
+    "id": 3,
+    "src": "image/Gallery/Birthday_Event_Decoration.png",
+    "alt": "Birthday Event Decoration",
+    "category": "Events"
+  },
+  {
+    "id": 4,
+    "src": "image/Gallery/Main_Restaurant_Dining_Area.png",
+    "alt": "Main Restaurant Dining Area",
+    "category": "Restaurant"
+  },
+  {
+    "id": 5,
+    "src": "image/Gallery/Deluxe_Room_Suite.png",
+    "alt": "Deluxe Room Suite",
+    "category": "Rooms"
+  },
+  {
+    "id": 6,
+    "src": "image/Gallery/Standard_Room.png",
+    "alt": "Standard Room",
+    "category": "Rooms"
+  },
+  {
+    "id": 7,
+    "src": "image/Gallery/Night_View.png",
+    "alt": "Hotel Yuvaan Exterior Night View",
+    "category": "Exterior"
+  },
+  {
+    "id": 8,
+    "src": "image/Gallery/Interior.png",
+    "alt": "Premium Room Interior",
+    "category": "Rooms"
+  },
+  {
+    "id": 9,
+    "src": "image/Gallery/Twin_Bed_Room.png",
+    "alt": "Twin Bed Room",
+    "category": "Rooms"
+  },
+  {
+    "id": 10,
+    "src": "image/Gallery/room.jpeg",
+    "alt": "Room (Generic)",
+    "category": "Rooms"
+  },
+  {
+    "id": 11,
+    "src": "image/Gallery/event.jpeg",
+    "alt": "Event Celebration",
+    "category": "Events"
+  },
+  {
+    "id": 12,
+    "src": "image/Gallery/restaurant_1.jpeg",
+    "alt": "Restaurant View",
+    "category": "Restaurant"
+  }
+]

@@ -1,104 +1,18 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
+import { Link } from "react-router-dom";
+import galleryData from "../data/gallery.json";
+
+const getImageUrl = (path: string) => {
+  const base = import.meta.env.BASE_URL || "/";
+  return base.endsWith("/") ? `${base}${path}` : `${base}/${path}`;
+};
 
 const GallerySection = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-const galleryImages = [
-  {
-    id: 1,
-    src: `${import.meta.env.BASE_URL}image/Gallery/Hotel_Reception_Area.png`,
-    alt: "Hotel Reception Area",
-    category: "Reception",
-  },
-  {
-    id: 2,
-    src: `${import.meta.env.BASE_URL}image/Gallery/Restaurant_Booth_Seating.png`,
-    alt: "Restaurant Booth Seating",
-    category: "Restaurant",
-  },
-  {
-    id: 3,
-    src: `${import.meta.env.BASE_URL}image/Gallery/Birthday_Event_Decoration.png`,
-    alt: "Birthday Event Decoration",
-    category: "Events",
-  },
-  {
-    id: 4,
-    src: `${import.meta.env.BASE_URL}image/Gallery/Main_Restaurant_Dining_Area.png`,
-    alt: "Main Restaurant Dining Area",
-    category: "Restaurant",
-  },
-  {
-    id: 5,
-    src: `${import.meta.env.BASE_URL}image/Gallery/Deluxe_Room_Suite.png`,
-    alt: "Deluxe Room Suite",
-    category: "Rooms",
-  },
-  {
-    id: 6,
-    src: `${import.meta.env.BASE_URL}image/Gallery/Standard_Room.png`,
-    alt: "Standard Room",
-    category: "Rooms",
-  },
-  {
-    id: 7,
-    src: `${import.meta.env.BASE_URL}image/Gallery/Night_View.png`,
-    alt: "Hotel Yuvaan Exterior Night View",
-    category: "Exterior",
-  },
-  {
-    id: 8,
-    src: `${import.meta.env.BASE_URL}image/Gallery/Interior.png`,
-    alt: "Premium Room Interior",
-    category: "Rooms",
-  },
-  {
-    id: 9,
-    src: `${import.meta.env.BASE_URL}image/Gallery/Twin_Bed_Room.png`,
-    alt: "Twin Bed Room",
-    category: "Rooms",
-  },
-  // Newly added images
-  {
-    id: 10,
-    src: `${import.meta.env.BASE_URL}image/Gallery/room.jpeg`,
-    alt: "Room (Generic)",
-    category: "Rooms",
-  },
-  {
-    id: 11,
-    src: `${import.meta.env.BASE_URL}image/Gallery/event.jpeg`,
-    alt: "Event Celebration",
-    category: "Events",
-  },
-  {
-    id: 12,
-    src: `${import.meta.env.BASE_URL}image/Gallery/restaurant_1.jpeg`,
-    alt: "Restaurant View",
-    category: "Restaurant",
-  },
-];
-
-
-  const categories = [
-    "All",
-    "Reception",
-    "Restaurant",
-    "Rooms",
-    "Events",
-    "Exterior",
-  ];
-  const [activeCategory, setActiveCategory] = useState("All");
-
-  const filteredImages = React.useMemo(() => {
-    if (activeCategory === "All") return galleryImages;
-    return galleryImages.filter(
-      (image) =>
-        image.category.trim().toLowerCase() ===
-        activeCategory.trim().toLowerCase()
-    );
-  }, [activeCategory, galleryImages]);
+  // Take only the first 6 images for the home page preview
+  const homeImages = galleryData.slice(0, 6);
 
   return (
     <section id="gallery" className="py-16 md:py-24 bg-background">
@@ -138,17 +52,17 @@ const galleryImages = [
 
         {/* Gallery Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredImages.map((image, index) => (
+          {homeImages.map((image, index) => (
             <div
               key={image.id}
               className={`relative group overflow-hidden rounded-2xl cursor-pointer animate-on-scroll-${
                 index % 2 === 0 ? "left" : "right"
               }`}
               style={{ animationDelay: `${index * 0.1}s` }}
-              onClick={() => setSelectedImage(image.src)}
+              onClick={() => setSelectedImage(getImageUrl(image.src))}
             >
               <img
-                src={image.src}
+                src={getImageUrl(image.src)}
                 alt={image.alt}
                 className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
               />
@@ -161,15 +75,24 @@ const galleryImages = [
             </div>
           ))}
         </div>
+
+        <div className="mt-12 text-center animate-on-scroll">
+          <Link
+            to="/gallery"
+            className="inline-block bg-primary text-primary-foreground py-3 px-8 rounded-full hover:bg-primary/90 transition-all duration-300 font-semibold tracking-wider text-sm shadow-lg hover:shadow-xl"
+          >
+            VIEW FULL GALLERY
+          </Link>
+        </div>
       </div>
 
       {/* Lightbox Modal */}
       {selectedImage && (
         <div
-          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4"
           onClick={() => setSelectedImage(null)}
         >
-          <div className="relative max-w-4xl max-h-full">
+          <div className="relative max-w-4xl max-h-full" onClick={(e) => e.stopPropagation()}>
             <img
               src={selectedImage}
               alt="Gallery Image"

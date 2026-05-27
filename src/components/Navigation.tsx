@@ -16,6 +16,7 @@ import {
   Image,
   Phone,
 } from "lucide-react";
+import bannerData from "../data/banner.json";
 
 const Navigation = () => {
   // Set initial theme to light mode. false = light, true = dark.
@@ -88,38 +89,54 @@ const Navigation = () => {
   };
 
   const navItems = [
-    { name: "Home", href: "#home", icon: <Home className="w-5 h-5" /> },
-    { name: "About", href: "#about", icon: <User className="w-5 h-5" /> },
-    { name: "Rooms", href: "#rooms", icon: <Bed className="w-5 h-5" /> },
+    { name: "Home", href: "/#home", icon: <Home className="w-5 h-5" /> },
+    { name: "About", href: "/#about", icon: <User className="w-5 h-5" /> },
+    { name: "Rooms", href: "/#rooms", icon: <Bed className="w-5 h-5" /> },
     {
       name: "Restaurant",
-      href: "#restaurant",
+      href: "/#restaurant",
       icon: <Utensils className="w-5 h-5" />,
     },
     {
       name: "Facilities",
-      href: "#facilities",
+      href: "/#facilities",
       icon: <Wifi className="w-5 h-5" />,
     },
-    // { name: "Events", href: "#events", icon: <Calendar className="w-5 h-5" /> },
-    { name: "Gallery", href: "#gallery", icon: <Image className="w-5 h-5" /> },
-    { name: "Contact", href: "#contact", icon: <Phone className="w-5 h-5" /> },
+    // { name: "Events", href: "/#events", icon: <Calendar className="w-5 h-5" /> },
+    { name: "Gallery", href: "/gallery", icon: <Image className="w-5 h-5" /> },
+    { name: "Contact", href: "/#contact", icon: <Phone className="w-5 h-5" /> },
   ];
 
   return (
     <nav
-      className={`fixed w-full z-50 transition-all duration-500 ${
+      className={`fixed w-full z-50 transition-all duration-500 flex flex-col ${
         isScrolled
           ? "bg-background/95 backdrop-blur-lg shadow-2xl border-b border-border/50"
           : "bg-transparent"
       }`}
       style={{ minHeight: "64px" }}
     >
-      <div className="container mx-auto px-4">
+      <div className="bg-primary text-primary-foreground text-[9px] sm:text-[10px] md:text-xs font-semibold py-1.5 overflow-hidden flex whitespace-nowrap tracking-wider">
+        <div className="animate-marquee flex shrink-0">
+          {[...bannerData, ...bannerData].map((text, index) => (
+            <React.Fragment key={`marquee-1-${index}`}>
+              <span className="mx-4">{text}</span> •
+            </React.Fragment>
+          ))}
+        </div>
+        <div className="animate-marquee flex shrink-0" aria-hidden="true">
+          {[...bannerData, ...bannerData].map((text, index) => (
+            <React.Fragment key={`marquee-2-${index}`}>
+              <span className="mx-4">{text}</span> •
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+      <div className="container mx-auto px-4 w-full">
         <div className="flex justify-between items-center py-4 md:py-4 sm:py-6 min-h-[64px] md:min-h-[72px] lg:min-h-[80px]">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <a href="#home" className="cursor-pointer">
+            <a href="/#home" className="cursor-pointer">
               <h1
                 className={`text-xl xs:text-2xl md:text-3xl font-bold font-playfair transition-all duration-500 ${
                   isScrolled ? "text-foreground" : "text-white"

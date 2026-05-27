@@ -1,7 +1,7 @@
 
 import { useEffect } from 'react';
 
-export const useScrollAnimation = () => {
+export const useScrollAnimation = (dependencies: any[] = []) => {
   useEffect(() => {
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
       entries.forEach((entry) => {
@@ -17,19 +17,27 @@ export const useScrollAnimation = () => {
       threshold: 0.1,
     });
 
-    // Observe all elements with animation classes
-    const animatedElements = document.querySelectorAll(
-      '.animate-on-scroll, .animate-on-scroll-left, .animate-on-scroll-right'
-    );
+    let animatedElements: NodeListOf<Element>;
 
-    animatedElements.forEach((element) => {
-      observer.observe(element);
-    });
+    // Delay to ensure React has fully committed and painted the DOM elements
+    const timer = setTimeout(() => {
+      animatedElements = document.querySelectorAll(
+        '.animate-on-scroll, .animate-on-scroll-left, .animate-on-scroll-right'
+      );
+
+      animatedElements.forEach((element) => {
+        observer.observe(element);
+      });
+    }, 50);
 
     return () => {
-      animatedElements.forEach((element) => {
-        observer.unobserve(element);
-      });
+      clearTimeout(timer);
+      if (animatedElements) {
+        animatedElements.forEach((element) => {
+          observer.unobserve(element);
+        });
+      }
+      observer.disconnect();
     };
-  }, []);
+  }, dependencies);
 };

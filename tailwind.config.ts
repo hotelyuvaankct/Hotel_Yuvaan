@@ -157,6 +157,10 @@ export default {
 					'100%': {
 						transform: 'translateX(100%)'
 					}
+				},
+				'marquee': {
+					'0%': { transform: 'translateX(0%)' },
+					'100%': { transform: 'translateX(-100%)' }
 				}
 			},
 			animation: {
@@ -167,6 +171,7 @@ export default {
 				'fade-in-right': 'fade-in-right 0.6s ease-out',
 				'scale-in': 'scale-in 0.6s ease-out',
 				'shimmer': 'shimmer 2s infinite',
+				'marquee': 'marquee 25s linear infinite',
 			},
 			fontFamily: {
 				'playfair': ['Playfair Display', 'serif'],
