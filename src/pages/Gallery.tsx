@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import Navigation from "../components/Navigation";
 import Footer from "../components/Footer";
 import galleryData from "../data/gallery.json";
+import GalleryCard from "../components/GalleryCard";
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
 
 const getImageUrl = (path: string) => {
@@ -73,26 +74,14 @@ const Gallery = () => {
           {/* Gallery Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredImages.map((image, index) => (
-              <div
+              <GalleryCard
                 key={image.id}
-                className={`relative group overflow-hidden rounded-2xl cursor-pointer animate-on-scroll-${
-                  index % 2 === 0 ? "left" : "right"
-                }`}
-                style={{ animationDelay: `${index * 0.1}s` }}
+                imageUrl={getImageUrl(image.src)}
+                alt={image.alt}
+                category={image.category}
+                index={index}
                 onClick={() => setSelectedImage(getImageUrl(image.src))}
-              >
-                <img
-                  src={getImageUrl(image.src)}
-                  alt={image.alt}
-                  className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute bottom-4 left-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="text-sm font-semibold">{image.alt}</div>
-                  <div className="text-xs text-white/80">{image.category}</div>
-                </div>
-                <div className="absolute inset-0 ring-2 ring-primary ring-opacity-0 group-hover:ring-opacity-100 transition-all duration-300 rounded-2xl" />
-              </div>
+              />
             ))}
           </div>
         </div>
