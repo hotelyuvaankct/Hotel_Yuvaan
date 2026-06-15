@@ -1,6 +1,6 @@
 # Hotel Yuvaan
 
-Welcome to the official repository of **Hotel Yuvaan**.
+Welcome to the official repository of **Hotel Yuvaan**. 
 
 ## Project Overview
 
