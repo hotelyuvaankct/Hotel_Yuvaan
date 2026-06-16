@@ -30,6 +30,28 @@ Push to `develop` for dev deployments. Merge `develop` → `main` when ready for
 
 **Vercel setup:** In Project Settings → Domains, assign `dev.hotelyuvaan.com` to the `develop` branch. Keep `main` as the Production branch.
 
+### Vercel settings
+
+Set the **Build Command** in the Vercel dashboard per project:
+
+| Project | Build Command | Env file |
+|---------|---------------|----------|
+| Dev (`develop`) | `npm run build:dev` | `.env.dev` |
+| Prod (`main`) | `npm run build:prod` | `.env.prod` |
+
+| Setting | Value |
+|---------|--------|
+| Install Command | `npm install` |
+| Output Directory | `dist` |
+| Development Command | `npm run dev` |
+
+**Vercel env vars** (Project Settings → Environment Variables) for `/api/contact` and `/api/reviews`:
+
+| Variable | Preview / develop | Production |
+|----------|-------------------|------------|
+| `BACKEND_API_URL` | `https://dev-api.hotelyuvaan.com` | `https://api.hotelyuvaan.com` |
+| `API_VERSION_PATH` | `/api/v1.0.0` | `/api/v1.0.0` |
+
 ## Installation
 
 1. Clone the repository:
@@ -42,16 +64,16 @@ Push to `develop` for dev deployments. Merge `develop` → `main` when ready for
     ```
 3. Install dependencies:
     ```bash
-    [Add installation command, e.g., npm install]
+    npm install
     ```
 
 ## Usage
 
 1. Start the development server:
     ```bash
-    [Add command to start the server, e.g., npm start]
+    npm run dev
     ```
-2. Open your browser and visit `http://localhost:3000`.
+2. Open your browser and visit `http://localhost:5173`.
 
 ## Contributing
 
