@@ -7,8 +7,11 @@ import {
   PhoneCall,
   ChevronRight,
 } from "lucide-react";
+import { useAppConfig } from "@/hooks/useAppConfig";
 
 const AboutSection = () => {
+  const { data: contact } = useAppConfig();
+
   return (
     <section
       id="about"
@@ -111,19 +114,26 @@ const AboutSection = () => {
                 <span className="bg-white/20 text-white p-2 rounded-full flex items-center justify-center">
                   <PhoneCall size={18} strokeWidth={2} />
                 </span>
-                <span className="text-sm text-white font-semibold">
-                  +91 87695675067
-                </span>
+                {contact?.phoneHref ? (
+                  <a
+                    href={contact.phoneHref}
+                    className="text-sm text-white font-semibold"
+                  >
+                    {contact.contactPhone}
+                  </a>
+                ) : (
+                  <span className="text-sm text-white font-semibold">
+                    {contact?.contactPhone}
+                  </span>
+                )}
                 <ChevronRight className="w-4 h-4 text-white transition-transform group-hover:translate-x-1" />
               </div>
 
               <div
-                className="flex items-center gap-3 px-4 py-3 bg-muted rounded-lg border border-gold-300/30 w-fit animate-fade-in-up group hover:bg-gold-500/10 hover:border-gold-400/50 transition-all"
+                className="flex items-center gap-3 px-4 py-3 bg-muted rounded-lg border border-gold-300/30 w-fit animate-fade-in-up group hover:bg-gold-500/10 hover:border-gold-400/50 transition-all cursor-pointer"
                 onClick={() =>
-                  window.open(
-                    "https://maps.app.goo.gl/ahJTic7MDcnBXHjy8",
-                    "_blank"
-                  )
+                  contact?.mapsLinkUrl &&
+                  window.open(contact.mapsLinkUrl, "_blank")
                 }
               >
                 <MapPin className="w-5 h-5 text-gold-500" />
