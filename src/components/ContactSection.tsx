@@ -1,42 +1,42 @@
 import React, { useState } from "react";
-import { MapPin, Phone, Mail, Clock, Star } from "lucide-react";
+import { MapPin, Phone, Mail } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import emailjs from "@emailjs/browser";
-import { useRef } from "react";
 import { FaArrowRightToBracket, FaArrowRotateRight } from "react-icons/fa6";
+import { submitReview } from "@/services/reviewService";
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    rating: 5,
     review: "",
   });
   const { toast } = useToast();
-  const formRef = useRef<HTMLFormElement>(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formRef.current) return;
     setLoading(true);
     try {
-      await emailjs.sendForm(
-        "service_vy6wrib",
-        "template_5v0708o",
-        formRef.current,
-        "W3jCYsRbFbajqTNUz"
-      );
+      const result = await submitReview({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        review: formData.review.trim(),
+      });
       toast({
         title: "Thank you for your review!",
-        description: "Your feedback has been sent successfully.",
+        description:
+          result.message ??
+          "We have received your message and will connect with you shortly.",
       });
-      setFormData({ name: "", email: "", rating: 5, review: "" });
+      setFormData({ name: "", email: "", review: "" });
     } catch (error) {
       toast({
         title: "Error",
         description:
-          "There was a problem sending your review. Please try again later.",
+          error instanceof Error
+            ? error.message
+            : "There was a problem sending your review. Please try again later.",
+        variant: "destructive",
       });
     } finally {
       setLoading(false);
@@ -139,7 +139,7 @@ const ContactSection = () => {
                 Leave a Review
               </h3>
 
-              <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label
                     htmlFor="name"
@@ -197,7 +197,6 @@ const ContactSection = () => {
                   />
                 </div>
 
-                <input type="hidden" name="rating" value={formData.rating} />
                 <div className="flex flex-col md:flex-row justify-between gap-4">
                   <button
                     type="reset"
@@ -207,7 +206,6 @@ const ContactSection = () => {
                       setFormData({
                         name: "",
                         email: "",
-                        rating: 5,
                         review: "",
                       })
                     }
