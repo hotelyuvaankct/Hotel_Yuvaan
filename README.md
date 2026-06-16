@@ -32,18 +32,14 @@ Push to `develop` for dev deployments. Merge `develop` → `main` when ready for
 
 ### Vercel settings
 
-Set the **Build Command** in the Vercel dashboard per project:
+Set build commands in the **Vercel dashboard** per project (not in `vercel.json`):
 
-| Project | Build Command | Env file |
-|---------|---------------|----------|
-| Dev (`develop`) | `npm run build:dev` | `.env.dev` |
-| Prod (`main`) | `npm run build:prod` | `.env.prod` |
+| Project | Build Command override |
+|---------|------------------------|
+| Dev | `npm run build:dev` |
+| Prod | `npm run build:prod` |
 
-| Setting | Value |
-|---------|--------|
-| Install Command | `npm install` |
-| Output Directory | `dist` |
-| Development Command | `npm run dev` |
+If the log still shows `build:prod` after saving, expand **Production Overrides** on the same page and set Build Command to `npm run build:dev` there too, then redeploy.
 
 **Vercel env vars** (Project Settings → Environment Variables) for `/api/contact` and `/api/reviews`:
 

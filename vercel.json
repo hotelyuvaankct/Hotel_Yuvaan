@@ -1,8 +1,5 @@
 {
   "framework": "vite",
-  "installCommand": "npm install",
-  "buildCommand": "npm run build:prod",
-  "devCommand": "npm run dev",
   "outputDirectory": "dist",
   "headers": [
     {
