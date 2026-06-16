@@ -7,7 +7,7 @@ Welcome to the official repository of **Hotel Yuvaan**.
 Hotel Yuvaan is a modern and user-friendly website designed to provide seamless booking experiences and showcase the amenities of the hotel.
 
 ## Features
-
+ 
 - Online room booking system
 - Photo gallery of the hotel
 - Information about services and amenities
@@ -18,6 +18,35 @@ Hotel Yuvaan is a modern and user-friendly website designed to provide seamless 
 - HTML5, CSS3, JavaScript
 - Backend: [Specify your backend technology, e.g., Node.js, Django]
 - Database: [Specify your database, e.g., MySQL, MongoDB]
+
+## Deployment branches
+
+| Branch    | Environment | API config   | Domain (Vercel)        |
+|-----------|-------------|--------------|------------------------|
+| `main`    | Production  | `.env.prod`  | `hotelyuvaan.com`      |
+| `develop` | Development | `.env.dev`   | `dev.hotelyuvaan.com`  |
+
+Push to `develop` for dev deployments. Merge `develop` → `main` when ready for production.
+
+**Vercel setup:** In Project Settings → Domains, assign `dev.hotelyuvaan.com` to the `develop` branch. Keep `main` as the Production branch.
+
+### Vercel settings
+
+Set build commands in the **Vercel dashboard** per project (not in `vercel.json`):
+
+| Project | Build Command override |
+|---------|------------------------|
+| Dev | `npm run build:dev` |
+| Prod | `npm run build:prod` |
+
+If the log still shows `build:prod` after saving, expand **Production Overrides** on the same page and set Build Command to `npm run build:dev` there too, then redeploy.
+
+**Vercel env vars** (Project Settings → Environment Variables) for `/api/contact` and `/api/reviews`:
+
+| Variable | Preview / develop | Production |
+|----------|-------------------|------------|
+| `BACKEND_API_URL` | `https://dev-api.hotelyuvaan.com` | `https://api.hotelyuvaan.com` |
+| `API_VERSION_PATH` | `/api/v1.0.0` | `/api/v1.0.0` |
 
 ## Installation
 
@@ -31,16 +60,16 @@ Hotel Yuvaan is a modern and user-friendly website designed to provide seamless 
     ```
 3. Install dependencies:
     ```bash
-    [Add installation command, e.g., npm install]
+    npm install
     ```
 
 ## Usage
 
 1. Start the development server:
     ```bash
-    [Add command to start the server, e.g., npm start]
+    npm run dev
     ```
-2. Open your browser and visit `http://localhost:3000`.
+2. Open your browser and visit `http://localhost:5173`.
 
 ## Contributing
 
