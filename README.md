@@ -19,6 +19,17 @@ Hotel Yuvaan is a modern and user-friendly website designed to provide seamless 
 - Backend: [Specify your backend technology, e.g., Node.js, Django]
 - Database: [Specify your database, e.g., MySQL, MongoDB]
 
+## Deployment branches
+
+| Branch    | Environment | API config   | Domain (Vercel)        |
+|-----------|-------------|--------------|------------------------|
+| `main`    | Production  | `.env.prod`  | `hotelyuvaan.com`      |
+| `develop` | Development | `.env.dev`   | `dev.hotelyuvaan.com`  |
+
+Push to `develop` for dev deployments. Merge `develop` → `main` when ready for production.
+
+**Vercel setup:** In Project Settings → Domains, assign `dev.hotelyuvaan.com` to the `develop` branch. Keep `main` as the Production branch.
+
 ## Installation
 
 1. Clone the repository:
