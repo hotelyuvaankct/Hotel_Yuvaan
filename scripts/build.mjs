@@ -15,3 +15,4 @@ console.log(
 );
 
 execSync(`vite build --mode ${mode}`, { stdio: "inherit" });
+
