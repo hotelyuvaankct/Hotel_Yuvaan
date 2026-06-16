@@ -2,13 +2,15 @@ import React, { useState } from "react";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { FaArrowRightToBracket, FaArrowRotateRight } from "react-icons/fa6";
-import { submitReview } from "@/services/reviewService";
+import { submitContact } from "@/services/contactService";
+import { useAppConfig } from "@/hooks/useAppConfig";
 
 const ContactSection = () => {
+  const { data: contact, isLoading } = useAppConfig();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    review: "",
+    message: "",
   });
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -17,25 +19,25 @@ const ContactSection = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const result = await submitReview({
+      const result = await submitContact({
         name: formData.name.trim(),
         email: formData.email.trim(),
-        review: formData.review.trim(),
+        message: formData.message.trim(),
       });
       toast({
-        title: "Thank you for your review!",
+        title: "Thank you for contacting us!",
         description:
           result.message ??
           "We have received your message and will connect with you shortly.",
       });
-      setFormData({ name: "", email: "", review: "" });
+      setFormData({ name: "", email: "", message: "" });
     } catch (error) {
       toast({
         title: "Error",
         description:
           error instanceof Error
             ? error.message
-            : "There was a problem sending your review. Please try again later.",
+            : "There was a problem sending your message. Please try again later.",
         variant: "destructive",
       });
     } finally {
@@ -55,7 +57,6 @@ const ContactSection = () => {
   return (
     <section id="contact" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
-        {/* Header */}
         <div className="text-center mb-16 animate-on-scroll">
           <p className="text-primary text-sm tracking-[0.2em] uppercase mb-4">
             GET IN TOUCH
@@ -70,7 +71,6 @@ const ContactSection = () => {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-12 items-stretch">
-          {/* Contact Information */}
           <div className="flex-1 animate-on-scroll-left flex flex-col justify-between">
             <div>
               <h3 className="text-2xl font-bold font-playfair mb-8">
@@ -85,8 +85,12 @@ const ContactSection = () => {
                   <div>
                     <h4 className="font-semibold mb-1">Address</h4>
                     <p className="text-muted-foreground">
-                      4VQ4+R9V, Station Rd,
-                      <br /> Kuchaman City, Rajasthan 341508
+                      {isLoading ? "Loading..." : (
+                        <>
+                          {contact?.addressLine1}
+                          <br /> {contact?.addressLine2}
+                        </>
+                      )}
                     </p>
                   </div>
                 </div>
@@ -98,7 +102,16 @@ const ContactSection = () => {
                   <div>
                     <h4 className="font-semibold mb-1">Phone</h4>
                     <p className="text-muted-foreground">
-                      Reception : +91 87695675067
+                      {!isLoading && contact?.phoneHref ? (
+                        <a
+                          href={contact.phoneHref}
+                          className="hover:text-primary transition-colors"
+                        >
+                          {contact.phoneDisplay}
+                        </a>
+                      ) : (
+                        contact?.phoneDisplay ?? "Loading..."
+                      )}
                     </p>
                   </div>
                 </div>
@@ -110,41 +123,47 @@ const ContactSection = () => {
                   <div>
                     <h4 className="font-semibold mb-1">Email</h4>
                     <p className="text-muted-foreground">
-                      hotelyuvaankct@gmail.com
+                      {!isLoading && contact?.emailHref ? (
+                        <a
+                          href={contact.emailHref}
+                          className="hover:text-primary transition-colors"
+                        >
+                          {contact.supportEmail}
+                        </a>
+                      ) : (
+                        contact?.supportEmail ?? "Loading..."
+                      )}
                     </p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Map Placeholder */}
-            <div className="bg-muted rounded-2xl overflow-hidden h-72 md:h-80 flex items-center justify-center mt-auto">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d221.90814049455088!2d74.85594625750201!3d27.139602085838558!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396b7900248144b5%3A0x510e857c14fc625c!2sHotel%20yuvaan%20and%20restaurant!5e0!3m2!1sen!2sin!4v1752412252235!5m2!1sen!2sin"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen={true}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Hotel Yuvaan Location"
-              ></iframe>
-            </div>
+            {contact?.mapsEmbedUrl && (
+              <div className="bg-muted rounded-2xl overflow-hidden h-72 md:h-80 flex items-center justify-center mt-auto">
+                <iframe
+                  src={contact.mapsEmbedUrl}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen={true}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Hotel Yuvaan Location"
+                ></iframe>
+              </div>
+            )}
           </div>
 
-          {/* Review Form */}
           <div className="flex-1 animate-on-scroll-right flex items-center">
             <div className="bg-card rounded-2xl p-8 shadow-lg w-full">
               <h3 className="text-2xl font-bold font-playfair mb-6">
-                Leave a Review
+                Send Us a Message
               </h3>
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-semibold mb-2"
-                  >
+                  <label htmlFor="name" className="block text-sm font-semibold mb-2">
                     Your Name
                   </label>
                   <input
@@ -160,10 +179,7 @@ const ContactSection = () => {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-semibold mb-2"
-                  >
+                  <label htmlFor="email" className="block text-sm font-semibold mb-2">
                     Email Address
                   </label>
                   <input
@@ -179,21 +195,19 @@ const ContactSection = () => {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="review"
-                    className="block text-sm font-semibold mb-2"
-                  >
-                    Your Review
+                  <label htmlFor="message" className="block text-sm font-semibold mb-2">
+                    Your Message
                   </label>
                   <textarea
-                    id="review"
-                    name="review"
-                    value={formData.review}
+                    id="message"
+                    name="message"
+                    value={formData.message}
                     onChange={handleInputChange}
                     required
                     rows={4}
+                    minLength={10}
                     className="w-full px-4 py-3 rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors duration-300 resize-none"
-                    placeholder="Share your experience with us..."
+                    placeholder="How can we help you?"
                   />
                 </div>
 
@@ -203,11 +217,7 @@ const ContactSection = () => {
                     disabled={loading}
                     className="w-full md:w-1/2 bg-secondary text-secondary-foreground py-3 rounded-lg font-semibold transition-colors duration-300 border border-secondary hover:bg-secondary/80 hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary disabled:opacity-60 disabled:cursor-not-allowed shadow-sm mb-2 md:mb-0"
                     onClick={() =>
-                      setFormData({
-                        name: "",
-                        email: "",
-                        review: "",
-                      })
+                      setFormData({ name: "", email: "", message: "" })
                     }
                   >
                     <div className="flex items-center justify-center space-x-2">
@@ -220,33 +230,12 @@ const ContactSection = () => {
                     className="w-full md:w-1/2 bg-primary text-primary-foreground py-3 rounded-lg font-semibold transition-colors duration-300 border border-primary hover:bg-primary/90 hover:border-secondary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary disabled:opacity-60 disabled:cursor-not-allowed shadow-sm flex items-center justify-center"
                     disabled={loading}
                   >
-                    {loading ? (
-                      <svg
-                        className="animate-spin h-5 w-5 mr-2 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8v8z"
-                        ></path>
-                      </svg>
-                    ) : (
-                      <div className="p-2">
+                    {loading ? "Sending..." : "Submit Message"}
+                    {!loading && (
+                      <div className="p-2 ml-1">
                         <FaArrowRightToBracket size={20} />
                       </div>
                     )}
-                    {loading ? "Sending..." : "Submit Review"}
                   </button>
                 </div>
               </form>

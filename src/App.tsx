@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Gallery from "./pages/Gallery";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
+import FloatingReviewWidget from "./components/FloatingReviewWidget";
 import { Analytics } from "@vercel/analytics/react"
 const queryClient = new QueryClient();
 
@@ -18,6 +19,7 @@ const App = () => (
        <Analytics />
       <BrowserRouter>
         <ScrollToTop />
+        <FloatingReviewWidget />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/gallery" element={<Gallery />} />

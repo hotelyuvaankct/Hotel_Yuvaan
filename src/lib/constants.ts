@@ -1,10 +1,15 @@
-import { BACKEND_API_URL, API_VERSION_PATH } from "../../constants/api.js";
+import { apiUrl, env, getBackendBaseUrl } from "@/config/env";
 
-
-export function getBackendBaseUrl(): string {
-  return BACKEND_API_URL.replace(/\/$/, "");
-}
+export { apiUrl, env, getBackendBaseUrl };
 
 export function getReviewsApiUrl(): string {
-  return `${getBackendBaseUrl()}${API_VERSION_PATH}/reviews`;
+  return apiUrl("/reviews");
+}
+
+export function getContactApiUrl(): string {
+  return apiUrl("/contact");
+}
+
+export function getConfigApiUrl(): string {
+  return apiUrl("/config");
 }

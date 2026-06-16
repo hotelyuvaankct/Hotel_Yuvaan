@@ -1,3 +1,2 @@
-export const BACKEND_API_URL = "https://api.hotelyuvaan.com";
-// export const BACKEND_API_URL = "http://localhost:8080";
-export const API_VERSION_PATH = "/api/v1.0.0";
+export const BACKEND_API_URL = process.env.BACKEND_API_URL;
+export const API_VERSION_PATH = process.env.API_VERSION_PATH;

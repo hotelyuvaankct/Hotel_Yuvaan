@@ -1,20 +1,20 @@
-import { getReviewsApiUrl } from "@/lib/constants";
+import { getContactApiUrl } from "@/lib/constants";
 
-export interface SubmitReviewPayload {
-  rating: number;
-  review?: string;
+export interface SubmitContactPayload {
+  name: string;
+  email: string;
+  message: string;
 }
 
 export interface ApiResponse {
   success: boolean;
   message?: string;
-  code?: number;
 }
 
-export async function submitReview(
-  payload: SubmitReviewPayload
+export async function submitContact(
+  payload: SubmitContactPayload
 ): Promise<ApiResponse> {
-  const response = await fetch(getReviewsApiUrl(), {
+  const response = await fetch(getContactApiUrl(), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -26,7 +26,7 @@ export async function submitReview(
   }));
 
   if (!response.ok) {
-    throw new Error(data.message ?? "Failed to submit review");
+    throw new Error(data.message ?? "Failed to submit contact form");
   }
 
   return data;
