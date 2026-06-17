@@ -7,17 +7,15 @@ import {
   Sun,
   Moon,
   Instagram,
-  Home,
   User,
   Bed,
   Utensils,
   Wifi,
-  Calendar,
   Image,
   Phone,
 } from "lucide-react";
 import bannerData from "../data/banner.json";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Navigation = () => {
   const location = useLocation();
@@ -94,22 +92,20 @@ const Navigation = () => {
   };
 
   const navItems = [
-    // { name: "Home", href: "/#home", icon: <Home className="w-5 h-5" /> },
-    { name: "About", href: "/#about", icon: <User className="w-5 h-5" /> },
-    { name: "Rooms", href: "/#rooms", icon: <Bed className="w-5 h-5" /> },
+    { name: "About", to: "/#about", icon: <User className="w-5 h-5" /> },
+    { name: "Rooms", to: "/#rooms", icon: <Bed className="w-5 h-5" /> },
     {
       name: "Restaurant",
-      href: "/#restaurant",
+      to: "/#restaurant",
       icon: <Utensils className="w-5 h-5" />,
     },
     {
       name: "Facilities",
-      href: "/#facilities",
+      to: "/#facilities",
       icon: <Wifi className="w-5 h-5" />,
     },
-    // { name: "Events", href: "/#events", icon: <Calendar className="w-5 h-5" /> },
-    { name: "Gallery", href: "/gallery", icon: <Image className="w-5 h-5" /> },
-    { name: "Contact", href: "/#contact", icon: <Phone className="w-5 h-5" /> },
+    { name: "Gallery", to: "/gallery", icon: <Image className="w-5 h-5" /> },
+    { name: "Contact", to: "/#contact", icon: <Phone className="w-5 h-5" /> },
   ];
 
   return (
@@ -141,7 +137,7 @@ const Navigation = () => {
         <div className="flex justify-between items-center py-4 md:py-4 sm:py-6 min-h-[64px] md:min-h-[72px] lg:min-h-[80px]">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <a href="/#home" className="cursor-pointer">
+            <Link to="/" className="cursor-pointer">
               <h1
                 className={`text-xl xs:text-2xl md:text-3xl font-bold font-playfair transition-all duration-500 ${
                   solidNav ? "text-foreground" : "text-white"
@@ -156,21 +152,21 @@ const Navigation = () => {
               >
                 LUXURY EXPERIENCE
               </p>
-            </a>
+            </Link>
           </div>
 
           {/* Desktop Menu */}
           <div className="hidden lg:flex items-center space-x-6 xl:space-x-8">
             {navItems.map((item) => (
-              <a
+              <Link
                 key={item.name}
-                href={item.href}
+                to={item.to}
                 className={`font-medium transition-all duration-300 hover:text-primary hover:scale-105 ${
                   solidNav ? "text-foreground" : "text-white"
                 }`}
               >
                 {item.name}
-              </a>
+              </Link>
             ))}
             {/* <button
               onClick={toggleTheme}
@@ -272,16 +268,16 @@ const Navigation = () => {
             >
               <div className="grid grid-cols-4 gap-1 p-2">
                 {navItems.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
-                    href={item.href}
+                    to={item.to}
                     className="flex flex-col items-center justify-center p-3 text-primary hover:text-white transition-colors duration-300 rounded-lg hover:bg-primary/20"
                     onClick={() => setIsMenuOpen(false)}
                     title={item.name}
                   >
                     {item.icon}
                     <span className="text-xs mt-1">{item.name}</span>
-                  </a>
+                  </Link>
                 ))}
               </div>
               <div className="border-t border-border/50 p-2">

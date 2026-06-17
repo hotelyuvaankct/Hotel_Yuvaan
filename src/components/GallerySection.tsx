@@ -1,24 +1,24 @@
-import React, { useState } from "react";
-import { X } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { X, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import galleryData from "../data/gallery.json";
+import { useQuery } from "@tanstack/react-query";
 import GalleryCard from "./GalleryCard";
-
-const getImageUrl = (path: string) => {
-  const base = import.meta.env.BASE_URL || "/";
-  return base.endsWith("/") ? `${base}${path}` : `${base}/${path}`;
-};
+import { fetchGalleryPreview } from "@/services/galleryService";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const GallerySection = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  // Take only the first 6 images for the home page preview
-  const homeImages = galleryData.slice(0, 6);
+  const { data: homeImages = [], isLoading, isError } = useQuery({
+    queryKey: ["gallery-preview"],
+    queryFn: () => fetchGalleryPreview(6),
+  });
+
+  useScrollAnimation([homeImages.length, isLoading]);
 
   return (
     <section id="gallery" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
-        {/* Header */}
         <div className="text-center mb-16 animate-on-scroll">
           <p className="text-primary text-sm tracking-[0.2em] uppercase mb-4">
             VISUAL EXPERIENCE
@@ -32,38 +32,38 @@ const GallerySection = () => {
           </p>
         </div>
 
-        {/* Gallery Categories */}
-        {/* <div className="mb-12 animate-on-scroll">
-          <div className="flex flex-wrap justify-center gap-4">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveCategory(category)}
-                className={`px-6 py-2 rounded-full border transition-all duration-300 ${
-                  activeCategory === category
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                }`}
-              >
-                {category}
-              </button>
+        {isLoading && (
+          <div className="flex justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        )}
+
+        {isError && (
+          <p className="text-center text-muted-foreground py-8">
+            Gallery images will appear here soon.
+          </p>
+        )}
+
+        {!isLoading && !isError && homeImages.length === 0 && (
+          <p className="text-center text-muted-foreground py-8">
+            New gallery photos are being added. Check back soon.
+          </p>
+        )}
+
+        {!isLoading && homeImages.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {homeImages.map((image, index) => (
+              <GalleryCard
+                key={image.id}
+                imageUrl={image.publicUrl}
+                alt={image.title}
+                category={image.category}
+                index={index}
+                onClick={() => setSelectedImage(image.publicUrl)}
+              />
             ))}
           </div>
-        </div> */}
-
-        {/* Gallery Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {homeImages.map((image, index) => (
-            <GalleryCard
-              key={image.id}
-              imageUrl={getImageUrl(image.src)}
-              alt={image.alt}
-              category={image.category}
-              index={index}
-              onClick={() => setSelectedImage(getImageUrl(image.src))}
-            />
-          ))}
-        </div>
+        )}
 
         <div className="mt-12 text-center animate-on-scroll">
           <Link
@@ -75,13 +75,15 @@ const GallerySection = () => {
         </div>
       </div>
 
-      {/* Lightbox Modal */}
       {selectedImage && (
         <div
           className="fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4"
           onClick={() => setSelectedImage(null)}
         >
-          <div className="relative max-w-4xl max-h-full" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="relative max-w-4xl max-h-full"
+            onClick={(e) => e.stopPropagation()}
+          >
             <img
               src={selectedImage}
               alt="Gallery Image"
