@@ -28,6 +28,14 @@ Hotel Yuvaan is a modern and user-friendly website designed to provide seamless 
 
 Push to `develop` for dev deployments. Merge `develop` → `main` when ready for production.
 
+### Local scripts
+
+| Environment | Env file     | Dev server        | Build              |
+|-------------|--------------|-------------------|--------------------|
+| Dev (remote)| `.env.dev`   | `npm run dev`     | `npm run build:dev`|
+| Local       | `.env.local` | `npm run dev:local`| `npm run build:local`|
+| Production  | `.env.prod`  | `npm run dev:prod`| `npm run build:prod`|
+
 **Vercel setup:** In Project Settings → Domains, assign `dev.hotelyuvaan.com` to the `develop` branch. Keep `main` as the Production branch.
 
 ### Vercel settings
@@ -67,7 +75,9 @@ If the log still shows `build:prod` after saving, expand **Production Overrides*
 
 1. Start the development server:
     ```bash
-    npm run dev
+    npm run dev          # remote dev API (.env.dev)
+    npm run dev:local    # local backend at localhost:8080 (.env.local)
+    npm run dev:prod     # production API (.env.prod)
     ```
 2. Open your browser and visit `http://localhost:5173`.
 
