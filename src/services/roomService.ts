@@ -54,6 +54,7 @@ export function buildBookUrl(params: {
   adults: number;
   children: number;
   rooms: number;
+  roomGuests?: { adults: number; children: number }[];
   promo?: string;
 }): string {
   const search = new URLSearchParams({
@@ -63,6 +64,12 @@ export function buildBookUrl(params: {
     children: String(params.children),
     rooms: String(params.rooms),
   });
+  if (params.roomGuests?.length) {
+    search.set(
+      "roomGuests",
+      params.roomGuests.map((r) => `${r.adults}-${r.children}`).join(",")
+    );
+  }
   if (params.promo?.trim()) {
     search.set("promo", params.promo.trim());
   }
