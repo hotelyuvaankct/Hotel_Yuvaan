@@ -11,6 +11,7 @@ import {
   Bed,
   Utensils,
   Wifi,
+  Tag,
   Image,
   Phone,
 } from "lucide-react";
@@ -105,6 +106,7 @@ const Navigation = () => {
       icon: <Wifi className="w-5 h-5" />,
     },
     { name: "Gallery", to: "/gallery", icon: <Image className="w-5 h-5" /> },
+    { name: "Offers", to: "/coupons", icon: <Tag className="w-5 h-5" /> },
     { name: "Contact", to: "/#contact", icon: <Phone className="w-5 h-5" /> },
   ];
 

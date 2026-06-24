@@ -209,7 +209,6 @@ const BookingSearchBar: React.FC = () => {
   const [guestRooms, setGuestRooms] = useState<RoomGuests[]>([
     { adults: 2, children: 0 },
   ]);
-  const [promo, setPromo] = useState("");
   const [guestModalOpen, setGuestModalOpen] = useState(false);
   const [checkInOpen, setCheckInOpen] = useState(false);
   const [checkOutOpen, setCheckOutOpen] = useState(false);
@@ -222,12 +221,10 @@ const BookingSearchBar: React.FC = () => {
   useEffect(() => {
     const urlCheckIn = searchParams.get("checkIn");
     const urlCheckOut = searchParams.get("checkOut");
-    const urlPromo = searchParams.get("promo");
     const urlRoomGuests = decodeRoomGuests(searchParams.get("roomGuests"));
 
     if (urlCheckIn) setCheckIn(urlCheckIn);
     if (urlCheckOut) setCheckOut(urlCheckOut);
-    if (urlPromo) setPromo(urlPromo);
     if (urlRoomGuests) setGuestRooms(urlRoomGuests);
   }, [searchParams]);
 
@@ -253,6 +250,7 @@ const BookingSearchBar: React.FC = () => {
   };
 
   const handleSearch = () => {
+    const promo = searchParams.get("promo")?.trim() || undefined;
     navigate(
       buildBookUrl({
         checkIn,
@@ -324,16 +322,6 @@ const BookingSearchBar: React.FC = () => {
               <p className="text-sm text-[#4b3621] font-medium">{guestSummary}</p>
             </div>
           </button>
-
-          <div className="flex items-center px-5 py-4 border-b lg:border-b-0 lg:border-r border-[#e8dfd0] flex-1 min-w-[140px]">
-            <input
-              type="text"
-              value={promo}
-              onChange={(e) => setPromo(e.target.value)}
-              placeholder="Promo code"
-              className="w-full text-sm text-[#4b3621] placeholder:text-[#b5a48a] outline-none bg-transparent"
-            />
-          </div>
 
           <button
             type="button"
