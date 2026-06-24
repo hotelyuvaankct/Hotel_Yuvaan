@@ -76,6 +76,9 @@ export interface BookingQuote {
   children?: number;
   rooms?: number;
   subtotalAmount?: number;
+  discountAmount?: number;
+  couponCode?: string;
+  couponTitle?: string;
   taxAmount?: number;
   totalAmount?: number;
   roomLines?: BookingRoomLine[];
@@ -100,6 +103,7 @@ export interface CheckoutPayload {
   guestEmail: string;
   guestPhone: string;
   notes?: string;
+  couponCode?: string;
 }
 
 export interface BookingResult {
@@ -120,6 +124,8 @@ export interface BookingResult {
   subtotalAmount: number;
   taxAmount: number;
   totalAmount: number;
+  discountAmount?: number;
+  couponCode?: string;
   rooms?: BookingRoomLine[];
   cancellationReason?: string;
   receiptDownloadUrl?: string;
@@ -221,9 +227,11 @@ export async function fetchPublicBooking(accessToken: string): Promise<BookingRe
   return parseResponse<BookingResult>(response);
 }
 
-export async function requestCancelOtp(accessToken: string): Promise<void> {
+export async function requestCancelOtp(accessToken: string, email: string): Promise<void> {
   const response = await fetch(apiUrl(`/public/bookings/${accessToken}/cancel/request-otp`), {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: email.trim() }),
   });
   await parseResponse<null>(response);
 }

@@ -31,6 +31,7 @@ const BookingView = () => {
   const [otpCode, setOtpCode] = useState("");
   const [cancelReason, setCancelReason] = useState("");
   const [otpSent, setOtpSent] = useState(false);
+  const [emailError, setEmailError] = useState<string | null>(null);
 
   const bookingQuery = useQuery({
     queryKey: ["publicBooking", token],
@@ -39,12 +40,16 @@ const BookingView = () => {
   });
 
   const otpMutation = useMutation({
-    mutationFn: () => requestCancelOtp(token!),
+    mutationFn: () => requestCancelOtp(token!, cancelEmail.trim()),
     onSuccess: () => {
       setOtpSent(true);
+      setEmailError(null);
       toast.success("OTP sent to your booking email");
     },
-    onError: (error: Error) => toast.error(error.message),
+    onError: (error: Error) => {
+      setOtpSent(false);
+      setEmailError(error.message);
+    },
   });
 
   const cancelMutation = useMutation({
@@ -58,7 +63,12 @@ const BookingView = () => {
       toast.success("Booking cancelled successfully");
       bookingQuery.refetch();
     },
-    onError: (error: Error) => toast.error(error.message),
+    onError: (error: Error) => {
+      if (error.message.toLowerCase().includes("email")) {
+        setEmailError(error.message);
+      }
+      toast.error(error.message);
+    },
   });
 
   const booking = bookingQuery.data;
@@ -173,6 +183,11 @@ const BookingView = () => {
                 <p className="text-sm text-neutral-600 mb-4">
                   We will send a one-time code to the email you used when booking. Enter it below
                   to confirm cancellation.
+                  {booking.guestEmail ? (
+                    <span className="block mt-1 text-neutral-500">
+                      Booking email on file: {booking.guestEmail}
+                    </span>
+                  ) : null}
                 </p>
                 <div className="space-y-4">
                   <div>
@@ -181,17 +196,31 @@ const BookingView = () => {
                       id="cancelEmail"
                       type="email"
                       value={cancelEmail}
-                      onChange={(e) => setCancelEmail(e.target.value)}
+                      onChange={(e) => {
+                        setCancelEmail(e.target.value);
+                        setEmailError(null);
+                        setOtpSent(false);
+                        setOtpCode("");
+                      }}
                       className="rounded-none"
                     />
+                    {emailError ? (
+                      <p className="text-sm text-destructive mt-1">{emailError}</p>
+                    ) : null}
                   </div>
                   {!otpSent ? (
                     <Button
                       type="button"
                       variant="outline"
                       className="rounded-none"
-                      onClick={() => otpMutation.mutate()}
-                      disabled={!cancelEmail || otpMutation.isPending}
+                      onClick={() => {
+                        if (!cancelEmail.trim() || !cancelEmail.includes("@")) {
+                          setEmailError("Enter the email address used when booking");
+                          return;
+                        }
+                        otpMutation.mutate();
+                      }}
+                      disabled={!cancelEmail.trim() || otpMutation.isPending}
                     >
                       {otpMutation.isPending ? "Sending…" : "Send OTP"}
                     </Button>

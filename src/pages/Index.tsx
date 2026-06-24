@@ -9,6 +9,7 @@ import FacilitiesSection from '../components/FacilitiesSection';
 import TestimonialsSection from '../components/TestimonialsSection';
 import EventsSection from '../components/EventsSection';
 import GallerySection from '../components/GallerySection';
+import CouponsSection from '../components/CouponsSection';
 import ContactSection from '../components/ContactSection';
 import Footer from '../components/Footer';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
@@ -27,6 +28,7 @@ const Index = () => {
       {/* <TestimonialsSection /> */}
       {/* <EventsSection /> */}
       <GallerySection />
+      <CouponsSection />
       <ContactSection />
       <Footer />
     </div>
