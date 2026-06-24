@@ -11,9 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
-!.env.local
 
-# Personal env overrides (committed: .env.dev, .env.prod, .env.local)
+# Personal env overrides (committed: .env.dev, .env.prod, .env.localhost)
 .env
 .env.*.local
 

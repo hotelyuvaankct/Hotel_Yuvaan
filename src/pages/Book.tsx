@@ -8,23 +8,18 @@ import Footer from "@/components/Footer";
 import BookingSearchBar from "@/components/BookingSearchBar";
 import BookingSidebar, { type CartItem } from "@/components/booking/BookingSidebar";
 import CapacityWarningModal from "@/components/booking/CapacityWarningModal";
-import GuestCheckoutForm, {
-  type GuestFormData,
-} from "@/components/booking/GuestCheckoutForm";
 import {
-  checkoutBooking,
   computeGuestCapacity,
   decodeRoomGuests,
   fetchBookingConfig,
   fetchRatePlans,
-  quoteCheckout,
   resolveDefaultHotelId,
   searchAvailabilityWithRooms,
   type AvailableRoomType,
   type BookingConfig,
-  type BookingQuote,
   type RatePlan,
 } from "@/services/bookingService";
+import { bookingSession } from "@/lib/bookingSessionManager";
 import { buildBookUrl, formatRoomPrice, normalizeStorageUrl } from "@/services/roomService";
 import { toast } from "sonner";
 
@@ -44,15 +39,16 @@ const Book = () => {
     }));
   const totalGuests = adults + children;
   const hasSearch = Boolean(checkIn && checkOut);
+  const roomGuestsKey = JSON.stringify(roomGuests);
+
+  const promoFromUrl = searchParams.get("promo")?.trim().toUpperCase() ?? "";
 
   const [hotelId, setHotelId] = useState<number | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [ratePlansByRoom, setRatePlansByRoom] = useState<Record<number, RatePlan[]>>({});
   const [loadingRates, setLoadingRates] = useState(false);
-  const [quote, setQuote] = useState<BookingQuote | null>(null);
   const [capacityModalOpen, setCapacityModalOpen] = useState(false);
-  const [guestFormOpen, setGuestFormOpen] = useState(false);
-  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [cartRestored, setCartRestored] = useState(false);
 
   useEffect(() => {
     if (!checkIn || !checkOut) {
@@ -65,17 +61,36 @@ const Book = () => {
           children: 0,
           rooms: 1,
           roomGuests: [{ adults: 2, children: 0 }],
+          promo: promoFromUrl || undefined,
         }),
         { replace: true }
       );
     }
-  }, [checkIn, checkOut, navigate]);
+  }, [checkIn, checkOut, navigate, promoFromUrl]);
 
   useEffect(() => {
     resolveDefaultHotelId()
       .then(setHotelId)
       .catch((error: Error) => toast.error(error.message));
   }, []);
+
+  useEffect(() => {
+    if (!hasSearch || cartRestored) return;
+
+    const session = bookingSession.load();
+    const matchesStay = bookingSession.matchesStay({
+      checkIn,
+      checkOut,
+      adults,
+      children,
+      roomGuestsKey,
+    });
+
+    if (session && matchesStay && session.cart.length > 0) {
+      setCart(session.cart);
+    }
+    setCartRestored(true);
+  }, [hasSearch, checkIn, checkOut, adults, children, roomGuestsKey, cartRestored]);
 
   const configQuery = useQuery({
     queryKey: ["bookingConfig"],
@@ -136,6 +151,20 @@ const Book = () => {
     };
   }, [availabilityQuery.data, checkIn, checkOut, hasSearch]);
 
+  const persistCart = (nextCart: CartItem[]) => {
+    if (!hotelId) return;
+    bookingSession.saveRoomSelection({
+      hotelId,
+      checkIn,
+      checkOut,
+      adults,
+      children,
+      roomGuests,
+      cart: nextCart,
+      pendingCouponCode: promoFromUrl || bookingSession.load()?.pendingCouponCode,
+    });
+  };
+
   const updateCartQuantity = (
     room: AvailableRoomType,
     plan: RatePlan,
@@ -147,28 +176,48 @@ const Book = () => {
       const currentQty = existing?.quantity ?? 0;
       const nextQty = Math.max(0, Math.min(room.availableRooms, currentQty + delta));
       const filtered = prev.filter((item) => item.key !== key);
-      if (nextQty === 0) return filtered;
-      const item: CartItem = {
-        key,
-        roomTypeId: room.roomTypeId,
-        roomTypeName: room.name,
-        ratePlanCode: plan.code,
-        ratePlanLabel: plan.label,
-        quantity: nextQty,
-        pricePerNight: plan.pricePerNight,
-        maxGuests: room.maxGuests,
-        imageUrl: room.primaryImageUrl
-          ? normalizeStorageUrl(room.primaryImageUrl)
-          : undefined,
-        totalNights: room.totalNights,
-      };
-      return [...filtered, item];
+      const nextCart =
+        nextQty === 0
+          ? filtered
+          : [
+              ...filtered,
+              {
+                key,
+                roomTypeId: room.roomTypeId,
+                roomTypeName: room.name,
+                ratePlanCode: plan.code,
+                ratePlanLabel: plan.label,
+                quantity: nextQty,
+                pricePerNight: plan.pricePerNight,
+                maxGuests: room.maxGuests,
+                imageUrl: room.primaryImageUrl
+                  ? normalizeStorageUrl(room.primaryImageUrl)
+                  : undefined,
+                totalNights: room.totalNights,
+              } satisfies CartItem,
+            ];
+      persistCart(nextCart);
+      return nextCart;
     });
-    setQuote(null);
   };
 
   const getCartQuantity = (roomTypeId: number, ratePlanCode: string) =>
     cart.find((item) => item.key === `${roomTypeId}-${ratePlanCode}`)?.quantity ?? 0;
+
+  const goToCheckout = () => {
+    if (!hotelId || cart.length === 0) return;
+    bookingSession.saveRoomSelection({
+      hotelId,
+      checkIn,
+      checkOut,
+      adults,
+      children,
+      roomGuests,
+      cart,
+      pendingCouponCode: promoFromUrl || bookingSession.load()?.pendingCouponCode,
+    });
+    navigate("/book/checkout");
+  };
 
   const handleContinue = () => {
     if (cart.length === 0) return;
@@ -176,40 +225,7 @@ const Book = () => {
       setCapacityModalOpen(true);
       return;
     }
-    setGuestFormOpen(true);
-  };
-
-  const handleGuestSubmit = async (guest: GuestFormData) => {
-    if (!hotelId) return;
-    setCheckoutLoading(true);
-    try {
-      const payload = {
-        hotelId,
-        checkIn,
-        checkOut,
-        adults,
-        children,
-        rooms: cart.reduce((sum, item) => sum + item.quantity, 0),
-        selections: cart.map((item) => ({
-          roomTypeId: item.roomTypeId,
-          ratePlanCode: item.ratePlanCode,
-          quantity: item.quantity,
-        })),
-        ...guest,
-      };
-      const quoteResult = await quoteCheckout(payload);
-      setQuote(quoteResult);
-      const booking = await checkoutBooking(payload);
-      toast.success("Booking confirmed! Check your email for details.");
-      navigate(`/booking/${booking.accessToken ?? booking.bookingCode}`, {
-        replace: true,
-      });
-    } catch (error) {
-      toast.error((error as Error).message);
-    } finally {
-      setCheckoutLoading(false);
-      setGuestFormOpen(false);
-    }
+    goToCheckout();
   };
 
   const displayCheckIn = checkIn ? format(parseISO(checkIn), "dd MMM yyyy") : "";
@@ -315,10 +331,11 @@ const Book = () => {
               checkIn={checkIn}
               checkOut={checkOut}
               cart={cart}
-              quote={quote}
+              quote={null}
               config={config ?? null}
               onContinue={handleContinue}
-              loading={checkoutLoading}
+              showCoupons={false}
+              continueLabel="Continue to checkout ›"
             />
           </div>
         )}
@@ -333,15 +350,8 @@ const Book = () => {
         onSelectMore={() => setCapacityModalOpen(false)}
         onContinueAnyway={() => {
           setCapacityModalOpen(false);
-          setGuestFormOpen(true);
+          goToCheckout();
         }}
-      />
-
-      <GuestCheckoutForm
-        open={guestFormOpen}
-        onOpenChange={setGuestFormOpen}
-        onSubmit={handleGuestSubmit}
-        loading={checkoutLoading}
       />
 
       <Footer />
