@@ -2,7 +2,30 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import { format, parseISO, addDays, startOfToday } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, Minus, Plus, Users, Bed, Check } from "lucide-react";
+import {
+  Loader2,
+  Minus,
+  Plus,
+  Users,
+  Bed,
+  Check,
+  Wifi,
+  Tv,
+  Coffee,
+  Utensils,
+  UtensilsCrossed,
+  Thermometer,
+  Wind,
+  Snowflake,
+  Shirt,
+  Waves,
+  Car,
+  CreditCard,
+  ShieldCheck,
+  ShowerHead,
+  Sparkles,
+  type LucideIcon,
+} from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import BookingSearchBar from "@/components/BookingSearchBar";
@@ -11,10 +34,7 @@ import CapacityWarningModal from "@/components/booking/CapacityWarningModal";
 import {
   computeGuestCapacity,
   decodeRoomGuests,
-  fetchBookingConfig,
-  fetchRatePlans,
-  resolveDefaultHotelId,
-  searchAvailabilityWithRooms,
+  fetchStay,
   type AvailableRoomType,
   type BookingConfig,
   type RatePlan,
@@ -45,8 +65,6 @@ const Book = () => {
 
   const [hotelId, setHotelId] = useState<number | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [ratePlansByRoom, setRatePlansByRoom] = useState<Record<number, RatePlan[]>>({});
-  const [loadingRates, setLoadingRates] = useState(false);
   const [capacityModalOpen, setCapacityModalOpen] = useState(false);
   const [cartRestored, setCartRestored] = useState(false);
 
@@ -69,12 +87,6 @@ const Book = () => {
   }, [checkIn, checkOut, navigate, promoFromUrl]);
 
   useEffect(() => {
-    resolveDefaultHotelId()
-      .then(setHotelId)
-      .catch((error: Error) => toast.error(error.message));
-  }, []);
-
-  useEffect(() => {
     if (!hasSearch || cartRestored) return;
 
     const session = bookingSession.load();
@@ -92,64 +104,22 @@ const Book = () => {
     setCartRestored(true);
   }, [hasSearch, checkIn, checkOut, adults, children, roomGuestsKey, cartRestored]);
 
-  const configQuery = useQuery({
-    queryKey: ["bookingConfig"],
-    queryFn: fetchBookingConfig,
+  const stayQuery = useQuery({
+    queryKey: ["stay", checkIn, checkOut, roomGuestsKey],
+    queryFn: () => fetchStay({ checkIn, checkOut, roomGuests }),
+    enabled: hasSearch,
   });
 
-  const availabilityQuery = useQuery({
-    queryKey: ["availability", hotelId, checkIn, checkOut, roomGuests],
-    queryFn: () =>
-      searchAvailabilityWithRooms({
-        hotelId: hotelId!,
-        checkIn,
-        checkOut,
-        roomGuests,
-      }),
-    enabled: hasSearch && hotelId != null,
-  });
+  const stay = stayQuery.data;
+
+  useEffect(() => {
+    if (stay?.hotelId != null) setHotelId(stay.hotelId);
+  }, [stay?.hotelId]);
 
   const accommodatedGuests = useMemo(
     () => computeGuestCapacity(cart),
     [cart]
   );
-
-  useEffect(() => {
-    if (!hasSearch || !checkIn || !checkOut || !availabilityQuery.data?.length) {
-      setRatePlansByRoom({});
-      return;
-    }
-
-    let cancelled = false;
-    const availableRooms = availabilityQuery.data.filter((room) => !room.soldOut);
-    setLoadingRates(true);
-
-    Promise.all(
-      availableRooms.map(async (room) => {
-        const plans = await fetchRatePlans({
-          roomTypeId: room.roomTypeId,
-          checkIn,
-          checkOut,
-          rooms: 1,
-        });
-        return [room.roomTypeId, plans] as const;
-      })
-    )
-      .then((entries) => {
-        if (cancelled) return;
-        setRatePlansByRoom(Object.fromEntries(entries));
-      })
-      .catch((error: Error) => {
-        if (!cancelled) toast.error(error.message);
-      })
-      .finally(() => {
-        if (!cancelled) setLoadingRates(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [availabilityQuery.data, checkIn, checkOut, hasSearch]);
 
   const persistCart = (nextCart: CartItem[]) => {
     if (!hotelId) return;
@@ -174,7 +144,12 @@ const Book = () => {
     setCart((prev) => {
       const existing = prev.find((item) => item.key === key);
       const currentQty = existing?.quantity ?? 0;
-      const nextQty = Math.max(0, Math.min(room.availableRooms, currentQty + delta));
+      // Total rooms already selected for this room type across ALL variants.
+      const otherVariantsQty = prev
+        .filter((item) => item.roomTypeId === room.roomTypeId && item.key !== key)
+        .reduce((sum, item) => sum + item.quantity, 0);
+      const remaining = Math.max(0, room.availableRooms - otherVariantsQty);
+      const nextQty = Math.max(0, Math.min(remaining, currentQty + delta));
       const filtered = prev.filter((item) => item.key !== key);
       const nextCart =
         nextQty === 0
@@ -204,6 +179,11 @@ const Book = () => {
   const getCartQuantity = (roomTypeId: number, ratePlanCode: string) =>
     cart.find((item) => item.key === `${roomTypeId}-${ratePlanCode}`)?.quantity ?? 0;
 
+  const getRoomTypeQuantity = (roomTypeId: number) =>
+    cart
+      .filter((item) => item.roomTypeId === roomTypeId)
+      .reduce((sum, item) => sum + item.quantity, 0);
+
   const goToCheckout = () => {
     if (!hotelId || cart.length === 0) return;
     bookingSession.saveRoomSelection({
@@ -230,7 +210,7 @@ const Book = () => {
 
   const displayCheckIn = checkIn ? format(parseISO(checkIn), "dd MMM yyyy") : "";
   const displayCheckOut = checkOut ? format(parseISO(checkOut), "dd MMM yyyy") : "";
-  const config = configQuery.data as BookingConfig | undefined;
+  const config = stay?.config as BookingConfig | undefined;
 
   return (
     <div className="min-h-screen bg-[#faf8f5] flex flex-col">
@@ -282,21 +262,21 @@ const Book = () => {
         {hasSearch && (
           <div className="grid lg:grid-cols-[1fr_320px] gap-8 items-start">
             <div>
-              {availabilityQuery.isLoading && (
+              {stayQuery.isLoading && (
                 <div className="flex justify-center py-16">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 </div>
               )}
 
-              {availabilityQuery.isError && (
+              {stayQuery.isError && (
                 <p className="text-center text-destructive">
-                  {(availabilityQuery.error as Error).message}
+                  {(stayQuery.error as Error).message}
                 </p>
               )}
 
-              {availabilityQuery.isSuccess && (
+              {stayQuery.isSuccess && (
                 <div className="space-y-6">
-                  {availabilityQuery.data.length === 0 ? (
+                  {(stay?.rooms.length ?? 0) === 0 ? (
                     <div className="text-center py-16 bg-white rounded-lg border">
                       <p className="text-lg font-medium mb-2">No rooms available</p>
                       <p className="text-muted-foreground mb-6">
@@ -310,12 +290,12 @@ const Book = () => {
                       </Link>
                     </div>
                   ) : (
-                    availabilityQuery.data.map((room) => (
+                    stay?.rooms.map((room) => (
                       <RoomCard
                         key={room.roomTypeId}
                         room={room}
-                        ratePlans={ratePlansByRoom[room.roomTypeId]}
-                        loadingRates={loadingRates && !ratePlansByRoom[room.roomTypeId]}
+                        ratePlans={room.ratePlans}
+                        roomTypeSelectedTotal={getRoomTypeQuantity(room.roomTypeId)}
                         getQuantity={(code) => getCartQuantity(room.roomTypeId, code)}
                         onQuantityChange={(plan, delta) =>
                           updateCartQuantity(room, plan, delta)
@@ -359,16 +339,45 @@ const Book = () => {
   );
 };
 
+const AMENITY_ICONS: { match: RegExp; icon: LucideIcon }[] = [
+  { match: /wifi|wi-fi|internet/i, icon: Wifi },
+  { match: /tv|televis|satellite|cable|channel/i, icon: Tv },
+  { match: /coffee|tea/i, icon: Coffee },
+  { match: /breakfast|dinner|meal|restaurant|food/i, icon: UtensilsCrossed },
+  { match: /kitchen/i, icon: Utensils },
+  { match: /heat/i, icon: Thermometer },
+  { match: /air ?condition|\bac\b|cooling|snow/i, icon: Snowflake },
+  { match: /fan|ventilat/i, icon: Wind },
+  { match: /wardrobe|closet|cupboard/i, icon: Shirt },
+  { match: /pool|swim/i, icon: Waves },
+  { match: /park/i, icon: Car },
+  { match: /payment|card|bank/i, icon: CreditCard },
+  { match: /cancel|policy/i, icon: ShieldCheck },
+  { match: /hot water|shower|geyser|bath/i, icon: ShowerHead },
+];
+
+function amenityIcon(value: string): LucideIcon {
+  return AMENITY_ICONS.find((entry) => entry.match.test(value))?.icon ?? Sparkles;
+}
+
+function formatAmenity(value: string): string {
+  return value
+    .replace(/[_-]+/g, " ")
+    .trim()
+    .toLowerCase()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
 const RoomCard = ({
   room,
   ratePlans,
-  loadingRates,
+  roomTypeSelectedTotal,
   getQuantity,
   onQuantityChange,
 }: {
   room: AvailableRoomType;
   ratePlans?: RatePlan[];
-  loadingRates: boolean;
+  roomTypeSelectedTotal: number;
   getQuantity: (code: string) => number;
   onQuantityChange: (plan: RatePlan, delta: number) => void;
 }) => (
@@ -420,25 +429,24 @@ const RoomCard = ({
 
         {room.amenities?.length > 0 && (
           <ul className="flex flex-wrap gap-2 mb-4">
-            {room.amenities.slice(0, 6).map((amenity) => (
-              <li
-                key={amenity}
-                className="text-xs bg-neutral-100 px-2 py-1 rounded text-neutral-600"
-              >
-                {amenity}
-              </li>
-            ))}
+            {room.amenities.slice(0, 6).map((amenity) => {
+              const Icon = amenityIcon(amenity);
+              return (
+                <li
+                  key={amenity}
+                  className="inline-flex items-center gap-1.5 text-xs bg-neutral-100 px-2 py-1 rounded text-neutral-600"
+                >
+                  <Icon className="h-3.5 w-3.5 text-[#b8892f]" />
+                  {formatAmenity(amenity)}
+                </li>
+              );
+            })}
           </ul>
         )}
 
         {!room.soldOut && (
           <div className="border-t border-neutral-100 pt-4 mt-2 space-y-4">
-            {loadingRates ? (
-              <div className="flex items-center gap-2 text-sm text-neutral-500">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Loading rate plans…
-              </div>
-            ) : ratePlans && ratePlans.length > 0 ? (
+            {ratePlans && ratePlans.length > 0 ? (
               ratePlans.map((plan) => {
                 const qty = getQuantity(plan.code);
                 return (
@@ -449,9 +457,15 @@ const RoomCard = ({
                     <div>
                       <p className="font-medium text-sm text-neutral-800">{plan.label}</p>
                       <ul className="text-xs text-neutral-500 mt-1 space-y-0.5">
-                        {plan.features?.slice(0, 3).map((feature) => (
-                          <li key={feature}>· {feature}</li>
-                        ))}
+                        {plan.features?.slice(0, 3).map((feature) => {
+                          const Icon = amenityIcon(feature);
+                          return (
+                            <li key={feature} className="inline-flex items-center gap-1.5">
+                              <Icon className="h-3 w-3 text-[#b8892f]" />
+                              {feature}
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
                     <div className="flex items-center gap-4 shrink-0">
@@ -477,7 +491,7 @@ const RoomCard = ({
                           type="button"
                           className="h-9 w-9 flex items-center justify-center disabled:opacity-40"
                           onClick={() => onQuantityChange(plan, 1)}
-                          disabled={qty >= room.availableRooms}
+                          disabled={roomTypeSelectedTotal >= room.availableRooms}
                         >
                           <Plus className="h-4 w-4" />
                         </button>

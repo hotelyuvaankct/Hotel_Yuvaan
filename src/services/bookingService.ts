@@ -42,6 +42,28 @@ export interface AvailableRoomType {
   badges?: string[];
   soldOut?: boolean;
   canAccommodateSingleRoom?: boolean;
+  ratePlans?: RatePlan[];
+}
+
+export interface ExtraService {
+  id: number;
+  hotelId?: number;
+  name: string;
+  description?: string;
+  price: number;
+  free: boolean;
+  forAllGuests: boolean;
+}
+
+export interface StayResult {
+  hotelId: number;
+  hotelName?: string;
+  checkIn: string;
+  checkOut: string;
+  totalNights: number;
+  config: BookingConfig;
+  rooms: AvailableRoomType[];
+  extraServices: ExtraService[];
 }
 
 export interface RatePlan {
@@ -153,22 +175,17 @@ export async function fetchBookingConfig(): Promise<BookingConfig> {
   return parseResponse<BookingConfig>(response);
 }
 
-export async function fetchHotels(): Promise<HotelSummary[]> {
-  const response = await fetch(apiUrl("/rooms/hotels"));
-  return parseResponse<HotelSummary[]>(response);
-}
-
-export async function searchAvailabilityWithRooms(params: {
-  hotelId: number;
+export async function fetchStay(params: {
+  hotelId?: number;
   checkIn: string;
   checkOut: string;
   roomGuests: RoomGuestConfig[];
-}): Promise<AvailableRoomType[]> {
-  const response = await fetch(apiUrl("/bookings/availability/search"), {
+}): Promise<StayResult> {
+  const response = await fetch(apiUrl("/bookings/stay"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      hotelId: params.hotelId,
+      ...(params.hotelId != null ? { hotelId: params.hotelId } : {}),
       checkIn: params.checkIn,
       checkOut: params.checkOut,
       roomGuests: params.roomGuests.map((room) => ({
@@ -177,24 +194,12 @@ export async function searchAvailabilityWithRooms(params: {
       })),
     }),
   });
-  return parseResponse<AvailableRoomType[]>(response);
+  return parseResponse<StayResult>(response);
 }
 
-export async function fetchRatePlans(params: {
-  roomTypeId: number;
-  checkIn: string;
-  checkOut: string;
-  rooms?: number;
-}): Promise<RatePlan[]> {
-  const search = new URLSearchParams({
-    checkIn: params.checkIn,
-    checkOut: params.checkOut,
-    rooms: String(params.rooms ?? 1),
-  });
-  const response = await fetch(
-    apiUrl(`/bookings/room-types/${params.roomTypeId}/rate-plans?${search}`)
-  );
-  return parseResponse<RatePlan[]>(response);
+export async function fetchHotels(): Promise<HotelSummary[]> {
+  const response = await fetch(apiUrl("/rooms/hotels"));
+  return parseResponse<HotelSummary[]>(response);
 }
 
 export async function quoteCheckout(payload: CheckoutPayload): Promise<BookingQuote> {
