@@ -1,12 +1,12 @@
-import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Users, Bed, Wifi, Coffee, Award, Star, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import {
   fetchPublicRoomTypes,
   formatRoomPrice,
   buildBookUrl,
   normalizeStorageUrl,
 } from "@/services/roomService";
+import { getAmenityIcon, getAmenityLabel } from "@/lib/amenities";
 import { Link } from "react-router-dom";
 import { format, addDays } from "date-fns";
 import {
@@ -16,18 +16,6 @@ import {
 } from "./ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-
-const featureIcons: Record<string, React.ComponentType<{ className?: string }>> = {
-  "Free WiFi": Wifi,
-  WiFi: Wifi,
-  Breakfast: Coffee,
-  "Premium Amenities": Award,
-  "City View": Award,
-  "Premium Lighting": Star,
-  "Modern Decor": Star,
-};
-
-const defaultAmenityIcons = [Users, Bed, Wifi, Coffee];
 
 const RoomsSection = () => {
   const { data: rooms = [], isLoading, isError } = useQuery({
@@ -174,11 +162,7 @@ const RoomsSection = () => {
 
                     <div className="grid grid-cols-2 gap-3 mb-6">
                       {displayFeatures.map((feature, featureIndex) => {
-                        const Icon =
-                          featureIcons[feature] ??
-                          defaultAmenityIcons[
-                            featureIndex % defaultAmenityIcons.length
-                          ];
+                        const Icon = getAmenityIcon(feature);
                         return (
                           <div
                             key={`${feature}-${featureIndex}`}
@@ -186,7 +170,7 @@ const RoomsSection = () => {
                           >
                             <Icon className="w-4 h-4 text-gold-500" />
                             <span className="text-muted-foreground font-medium truncate">
-                              {feature}
+                              {getAmenityLabel(feature)}
                             </span>
                           </div>
                         );
