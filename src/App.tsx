@@ -9,6 +9,7 @@ import Coupons from "./pages/Coupons";
 import Book from "./pages/Book";
 import BookCheckout from "./pages/BookCheckout";
 import BookingView from "./pages/BookingView";
+import SitePage from "./pages/SitePage";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
 import FloatingReviewWidget from "./components/FloatingReviewWidget";
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/book" element={<Book />} />
           <Route path="/book/checkout" element={<BookCheckout />} />
           <Route path="/booking/:token" element={<BookingView />} />
+          <Route path="/:slug" element={<SitePage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

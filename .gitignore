@@ -27,8 +27,6 @@ dist-ssr
 *.sln
 *.sw?
 
-
-
 # Graphify output
 graphify-out/
 
@@ -38,3 +36,7 @@ graphify-out/
 .windsurf/
 .codex/
 .gemini/
+
+# Git worktrees
+.worktrees/
+worktrees/
