@@ -7,13 +7,18 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import BookingSidebar, { type CartItem } from "@/components/booking/BookingSidebar";
 import {
-  checkoutBooking,
   computeGuestCapacity,
   fetchBookingConfig,
-  quoteCheckout,
   type BookingConfig,
   type BookingQuote,
 } from "@/services/bookingService";
+import {
+  createRazorpayOrder,
+  fetchCheckoutSummary,
+  loadRazorpayScript,
+  openRazorpayCheckout,
+  verifyRazorpayPayment,
+} from "@/services/paymentService";
 import {
   fetchPublicCoupons,
   validatePublicCoupon,
@@ -240,16 +245,58 @@ const BookCheckout = () => {
         ...(couponCode ? { couponCode } : {}),
       };
 
-      const quoteResult = await quoteCheckout(payload);
-      setQuote(quoteResult);
-      const booking = await checkoutBooking(payload);
+      await loadRazorpayScript();
+      const summary = await fetchCheckoutSummary(payload);
+      setQuote({
+        hotelId: summary.hotelId,
+        hotelName: summary.hotelName,
+        checkIn: summary.checkIn,
+        checkOut: summary.checkOut,
+        totalNights: summary.totalNights,
+        adults: summary.adults,
+        children: summary.children,
+        rooms: summary.rooms,
+        subtotalAmount: summary.subtotalAmount,
+        discountAmount: summary.discountAmount,
+        taxAmount: summary.taxAmount,
+        totalAmount: summary.totalAmount,
+        couponCode: summary.couponCode,
+        couponTitle: summary.couponTitle,
+        roomLines: summary.roomLines,
+      });
+
+      const order = await createRazorpayOrder(payload);
+
+      const payment = await openRazorpayCheckout({
+        order,
+        name: "Hotel Yuvaan",
+        description: `Stay ${draft.checkIn} → ${draft.checkOut}`,
+        prefill: {
+          name: `${guest.guestFirstName} ${guest.guestLastName}`.trim(),
+          email: guest.guestEmail.trim(),
+          contact: guest.guestPhone.trim(),
+        },
+      });
+
+      const verified = await verifyRazorpayPayment({
+        razorpayOrderId: payment.razorpay_order_id,
+        razorpayPaymentId: payment.razorpay_payment_id,
+        razorpaySignature: payment.razorpay_signature,
+      });
+
       bookingSession.clear();
-      toast.success("Booking confirmed! Check your email for details.");
+      toast.success("Payment successful! Booking confirmed.");
+      const booking = verified.booking;
       navigate(`/booking/${booking.accessToken ?? booking.bookingCode}`, {
         replace: true,
       });
     } catch (error) {
-      toast.error((error as Error).message);
+      const message = (error as Error).message;
+      if (message === "Payment cancelled") {
+        toast.message("Payment cancelled");
+      } else {
+        toast.error(message);
+      }
     } finally {
       setSubmitting(false);
     }
@@ -375,7 +422,7 @@ const BookCheckout = () => {
                   disabled={submitting}
                   className="w-full rounded-none bg-[#4b3621] hover:bg-[#3d2b1a] py-6 text-sm font-semibold tracking-wider uppercase"
                 >
-                  {submitting ? "Confirming booking…" : "Confirm booking"}
+                  {submitting ? "Processing payment…" : "Pay & confirm booking"}
                 </Button>
               </form>
             </div>

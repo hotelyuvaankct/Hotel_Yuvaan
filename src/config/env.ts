@@ -20,6 +20,8 @@ export const env = {
     import.meta.env.VITE_API_VERSION_PATH,
     "VITE_API_VERSION_PATH"
   ),
+  /** Public Razorpay key only — never put KEY_SECRET in frontend env. */
+  razorpayKeyId: import.meta.env.VITE_RAZORPAY_KEY_ID ?? "",
 } as const;
 
 export function getBackendBaseUrl(): string {
