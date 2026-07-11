@@ -51,11 +51,11 @@ const BookingCouponList = ({
       <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
         Available offers
       </p>
-      <ul className="space-y-2 max-h-52 overflow-y-auto pr-0.5">
+      <ul className={`space-y-2 ${coupons.length > 4 ? "max-h-64 overflow-y-auto pr-0.5" : ""}`}>
         {coupons.map((coupon) => {
           const eligible = isCouponEligible(coupon, cartSubtotal);
-          const isApplied = appliedCode === coupon.code;
-          const isApplying = applyingCode === coupon.code;
+          const isApplied = appliedCode?.toUpperCase() === coupon.code.toUpperCase();
+          const isApplying = applyingCode?.toUpperCase() === coupon.code.toUpperCase();
           const minBooking = formatCouponMinBooking(coupon.minBookingAmount);
 
           return (
@@ -74,7 +74,7 @@ const BookingCouponList = ({
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex flex-wrap items-center gap-1.5">
                       <Tag className="h-3.5 w-3.5 shrink-0 text-[#4b3621]" />
                       <span className="font-mono text-xs font-semibold tracking-wider text-[#4b3621]">
                         {coupon.code}
@@ -83,7 +83,7 @@ const BookingCouponList = ({
                         {formatCouponDiscount(coupon)}
                       </span>
                     </div>
-                    <p className="mt-1 text-xs font-medium text-neutral-800 line-clamp-1">
+                    <p className="mt-1 text-xs font-medium text-neutral-800">
                       {coupon.title}
                     </p>
                     {minBooking ? (
