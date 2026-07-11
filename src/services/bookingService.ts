@@ -120,10 +120,10 @@ export interface CheckoutPayload {
   children: number;
   rooms: number;
   selections: CheckoutRoomSelection[];
-  guestFirstName: string;
-  guestLastName: string;
-  guestEmail: string;
-  guestPhone: string;
+  guestFirstName?: string;
+  guestLastName?: string;
+  guestEmail?: string;
+  guestPhone?: string;
   notes?: string;
   couponCode?: string;
 }

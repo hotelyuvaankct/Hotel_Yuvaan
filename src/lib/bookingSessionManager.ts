@@ -121,6 +121,10 @@ export const bookingSession = {
     pendingCouponCode?: string;
   }): BookingSession {
     const existing = readRaw();
+    const nextPending =
+      "pendingCouponCode" in input
+        ? input.pendingCouponCode?.trim().toUpperCase() || undefined
+        : existing?.pendingCouponCode;
     return this.save({
       hotelId: input.hotelId,
       checkIn: input.checkIn,
@@ -129,9 +133,15 @@ export const bookingSession = {
       children: input.children,
       roomGuests: input.roomGuests,
       cart: input.cart,
-      pendingCouponCode: input.pendingCouponCode ?? existing?.pendingCouponCode,
+      pendingCouponCode: nextPending,
       guest: existing?.guest,
-      appliedCoupon: existing?.appliedCoupon ?? null,
+      appliedCoupon:
+        nextPending &&
+        existing?.appliedCoupon?.code?.toUpperCase() === nextPending
+          ? existing.appliedCoupon
+          : nextPending
+            ? null
+            : existing?.appliedCoupon ?? null,
     });
   },
 

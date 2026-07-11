@@ -37,8 +37,17 @@ import {
   fetchStay,
   type AvailableRoomType,
   type BookingConfig,
+  type BookingQuote,
   type RatePlan,
 } from "@/services/bookingService";
+import {
+  checkoutSummaryToQuote,
+  fetchCheckoutSummary,
+} from "@/services/paymentService";
+import {
+  fetchPublicCoupons,
+  type CouponValidation,
+} from "@/services/couponService";
 import { bookingSession } from "@/lib/bookingSessionManager";
 import { buildBookUrl, formatRoomPrice, normalizeStorageUrl } from "@/services/roomService";
 import { toast } from "sonner";
@@ -67,6 +76,19 @@ const Book = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [capacityModalOpen, setCapacityModalOpen] = useState(false);
   const [cartRestored, setCartRestored] = useState(false);
+  const [pendingCouponCode, setPendingCouponCode] = useState(
+    () =>
+      promoFromUrl ||
+      bookingSession.load()?.pendingCouponCode?.trim().toUpperCase() ||
+      ""
+  );
+  const [appliedCoupon, setAppliedCoupon] = useState<CouponValidation | null>(
+    () => bookingSession.load()?.appliedCoupon ?? null
+  );
+  const [applyingCoupon, setApplyingCoupon] = useState<string | null>(null);
+  const [couponError, setCouponError] = useState<string | null>(null);
+  const [quote, setQuote] = useState<BookingQuote | null>(null);
+  const [quoteLoading, setQuoteLoading] = useState(false);
 
   useEffect(() => {
     if (!checkIn || !checkOut) {
@@ -101,12 +123,30 @@ const Book = () => {
     if (session && matchesStay && session.cart.length > 0) {
       setCart(session.cart);
     }
+    if (!promoFromUrl && session?.pendingCouponCode) {
+      setPendingCouponCode(session.pendingCouponCode.trim().toUpperCase());
+    }
+    if (session?.appliedCoupon?.valid) {
+      setAppliedCoupon(session.appliedCoupon);
+    }
     setCartRestored(true);
-  }, [hasSearch, checkIn, checkOut, adults, children, roomGuestsKey, cartRestored]);
+  }, [hasSearch, checkIn, checkOut, adults, children, roomGuestsKey, cartRestored, promoFromUrl]);
+
+  useEffect(() => {
+    if (promoFromUrl) {
+      setPendingCouponCode(promoFromUrl);
+    }
+  }, [promoFromUrl]);
 
   const stayQuery = useQuery({
     queryKey: ["stay", checkIn, checkOut, roomGuestsKey],
     queryFn: () => fetchStay({ checkIn, checkOut, roomGuests }),
+    enabled: hasSearch,
+  });
+
+  const couponsQuery = useQuery({
+    queryKey: ["public-coupons-book"],
+    queryFn: fetchPublicCoupons,
     enabled: hasSearch,
   });
 
@@ -121,7 +161,7 @@ const Book = () => {
     [cart]
   );
 
-  const persistCart = (nextCart: CartItem[]) => {
+  const persistCart = (nextCart: CartItem[], couponCode = pendingCouponCode) => {
     if (!hotelId) return;
     bookingSession.saveRoomSelection({
       hotelId,
@@ -131,9 +171,149 @@ const Book = () => {
       children,
       roomGuests,
       cart: nextCart,
-      pendingCouponCode: promoFromUrl || bookingSession.load()?.pendingCouponCode,
+      pendingCouponCode: couponCode,
     });
   };
+
+  const handleSelectCoupon = (code: string) => {
+    const normalized = code.trim().toUpperCase();
+    if (!normalized) return;
+    if (cart.length === 0) {
+      toast.error("Select rooms before applying a coupon");
+      return;
+    }
+    setCouponError(null);
+    setApplyingCoupon(normalized);
+    setPendingCouponCode(normalized);
+    persistCart(cart, normalized);
+  };
+
+  const handleRemoveCoupon = () => {
+    setPendingCouponCode("");
+    setAppliedCoupon(null);
+    setCouponError(null);
+    setApplyingCoupon(null);
+    if (hotelId) {
+      bookingSession.saveRoomSelection({
+        hotelId,
+        checkIn,
+        checkOut,
+        adults,
+        children,
+        roomGuests,
+        cart,
+        pendingCouponCode: "",
+      });
+      bookingSession.patch({ appliedCoupon: null, pendingCouponCode: undefined });
+    } else {
+      bookingSession.patch({ pendingCouponCode: undefined, appliedCoupon: null });
+    }
+  };
+
+  // Server checkout-summary drives tax / discount / total
+  useEffect(() => {
+    if (!cartRestored || !hotelId || cart.length === 0 || !checkIn || !checkOut) {
+      setQuote(null);
+      return;
+    }
+
+    let cancelled = false;
+    const couponCode = pendingCouponCode || undefined;
+    const timer = window.setTimeout(() => {
+      void (async () => {
+        setQuoteLoading(true);
+        if (couponCode) setApplyingCoupon(couponCode);
+        try {
+          const summary = await fetchCheckoutSummary({
+            hotelId,
+            checkIn,
+            checkOut,
+            adults,
+            children,
+            rooms: cart.reduce((sum, item) => sum + item.quantity, 0),
+            selections: cart.map((item) => ({
+              roomTypeId: item.roomTypeId,
+              ratePlanCode: item.ratePlanCode,
+              quantity: item.quantity,
+            })),
+            ...(couponCode ? { couponCode } : {}),
+          });
+          if (cancelled) return;
+          setQuote(checkoutSummaryToQuote(summary));
+          setCouponError(null);
+          if (summary.couponCode) {
+            const applied: CouponValidation = {
+              valid: true,
+              code: summary.couponCode,
+              title: summary.couponTitle,
+              discountAmount: summary.discountAmount,
+            };
+            setAppliedCoupon(applied);
+            setPendingCouponCode(summary.couponCode.toUpperCase());
+            bookingSession.patch({
+              pendingCouponCode: summary.couponCode.toUpperCase(),
+              appliedCoupon: applied,
+            });
+          } else if (!couponCode) {
+            setAppliedCoupon(null);
+          }
+        } catch (error) {
+          if (cancelled) return;
+          const message = (error as Error).message;
+          if (couponCode) {
+            setCouponError(message);
+            setAppliedCoupon(null);
+            setPendingCouponCode("");
+            bookingSession.patch({
+              appliedCoupon: null,
+              pendingCouponCode: undefined,
+            });
+            toast.error(message);
+            try {
+              const summary = await fetchCheckoutSummary({
+                hotelId,
+                checkIn,
+                checkOut,
+                adults,
+                children,
+                rooms: cart.reduce((sum, item) => sum + item.quantity, 0),
+                selections: cart.map((item) => ({
+                  roomTypeId: item.roomTypeId,
+                  ratePlanCode: item.ratePlanCode,
+                  quantity: item.quantity,
+                })),
+              });
+              if (!cancelled) setQuote(checkoutSummaryToQuote(summary));
+            } catch {
+              if (!cancelled) setQuote(null);
+            }
+          } else {
+            setQuote(null);
+            toast.error(message);
+          }
+        } finally {
+          if (!cancelled) {
+            setQuoteLoading(false);
+            setApplyingCoupon(null);
+          }
+        }
+      })();
+    }, 350);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [
+    cartRestored,
+    hotelId,
+    checkIn,
+    checkOut,
+    adults,
+    children,
+    cart,
+    pendingCouponCode,
+  ]);
 
   const updateCartQuantity = (
     room: AvailableRoomType,
@@ -194,7 +374,7 @@ const Book = () => {
       children,
       roomGuests,
       cart,
-      pendingCouponCode: promoFromUrl || bookingSession.load()?.pendingCouponCode,
+      pendingCouponCode,
     });
     navigate("/book/checkout");
   };
@@ -311,10 +491,21 @@ const Book = () => {
               checkIn={checkIn}
               checkOut={checkOut}
               cart={cart}
-              quote={null}
+              quote={quote}
+              quoteLoading={quoteLoading}
               config={config ?? null}
               onContinue={handleContinue}
-              showCoupons={false}
+              showCoupons
+              availableCoupons={couponsQuery.data ?? []}
+              couponsLoading={couponsQuery.isLoading}
+              appliedCoupon={appliedCoupon}
+              selectedCouponCode={
+                appliedCoupon?.valid ? null : pendingCouponCode || null
+              }
+              applyingCouponCode={applyingCoupon}
+              couponError={couponError}
+              onSelectCoupon={handleSelectCoupon}
+              onRemoveCoupon={handleRemoveCoupon}
               continueLabel="Continue to checkout ›"
             />
           </div>
