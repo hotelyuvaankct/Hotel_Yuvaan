@@ -1,15 +1,18 @@
-import React from "react";
+import { Link } from "react-router-dom";
 import { Instagram, MapPin, Phone, Mail } from "lucide-react";
 import { useAppConfig } from "@/hooks/useAppConfig";
+import { footerLinksByGroup } from "@/data/sitePages";
 
 const Footer = () => {
   const { data: contact } = useAppConfig();
+  const legalLinks = footerLinksByGroup("legal");
+  const businessLinks = footerLinksByGroup("business");
 
   return (
     <footer className="bg-primary/95 text-primary-foreground py-8 sm:py-12">
       <div className="container mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-          <div className="space-y-4 md:ml-8 lg:ml-16 xl:ml-24">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+          <div className="space-y-4">
             <h3 className="text-lg font-bold">About Hotel Yuvaan</h3>
             <p className="text-primary-foreground/80 text-sm sm:text-base">
               Luxury hotel offering comfort, elegance and personal service.
@@ -27,7 +30,39 @@ const Footer = () => {
             )}
           </div>
 
-          <div className="space-y-4 md:ml-8 lg:ml-16 xl:ml-24">
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold">Business</h3>
+            <ul className="space-y-2 text-sm sm:text-base">
+              {businessLinks.map((link) => (
+                <li key={link.to}>
+                  <Link
+                    to={link.to}
+                    className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold">Legal</h3>
+            <ul className="space-y-2 text-sm sm:text-base">
+              {legalLinks.map((link) => (
+                <li key={link.to}>
+                  <Link
+                    to={link.to}
+                    className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="space-y-4">
             <h3 className="text-lg font-bold">Contact</h3>
             <div className="space-y-2 text-sm sm:text-base">
               <div className="flex items-start space-x-2">
@@ -70,8 +105,19 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-primary-foreground/20 pt-6 text-center text-xs sm:text-sm text-primary-foreground/80">
+        <div className="border-t border-primary-foreground/20 pt-6 text-center text-xs sm:text-sm text-primary-foreground/80 space-y-2">
           <p>© {new Date().getFullYear()} Hotel Yuvaan. All rights reserved.</p>
+          <p className="text-primary-foreground/60">
+            Payments secured by Razorpay · By booking you agree to our{" "}
+            <Link to="/terms" className="underline underline-offset-2 hover:text-primary-foreground">
+              Terms
+            </Link>{" "}
+            and{" "}
+            <Link to="/privacy" className="underline underline-offset-2 hover:text-primary-foreground">
+              Privacy Policy
+            </Link>
+            .
+          </p>
         </div>
       </div>
     </footer>
