@@ -20,6 +20,8 @@ export interface CouponValidation {
   code?: string;
   title?: string;
   discountAmount?: number;
+  /** Preview only — checkout still needs email for some coupons. */
+  requiresEmail?: boolean;
 }
 
 interface ApiResponse<T> {

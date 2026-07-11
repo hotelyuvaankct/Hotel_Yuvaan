@@ -1,5 +1,5 @@
-import { apiUrl, env } from "@/config/env";
-import type { BookingResult, CheckoutPayload } from "@/services/bookingService";
+import { apiUrl } from "@/config/env";
+import type { BookingResult, CheckoutPayload, CheckoutRoomSelection } from "@/services/bookingService";
 
 export interface CreateOrderResult {
   orderId: string;
@@ -11,6 +11,20 @@ export interface CreateOrderResult {
   discountAmount?: number;
   taxAmount?: number;
   couponCode?: string;
+}
+
+/** Body for POST /payments/checkout-summary — no guest name/phone. */
+export interface CheckoutSummaryPayload {
+  hotelId: number;
+  checkIn: string;
+  checkOut: string;
+  adults: number;
+  children: number;
+  rooms: number;
+  selections: CheckoutRoomSelection[];
+  couponCode?: string;
+  /** Optional — enables per-email coupon rules when guest has entered email. */
+  guestEmail?: string;
 }
 
 export interface CheckoutSummary {
@@ -79,11 +93,15 @@ async function parseResponse<T>(response: Response): Promise<T> {
 }
 
 function mapOrder(raw: Record<string, unknown>): CreateOrderResult {
+  const keyId = String(raw.keyId ?? raw.key_id ?? "").trim();
+  if (!keyId) {
+    throw new Error("Payment configuration missing from server (keyId)");
+  }
   return {
     orderId: String(raw.orderId ?? raw.order_id ?? ""),
     amount: Number(raw.amount),
     currency: String(raw.currency ?? "INR"),
-    keyId: String(raw.keyId ?? raw.key_id ?? env.razorpayKeyId ?? ""),
+    keyId,
     totalAmount: raw.totalAmount != null ? Number(raw.totalAmount) : undefined,
     subtotalAmount: raw.subtotalAmount != null ? Number(raw.subtotalAmount) : undefined,
     discountAmount: raw.discountAmount != null ? Number(raw.discountAmount) : undefined,
@@ -93,13 +111,33 @@ function mapOrder(raw: Record<string, unknown>): CreateOrderResult {
 }
 
 /** Preview payable totals — call before create-order. Amount is server-calculated. */
-export async function fetchCheckoutSummary(payload: CheckoutPayload): Promise<CheckoutSummary> {
+export async function fetchCheckoutSummary(payload: CheckoutSummaryPayload): Promise<CheckoutSummary> {
   const response = await fetch(apiUrl("/payments/checkout-summary"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
   return parseResponse<CheckoutSummary>(response);
+}
+
+export function checkoutSummaryToQuote(summary: CheckoutSummary): import("@/services/bookingService").BookingQuote {
+  return {
+    hotelId: summary.hotelId,
+    hotelName: summary.hotelName,
+    checkIn: summary.checkIn,
+    checkOut: summary.checkOut,
+    totalNights: summary.totalNights,
+    adults: summary.adults,
+    children: summary.children,
+    rooms: summary.rooms,
+    subtotalAmount: summary.subtotalAmount,
+    discountAmount: summary.discountAmount,
+    taxAmount: summary.taxAmount,
+    totalAmount: summary.totalAmount,
+    couponCode: summary.couponCode,
+    couponTitle: summary.couponTitle,
+    roomLines: summary.roomLines,
+  };
 }
 
 /** Backend quotes amount from booking + coupon — never send amount from the client. */
@@ -172,9 +210,9 @@ export function openRazorpayCheckout(
       return;
     }
 
-    const key = options.order.keyId || env.razorpayKeyId;
+    const key = options.order.keyId?.trim();
     if (!key) {
-      reject(new Error("Missing Razorpay key id"));
+      reject(new Error("Missing Razorpay key id from create-order"));
       return;
     }
 
