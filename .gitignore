@@ -26,3 +26,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+
+# Graphify output
+graphify-out/
+
+# AI local/cache folders
+.cursor/
+.claude/
+.windsurf/
+.codex/
+.gemini/

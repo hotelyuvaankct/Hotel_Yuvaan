@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Dialog } from "../components/ui/dialog";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "../components/ui/carousel";
+import { getAmenityIcon, getAmenityLabel } from "@/lib/amenities";
 
 interface Room {
   type: string;
@@ -64,12 +65,15 @@ const RoomPopup: React.FC<RoomPopupProps> = ({ open, onClose, room }) => {
         <div className="mb-4">
           <h3 className="font-semibold mb-2">Amenities</h3>
           <ul className="grid grid-cols-2 gap-2 text-sm">
-            {room.amenities.map((item, i) => (
-              <li key={i} className="flex items-center gap-2">
-                <span className="text-primary">•</span>
-                {item}
-              </li>
-            ))}
+            {room.amenities.map((item, i) => {
+              const Icon = getAmenityIcon(item);
+              return (
+                <li key={i} className="flex items-center gap-2">
+                  <Icon className="w-4 h-4 text-primary shrink-0" />
+                  {getAmenityLabel(item)}
+                </li>
+              );
+            })}
           </ul>
         </div>
         <a
