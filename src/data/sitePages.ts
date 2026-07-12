@@ -34,6 +34,7 @@ export const SITE_PAGES: SitePageDef[] = [
         bullets: [
           "Guest details must be accurate (name, email, phone).",
           "You are responsible for the guests listed on the reservation.",
+          "Before payment, you must confirm that you have read and understood the couple stay policy.",
           "Special requests are subject to availability and are not guaranteed unless confirmed in writing.",
         ],
       },
@@ -58,19 +59,27 @@ export const SITE_PAGES: SitePageDef[] = [
         ],
       },
       {
-        heading: "6. Guest conduct",
+        heading: "6. Couple stay policy",
         paragraphs: [
-          "Guests must comply with hotel house rules, local laws, and instructions from staff. We reserve the right to refuse service or ask guests to leave without refund in case of damage, illegal activity, or behaviour that endangers others.",
+          "Hotel Yuvaan allows couple stays for married couples only. Unmarried couples are not permitted to stay as a couple at the property.",
+          "By completing a booking, you confirm that you have read and understood this couple stay policy. If your booking is for a couple, all guests must comply with the hotel's eligibility requirements.",
+          "Valid government-issued photo ID may be required at check-in. The hotel reserves the right to refuse check-in or ask guests to leave without refund if the stay does not meet this policy.",
         ],
       },
       {
-        heading: "7. Liability",
+        heading: "7. Guest conduct",
+        paragraphs: [
+          "Guests must comply with hotel house rules, local laws, and instructions from staff — including the couple stay policy above. We reserve the right to refuse service or ask guests to leave without refund in case of damage, illegal activity, policy violations, or behaviour that endangers others.",
+        ],
+      },
+      {
+        heading: "8. Liability",
         paragraphs: [
           "To the fullest extent permitted by law, Hotel Yuvaan is not liable for indirect or consequential losses arising from your booking or stay, except where required under applicable consumer protection law.",
         ],
       },
       {
-        heading: "8. Changes to these terms",
+        heading: "9. Changes to these terms",
         paragraphs: [
           "We may update these terms from time to time. The version published on this website at the time of your booking applies to that booking.",
         ],

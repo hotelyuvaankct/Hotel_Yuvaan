@@ -36,7 +36,7 @@ const RoomsSection = () => {
   return (
     <section
       id="rooms"
-      className="py-16 md:py-24 bg-background relative overflow-hidden"
+      className="pt-10 md:pt-12 pb-16 md:pb-24 bg-background relative overflow-hidden"
     >
       <div className="absolute top-0 right-0 w-32 h-32 bg-gold-500/10 rounded-full filter blur-3xl translate-x-1/2 -translate-y-1/2"></div>
       <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/10 rounded-full filter blur-3xl -translate-x-1/2 translate-y-1/2"></div>

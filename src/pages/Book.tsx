@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import { format, parseISO, addDays, startOfToday } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
@@ -26,17 +26,22 @@ import {
   Sparkles,
   type LucideIcon,
 } from "lucide-react";
+import Autoplay from "embla-carousel-autoplay";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import BookingSearchBar from "@/components/BookingSearchBar";
-import BookingSidebar, { type CartItem } from "@/components/booking/BookingSidebar";
+import { type CartItem } from "@/components/booking/BookingSidebar";
 import CapacityWarningModal from "@/components/booking/CapacityWarningModal";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
 import {
   computeGuestCapacity,
   decodeRoomGuests,
   fetchStay,
   type AvailableRoomType,
-  type BookingConfig,
   type BookingQuote,
   type RatePlan,
 } from "@/services/bookingService";
@@ -44,12 +49,14 @@ import {
   checkoutSummaryToQuote,
   fetchCheckoutSummary,
 } from "@/services/paymentService";
-import {
-  fetchPublicCoupons,
-  type CouponValidation,
-} from "@/services/couponService";
+import { type CouponValidation } from "@/services/couponService";
 import { bookingSession } from "@/lib/bookingSessionManager";
-import { buildBookUrl, formatRoomPrice, normalizeStorageUrl } from "@/services/roomService";
+import {
+  buildBookUrl,
+  fetchPublicRoomTypes,
+  formatRoomPrice,
+  normalizeStorageUrl,
+} from "@/services/roomService";
 import { toast } from "sonner";
 
 const Book = () => {
@@ -144,13 +151,28 @@ const Book = () => {
     enabled: hasSearch,
   });
 
-  const couponsQuery = useQuery({
-    queryKey: ["public-coupons-book"],
-    queryFn: fetchPublicCoupons,
+  const roomTypesQuery = useQuery({
+    queryKey: ["public-room-types-book"],
+    queryFn: () => fetchPublicRoomTypes(),
     enabled: hasSearch,
   });
 
+
   const stay = stayQuery.data;
+
+  const roomsWithImages = useMemo(() => {
+    const catalog = roomTypesQuery.data ?? [];
+    return (stay?.rooms ?? []).map((room) => {
+      if (room.images && room.images.length > 0) return room;
+      const match = catalog.find(
+        (item) =>
+          item.id === room.roomTypeId ||
+          item.name.trim().toLowerCase() === room.name.trim().toLowerCase()
+      );
+      if (!match?.images?.length) return room;
+      return { ...room, images: match.images };
+    });
+  }, [stay?.rooms, roomTypesQuery.data]);
 
   useEffect(() => {
     if (stay?.hotelId != null) setHotelId(stay.hotelId);
@@ -175,40 +197,6 @@ const Book = () => {
     });
   };
 
-  const handleSelectCoupon = (code: string) => {
-    const normalized = code.trim().toUpperCase();
-    if (!normalized) return;
-    if (cart.length === 0) {
-      toast.error("Select rooms before applying a coupon");
-      return;
-    }
-    setCouponError(null);
-    setApplyingCoupon(normalized);
-    setPendingCouponCode(normalized);
-    persistCart(cart, normalized);
-  };
-
-  const handleRemoveCoupon = () => {
-    setPendingCouponCode("");
-    setAppliedCoupon(null);
-    setCouponError(null);
-    setApplyingCoupon(null);
-    if (hotelId) {
-      bookingSession.saveRoomSelection({
-        hotelId,
-        checkIn,
-        checkOut,
-        adults,
-        children,
-        roomGuests,
-        cart,
-        pendingCouponCode: "",
-      });
-      bookingSession.patch({ appliedCoupon: null, pendingCouponCode: undefined });
-    } else {
-      bookingSession.patch({ pendingCouponCode: undefined, appliedCoupon: null });
-    }
-  };
 
   // Server checkout-summary drives tax / discount / total
   useEffect(() => {
@@ -390,15 +378,13 @@ const Book = () => {
 
   const displayCheckIn = checkIn ? format(parseISO(checkIn), "dd MMM yyyy") : "";
   const displayCheckOut = checkOut ? format(parseISO(checkOut), "dd MMM yyyy") : "";
-  const config = stay?.config as BookingConfig | undefined;
-
   return (
     <div className="min-h-screen bg-[#faf8f5] flex flex-col">
       <Navigation />
 
-      <section className="relative pt-28 pb-10 bg-[#4b3621]">
+      <section className="relative pt-24 md:pt-28 pb-6 md:pb-8 bg-[#4b3621]">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
+          <div className="text-center m-5 md:mb-6">
             <h1 className="font-playfair text-3xl md:text-4xl text-white mb-2">
               Select rooms
             </h1>
@@ -431,7 +417,7 @@ const Book = () => {
         </div>
       </div>
 
-      <main className="flex-1 container mx-auto px-4 py-10">
+      <main className="flex-1 container mx-auto px-3 sm:px-4 pt-4 sm:pt-5 pb-8 sm:pb-10 min-w-0 overflow-x-hidden">
         {!hasSearch && (
           <div className="text-center text-[#8b7355] max-w-xl mx-auto py-8">
             <Loader2 className="h-6 w-6 animate-spin mx-auto mb-3 text-[#b8892f]" />
@@ -440,8 +426,7 @@ const Book = () => {
         )}
 
         {hasSearch && (
-          <div className="grid lg:grid-cols-[1fr_320px] gap-8 items-start">
-            <div>
+          <div className="min-w-0 w-full max-w-5xl mx-auto">
               {stayQuery.isLoading && (
                 <div className="flex justify-center py-16">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -455,8 +440,8 @@ const Book = () => {
               )}
 
               {stayQuery.isSuccess && (
-                <div className="space-y-6">
-                  {(stay?.rooms.length ?? 0) === 0 ? (
+                <div className="space-y-5">
+                  {(roomsWithImages.length ?? 0) === 0 ? (
                     <div className="text-center py-16 bg-white rounded-lg border">
                       <p className="text-lg font-medium mb-2">No rooms available</p>
                       <p className="text-muted-foreground mb-6">
@@ -470,7 +455,7 @@ const Book = () => {
                       </Link>
                     </div>
                   ) : (
-                    stay?.rooms.map((room) => (
+                    roomsWithImages.map((room) => (
                       <RoomCard
                         key={room.roomTypeId}
                         room={room}
@@ -485,32 +470,35 @@ const Book = () => {
                   )}
                 </div>
               )}
-            </div>
-
-            <BookingSidebar
-              checkIn={checkIn}
-              checkOut={checkOut}
-              cart={cart}
-              quote={quote}
-              quoteLoading={quoteLoading}
-              config={config ?? null}
-              onContinue={handleContinue}
-              showCoupons
-              availableCoupons={couponsQuery.data ?? []}
-              couponsLoading={couponsQuery.isLoading}
-              appliedCoupon={appliedCoupon}
-              selectedCouponCode={
-                appliedCoupon?.valid ? null : pendingCouponCode || null
-              }
-              applyingCouponCode={applyingCoupon}
-              couponError={couponError}
-              onSelectCoupon={handleSelectCoupon}
-              onRemoveCoupon={handleRemoveCoupon}
-              continueLabel="Continue to checkout ›"
-            />
           </div>
         )}
       </main>
+
+      {cart.length > 0 ? (
+        <div className="sticky bottom-0 z-40 border-t border-neutral-200 bg-white/95 backdrop-blur-sm shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
+          <div className="container mx-auto px-3 sm:px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div className="text-sm text-neutral-700">
+              <span className="font-medium text-[#4b3621]">
+                {cart.reduce((sum, item) => sum + item.quantity, 0)} room
+                {cart.reduce((sum, item) => sum + item.quantity, 0) === 1 ? "" : "s"} selected
+              </span>
+              {quote?.totalAmount != null ? (
+                <span className="text-neutral-500">
+                  {" "}
+                  · {formatRoomPrice(Number(quote.totalAmount))} total
+                </span>
+              ) : null}
+            </div>
+            <button
+              type="button"
+              onClick={handleContinue}
+              className="px-5 py-2.5 text-sm font-semibold tracking-wider uppercase text-white bg-gradient-to-r from-[#c9a227] to-[#4b3621] hover:opacity-95 transition-opacity"
+            >
+              Continue to checkout ›
+            </button>
+          </div>
+        </div>
+      ) : null}
 
       <CapacityWarningModal
         open={capacityModalOpen}
@@ -559,6 +547,67 @@ function formatAmenity(value: string): string {
     .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
+function roomImageUrls(room: AvailableRoomType): string[] {
+  const fromList = (room.images ?? [])
+    .map((url) => normalizeStorageUrl(url))
+    .filter(Boolean);
+  if (fromList.length > 0) return fromList;
+  if (room.primaryImageUrl) return [normalizeStorageUrl(room.primaryImageUrl)];
+  return [];
+}
+
+function RoomImageCarousel({
+  room,
+}: {
+  room: AvailableRoomType;
+}) {
+  const images = roomImageUrls(room);
+  const autoplay = useRef(
+    Autoplay({ delay: 3500, stopOnInteraction: false, stopOnMouseEnter: true })
+  );
+
+  if (images.length === 0) {
+    return (
+      <div className="w-full h-full flex items-center justify-center text-neutral-400 text-sm">
+        No image
+      </div>
+    );
+  }
+
+  if (images.length === 1) {
+    return (
+      <img
+        src={images[0]}
+        alt={room.name}
+        className={`w-full h-full object-cover ${room.soldOut ? "opacity-60" : ""}`}
+      />
+    );
+  }
+
+  return (
+    <Carousel
+      className="w-full h-full"
+      opts={{ loop: true }}
+      plugins={[autoplay.current]}
+    >
+      <CarouselContent className="ml-0 h-full">
+        {images.map((imageUrl, index) => (
+          <CarouselItem key={`${room.roomTypeId}-${index}`} className="pl-0 basis-full h-full">
+            <div className="relative h-40 sm:h-44 md:h-[200px]">
+              <img
+                src={imageUrl}
+                alt={`${room.name} - Image ${index + 1}`}
+                className={`w-full h-full object-cover ${room.soldOut ? "opacity-60" : ""}`}
+                loading={index === 0 ? "eager" : "lazy"}
+              />
+            </div>
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+    </Carousel>
+  );
+}
+
 const RoomCard = ({
   room,
   ratePlans,
@@ -572,135 +621,171 @@ const RoomCard = ({
   getQuantity: (code: string) => number;
   onQuantityChange: (plan: RatePlan, delta: number) => void;
 }) => (
-  <article className="bg-white border border-neutral-200 rounded-lg overflow-hidden shadow-sm">
-    <div className="grid md:grid-cols-[280px_1fr] gap-0">
-      <div className="relative bg-neutral-100 min-h-[200px]">
-        {room.primaryImageUrl ? (
-          <img
-            src={normalizeStorageUrl(room.primaryImageUrl)}
-            alt={room.name}
-            className="w-full h-full object-cover min-h-[200px]"
-          />
-        ) : (
-          <div className="w-full h-full min-h-[200px] flex items-center justify-center text-neutral-400">
-            No image
-          </div>
-        )}
-        {room.soldOut && (
-          <span className="absolute top-3 left-3 bg-orange-500 text-white text-xs font-semibold px-2 py-1 rounded">
+  <article
+    className={`bg-white border rounded-lg overflow-hidden shadow-sm w-full min-w-0 ${
+      room.soldOut ? "border-neutral-200 opacity-90" : "border-neutral-200"
+    }`}
+  >
+    {/* Room header */}
+    <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] min-w-0">
+      <div
+        className={`relative bg-neutral-100 h-40 sm:h-44 md:h-[200px] overflow-hidden ${
+          room.soldOut ? "grayscale" : ""
+        }`}
+      >
+        <RoomImageCarousel room={room} />
+        {room.soldOut ? (
+          <span className="absolute top-2.5 left-2.5 z-10 bg-neutral-800/90 text-white text-[10px] sm:text-xs font-semibold px-2 py-1 rounded tracking-wide uppercase pointer-events-none">
             Sold out
           </span>
-        )}
-        {!room.soldOut && room.availableRooms <= 2 && (
-          <span className="absolute top-3 left-3 bg-orange-500 text-white text-xs font-semibold px-2 py-1 rounded">
+        ) : room.availableRooms <= 2 ? (
+          <span className="absolute top-2.5 left-2.5 z-10 bg-orange-500 text-white text-[10px] sm:text-xs font-semibold px-2 py-1 rounded pointer-events-none">
             {room.availableRooms} room{room.availableRooms === 1 ? "" : "s"} left
           </span>
-        )}
+        ) : null}
       </div>
 
-      <div className="p-6">
-        <h2 className="text-xl font-playfair font-semibold text-[#4b3621]">
-          {room.name}
-        </h2>
+      <div className="px-3 sm:px-5 py-3.5 sm:py-4 flex flex-col justify-center gap-1.5 sm:gap-2 md:min-h-[200px] min-w-0">
+        <div className="flex flex-wrap items-start justify-between gap-1.5">
+          <h2 className="text-lg sm:text-xl font-playfair font-semibold text-[#4b3621] leading-snug break-words">
+            {room.name}
+          </h2>
+          {room.soldOut && (
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wide text-neutral-500 bg-neutral-100 px-2 py-0.5 rounded shrink-0">
+              Unavailable
+            </span>
+          )}
+        </div>
 
-        <div className="flex flex-wrap gap-4 text-sm text-neutral-500 mt-2 mb-3">
-          <span className="inline-flex items-center gap-1.5">
-            <Users className="h-4 w-4" />
+        <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs sm:text-sm text-neutral-500">
+          <span className="inline-flex items-center gap-1">
+            <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
             up to {room.maxGuests} guests
           </span>
-          <span className="inline-flex items-center gap-1.5">
-            <Bed className="h-4 w-4" />
-            {room.availableRooms} of {room.totalRooms} available
+          <span className="inline-flex items-center gap-1">
+            <Bed className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+            {room.soldOut
+              ? "No rooms available"
+              : `${room.availableRooms} of ${room.totalRooms} available`}
           </span>
         </div>
 
         {room.description && (
-          <p className="text-sm text-neutral-600 mb-3 line-clamp-2">{room.description}</p>
+          <p className="text-xs sm:text-sm text-neutral-600 line-clamp-2 leading-snug">
+            {room.description}
+          </p>
         )}
 
         {room.amenities?.length > 0 && (
-          <ul className="flex flex-wrap gap-2 mb-4">
-            {room.amenities.slice(0, 6).map((amenity) => {
+          <ul className="flex flex-wrap gap-1 pt-0.5">
+            {room.amenities.slice(0, 5).map((amenity) => {
               const Icon = amenityIcon(amenity);
               return (
                 <li
                   key={amenity}
-                  className="inline-flex items-center gap-1.5 text-xs bg-neutral-100 px-2 py-1 rounded text-neutral-600"
+                  className="inline-flex items-center gap-1 text-[10px] sm:text-xs bg-neutral-100 px-1.5 sm:px-2 py-0.5 rounded text-neutral-600 max-w-full"
                 >
-                  <Icon className="h-3.5 w-3.5 text-[#b8892f]" />
-                  {formatAmenity(amenity)}
+                  <Icon className="h-3 w-3 text-[#b8892f] shrink-0" />
+                  <span className="truncate">{formatAmenity(amenity)}</span>
                 </li>
               );
             })}
           </ul>
         )}
+      </div>
+    </div>
 
-        {!room.soldOut && (
-          <div className="border-t border-neutral-100 pt-4 mt-2 space-y-4">
-            {ratePlans && ratePlans.length > 0 ? (
-              ratePlans.map((plan) => {
+    {/* Rates / sold-out footer — same card */}
+    <div className="border-t border-neutral-100 min-w-0">
+      {room.soldOut ? (
+        <div className="px-3 sm:px-5 py-3 bg-neutral-50">
+          <p className="text-xs sm:text-sm text-neutral-600 leading-snug">
+            Sold out for your selected dates. Try different dates or another room.
+          </p>
+        </div>
+      ) : (
+        <>
+          <div className="px-3 sm:px-5 pt-2.5 sm:pt-3 pb-1">
+            <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
+              Choose a rate
+            </p>
+          </div>
+          {ratePlans && ratePlans.length > 0 ? (
+            <ul className="min-w-0">
+              {ratePlans.map((plan, index) => {
                 const qty = getQuantity(plan.code);
                 return (
-                  <div
+                  <li
                     key={plan.code}
-                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 py-3 border-b border-neutral-50 last:border-0"
+                    className={`px-3 sm:px-5 py-2.5 sm:py-3 min-w-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 sm:gap-4 ${
+                      index < ratePlans.length - 1 ? "border-b border-neutral-100" : ""
+                    }`}
                   >
-                    <div>
-                      <p className="font-medium text-sm text-neutral-800">{plan.label}</p>
-                      <ul className="text-xs text-neutral-500 mt-1 space-y-0.5">
-                        {plan.features?.slice(0, 3).map((feature) => {
-                          const Icon = amenityIcon(feature);
-                          return (
-                            <li key={feature} className="inline-flex items-center gap-1.5">
-                              <Icon className="h-3 w-3 text-[#b8892f]" />
-                              {feature}
-                            </li>
-                          );
-                        })}
-                      </ul>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-sm text-neutral-800 leading-snug break-words">
+                        {plan.label}
+                      </p>
+
+                      {plan.features && plan.features.length > 0 && (
+                        <ul className="mt-1.5 flex flex-col gap-0.5 min-[400px]:flex-row min-[400px]:flex-wrap min-[400px]:gap-x-3 min-[400px]:gap-y-0.5">
+                          {plan.features.slice(0, 3).map((feature) => {
+                            const Icon = amenityIcon(feature);
+                            return (
+                              <li
+                                key={feature}
+                                className="inline-flex items-start gap-1 text-[11px] sm:text-xs text-neutral-500 min-w-0"
+                              >
+                                <Icon className="h-3 w-3 text-[#b8892f] shrink-0 mt-0.5" />
+                                <span className="break-words leading-snug">{feature}</span>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      )}
                     </div>
-                    <div className="flex items-center gap-4 shrink-0">
-                      <div className="text-right">
-                        <p className="text-lg font-semibold text-orange-600">
+
+                    <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4 shrink-0 w-full sm:w-auto">
+                      <div className="sm:text-right min-w-[5.5rem]">
+                        <p className="text-base sm:text-lg font-semibold text-orange-600 leading-none tabular-nums">
                           {formatRoomPrice(plan.pricePerNight)}
                         </p>
-                        <p className="text-xs text-neutral-500">per night, taxes incl.</p>
+                        <p className="text-[10px] sm:text-[11px] text-neutral-500 mt-0.5 leading-tight whitespace-nowrap">
+                          per night + taxes
+                        </p>
                       </div>
-                      <div className="inline-flex items-center border border-neutral-300">
+                      <div className="inline-flex items-center border border-neutral-300 rounded-sm shrink-0">
                         <button
                           type="button"
-                          className="h-9 w-9 flex items-center justify-center disabled:opacity-40"
+                          className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center disabled:opacity-40 touch-manipulation"
                           onClick={() => onQuantityChange(plan, -1)}
                           disabled={qty <= 0}
+                          aria-label={`Decrease ${plan.label}`}
                         >
-                          <Minus className="h-4 w-4" />
+                          <Minus className="h-3.5 w-3.5" />
                         </button>
-                        <span className="h-9 min-w-[2rem] flex items-center justify-center border-x border-neutral-300 text-sm">
+                        <span className="h-8 sm:h-9 min-w-[1.75rem] flex items-center justify-center border-x border-neutral-300 text-sm tabular-nums">
                           {qty}
                         </span>
                         <button
                           type="button"
-                          className="h-9 w-9 flex items-center justify-center disabled:opacity-40"
+                          className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center disabled:opacity-40 touch-manipulation"
                           onClick={() => onQuantityChange(plan, 1)}
                           disabled={roomTypeSelectedTotal >= room.availableRooms}
+                          aria-label={`Increase ${plan.label}`}
                         >
-                          <Plus className="h-4 w-4" />
+                          <Plus className="h-3.5 w-3.5" />
                         </button>
                       </div>
                     </div>
-                  </div>
+                  </li>
                 );
-              })
-            ) : (
-              <p className="text-sm text-neutral-500">No rate plans available.</p>
-            )}
-          </div>
-        )}
-
-        {room.soldOut && (
-          <p className="text-sm text-neutral-500 mt-2">This room type is sold out for your dates.</p>
-        )}
-      </div>
+              })}
+            </ul>
+          ) : (
+            <p className="px-3 sm:px-5 py-3 text-sm text-neutral-500">No rate plans available.</p>
+          )}
+        </>
+      )}
     </div>
   </article>
 );

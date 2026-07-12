@@ -41,6 +41,13 @@ export interface CheckoutSummary {
   couponCode?: string;
   couponTitle?: string;
   taxAmount?: number;
+  cgstAmount?: number;
+  sgstAmount?: number;
+  roomTaxPercent?: number;
+  processingFeePercent?: number;
+  processingFeeAmount?: number;
+  processingFeeGstPercent?: number;
+  processingFeeGstAmount?: number;
   totalAmount: number;
   amountPaise: number;
   currency: string;
@@ -133,6 +140,13 @@ export function checkoutSummaryToQuote(summary: CheckoutSummary): import("@/serv
     subtotalAmount: summary.subtotalAmount,
     discountAmount: summary.discountAmount,
     taxAmount: summary.taxAmount,
+    cgstAmount: summary.cgstAmount,
+    sgstAmount: summary.sgstAmount,
+    roomTaxPercent: summary.roomTaxPercent,
+    processingFeePercent: summary.processingFeePercent,
+    processingFeeAmount: summary.processingFeeAmount,
+    processingFeeGstPercent: summary.processingFeeGstPercent,
+    processingFeeGstAmount: summary.processingFeeGstAmount,
     totalAmount: summary.totalAmount,
     couponCode: summary.couponCode,
     couponTitle: summary.couponTitle,

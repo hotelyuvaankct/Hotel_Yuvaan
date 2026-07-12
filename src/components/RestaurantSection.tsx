@@ -38,7 +38,7 @@ const menuHighlights = [
 const RestaurantSection = () => {
   const navigate = useNavigate();
   return (
-    <section id="restaurant" className="py-16 md:py-24 bg-background">
+    <section id="restaurant" className="pt-10 md:pt-12 pb-16 md:pb-24 bg-background">
       <div className="container mx-auto px-4">
         {/* Main Restaurant Section */}
         <div className="grid lg:grid-cols-2 gap-12 items-center">

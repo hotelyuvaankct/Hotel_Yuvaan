@@ -22,7 +22,7 @@ const CouponsSection = () => {
   }
 
   return (
-    <section id="offers" className="py-16 md:py-24 bg-[#faf8f5]">
+    <section id="offers" className="pt-16 md:pt-24 pb-10 md:pb-12 bg-[#faf8f5]">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 animate-on-scroll">
           <p className="text-primary text-sm tracking-[0.2em] uppercase mb-4">

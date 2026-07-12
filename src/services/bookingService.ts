@@ -15,7 +15,6 @@ export interface BookingConfig {
   checkInTime: string;
   checkOutTime: string;
   hotelNotifyEmail?: string;
-  infoNotifyEmail?: string;
 }
 
 export interface RoomGuestConfig {
@@ -38,6 +37,7 @@ export interface AvailableRoomType {
   discountPercent?: number;
   totalNights: number;
   primaryImageUrl?: string;
+  images?: string[];
   amenities: string[];
   badges?: string[];
   soldOut?: boolean;
@@ -102,6 +102,13 @@ export interface BookingQuote {
   couponCode?: string;
   couponTitle?: string;
   taxAmount?: number;
+  cgstAmount?: number;
+  sgstAmount?: number;
+  roomTaxPercent?: number;
+  processingFeePercent?: number;
+  processingFeeAmount?: number;
+  processingFeeGstPercent?: number;
+  processingFeeGstAmount?: number;
   totalAmount?: number;
   roomLines?: BookingRoomLine[];
 }
