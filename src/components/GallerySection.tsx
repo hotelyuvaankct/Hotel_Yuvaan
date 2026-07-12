@@ -17,7 +17,7 @@ const GallerySection = () => {
   useScrollAnimation([homeImages.length, isLoading]);
 
   return (
-    <section id="gallery" className="py-16 md:py-24 bg-background">
+    <section id="gallery" className="pt-10 md:pt-12 pb-16 md:pb-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 animate-on-scroll">
           <p className="text-primary text-sm tracking-[0.2em] uppercase mb-4">

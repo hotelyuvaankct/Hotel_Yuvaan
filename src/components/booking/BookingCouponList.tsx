@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { Check, Loader2, Tag } from "lucide-react";
 import {
   formatCouponDiscount,
@@ -29,6 +30,29 @@ const BookingCouponList = ({
   error,
   onSelectCoupon,
 }: BookingCouponListProps) => {
+  const listRef = useRef<HTMLDivElement>(null);
+  const [ineligibleAttemptCode, setIneligibleAttemptCode] = useState<string | null>(
+    null
+  );
+
+  useEffect(() => {
+    setIneligibleAttemptCode(null);
+  }, [cartSubtotal]);
+
+  useEffect(() => {
+    if (!ineligibleAttemptCode) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null;
+      if (!target || !listRef.current?.contains(target)) {
+        setIneligibleAttemptCode(null);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, [ineligibleAttemptCode]);
+
   if (loading) {
     return (
       <div className="flex items-center gap-2 text-xs text-neutral-500 py-1">
@@ -47,7 +71,7 @@ const BookingCouponList = ({
   }
 
   return (
-    <div className="space-y-2">
+    <div ref={listRef} className="space-y-2">
       <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
         Available offers
       </p>
@@ -57,19 +81,27 @@ const BookingCouponList = ({
           const isApplied = appliedCode?.toUpperCase() === coupon.code.toUpperCase();
           const isApplying = applyingCode?.toUpperCase() === coupon.code.toUpperCase();
           const minBooking = formatCouponMinBooking(coupon.minBookingAmount);
+          const showIneligibleMsg =
+            ineligibleAttemptCode?.toUpperCase() === coupon.code.toUpperCase() &&
+            !eligible;
 
           return (
             <li key={coupon.id}>
               <button
                 type="button"
-                onClick={() => onSelectCoupon(coupon.code)}
-                disabled={!eligible || isApplying}
+                onClick={() => {
+                  if (!eligible) {
+                    setIneligibleAttemptCode(coupon.code);
+                    return;
+                  }
+                  setIneligibleAttemptCode(null);
+                  onSelectCoupon(coupon.code);
+                }}
+                disabled={isApplying}
                 className={`w-full rounded-lg border px-3 py-2.5 text-left transition-colors disabled:cursor-not-allowed ${
                   isApplied
                     ? "border-green-300 bg-green-50"
-                    : eligible
-                      ? "border-neutral-200 bg-neutral-50 hover:border-[#4b3621] hover:bg-white"
-                      : "border-neutral-100 bg-neutral-50 opacity-60"
+                    : "border-neutral-200 bg-neutral-50 hover:border-[#4b3621] hover:bg-white"
                 }`}
               >
                 <div className="flex items-start justify-between gap-2">
@@ -89,7 +121,7 @@ const BookingCouponList = ({
                     {minBooking ? (
                       <p className="mt-0.5 text-[10px] text-neutral-500">{minBooking}</p>
                     ) : null}
-                    {!eligible && minBooking ? (
+                    {showIneligibleMsg ? (
                       <p className="mt-1 text-[10px] text-amber-700">
                         Add more to your booking to use this offer
                       </p>

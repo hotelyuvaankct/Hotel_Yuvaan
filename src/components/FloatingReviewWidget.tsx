@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { submitReview } from "@/services/reviewService";
@@ -19,7 +20,14 @@ const RATING_LABELS: Record<number, string> = {
   5: "Amazing, above expectations!",
 };
 
+function isBookingFlowPath(pathname: string): boolean {
+  return pathname === "/book" || pathname.startsWith("/book/");
+}
+
 const FloatingReviewWidget = () => {
+  const { pathname } = useLocation();
+  const hideOnBookingFlow = isBookingFlowPath(pathname);
+
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [hoverRating, setHoverRating] = useState(0);
@@ -72,6 +80,8 @@ const FloatingReviewWidget = () => {
       setLoading(false);
     }
   };
+
+  if (hideOnBookingFlow) return null;
 
   return (
     <>

@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { format, parseISO } from "date-fns";
-import { Loader2, Tag, X } from "lucide-react";
+import { ChevronDown, Loader2, Tag, X } from "lucide-react";
 import { formatRoomPrice } from "@/services/roomService";
 import type { BookingConfig, BookingQuote } from "@/services/bookingService";
 import type { CouponValidation, PublicCoupon } from "@/services/couponService";
 import BookingCouponList from "@/components/booking/BookingCouponList";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 export type CartItem = {
   key: string;
@@ -40,6 +45,11 @@ interface BookingSidebarProps {
   showContinueButton?: boolean;
   continueLabel?: string;
   selectedCouponCode?: string | null;
+  /** Stay nights/dates/check-in times */
+  showStayDetails?: boolean;
+  /** Selected room lines in the sidebar */
+  showCartItems?: boolean;
+  title?: string;
 }
 
 const BookingSidebar = ({
@@ -63,6 +73,9 @@ const BookingSidebar = ({
   showContinueButton = true,
   continueLabel = "Continue ›",
   selectedCouponCode,
+  showStayDetails = true,
+  showCartItems = true,
+  title = "My booking",
 }: BookingSidebarProps) => {
   const [manualCode, setManualCode] = useState("");
 
@@ -92,7 +105,14 @@ const BookingSidebar = ({
   // Totals come only from backend checkout-summary — never computed here
   const discount = Number(quote?.discountAmount ?? 0);
   const tax = quote?.taxAmount;
+  const cgst = quote?.cgstAmount;
+  const sgst = quote?.sgstAmount;
+  const roomTaxPercent = quote?.roomTaxPercent;
+  const processingFee = quote?.processingFeeAmount;
+  const processingFeeGst = quote?.processingFeeGstAmount;
   const total = quote?.totalAmount;
+  const halfTaxLabel =
+    roomTaxPercent != null ? (Number(roomTaxPercent) / 2).toFixed(Number(roomTaxPercent) % 1 === 0 ? 1 : 2) : null;
   const subtotalForEligibility = Number(
     quote?.subtotalAmount ??
       cart.reduce(
@@ -107,47 +127,61 @@ const BookingSidebar = ({
     selectedCouponCode;
 
   return (
-    <aside className="sticky top-28 self-start h-fit w-full bg-white border border-neutral-200 rounded-lg shadow-sm p-6">
-      <h2 className="font-playfair text-xl text-[#4b3621] mb-4">My booking</h2>
+    <aside className="w-full bg-white border border-neutral-200 rounded-xl shadow-sm p-5 sm:p-7">
+      <h2 className="font-playfair text-lg sm:text-xl font-semibold text-[#4b3621] tracking-tight leading-tight mb-4">
+        {title}
+      </h2>
 
-      <p className="text-sm text-neutral-600 mb-1">
-        {nights} night{nights === 1 ? "" : "s"}
-      </p>
-      {checkIn && checkOut && (
-        <p className="text-sm font-medium text-neutral-800 mb-1">
-          {format(parseISO(checkIn), "d MMMM")} — {format(parseISO(checkOut), "d MMMM")}
-        </p>
-      )}
-      {config && (
-        <div className="text-xs text-neutral-500 mb-4 space-y-0.5">
-          <p>Check-in from {config.checkInTime}</p>
-          <p>Check-out till {config.checkOutTime}</p>
-        </div>
-      )}
+      {showStayDetails ? (
+        <>
+          <p className="text-sm text-neutral-600 mb-0.5">
+            {nights} night{nights === 1 ? "" : "s"}
+          </p>
+          {checkIn && checkOut && (
+            <p className="text-sm font-medium text-neutral-800 mb-0.5">
+              {format(parseISO(checkIn), "d MMMM")} — {format(parseISO(checkOut), "d MMMM")}
+            </p>
+          )}
+          {config && (
+            <div className="text-xs text-neutral-500 space-y-0.5">
+              <p>Check-in from {config.checkInTime}</p>
+              <p>Check-out till {config.checkOutTime}</p>
+            </div>
+          )}
+        </>
+      ) : null}
 
-      {cart.length === 0 ? (
-        <p className="text-sm text-neutral-500 py-6">Select rooms to see your summary.</p>
-      ) : (
-        <ul className="space-y-3 mb-4 border-t border-neutral-100 pt-4">
-          {cart.map((item, index) => (
-            <li key={item.key} className="text-sm">
-              <p className="font-medium text-neutral-800">
-                Room {index + 1}: {item.roomTypeName}
-              </p>
-              <p className="text-neutral-500 text-xs">{item.ratePlanLabel}</p>
-              <p className="text-neutral-700 mt-0.5">
-                {formatRoomPrice(item.pricePerNight * item.quantity * item.totalNights)}
-                {item.quantity > 1 ? ` (${item.quantity}×)` : ""}
-              </p>
-            </li>
-          ))}
-        </ul>
-      )}
+      {showCartItems ? (
+        cart.length === 0 ? (
+          <p className="text-sm text-neutral-500 py-4 mt-1">
+            Select rooms to see your summary.
+          </p>
+        ) : (
+          <ul className={`space-y-2.5 border-t border-neutral-100 pt-3 ${showStayDetails ? "mt-3" : "mt-0"}`}>
+            {cart.map((item, index) => (
+              <li key={item.key} className="text-sm flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="font-medium text-neutral-800 leading-snug">
+                    Room {index + 1}: {item.roomTypeName}
+                  </p>
+                  <p className="text-neutral-500 text-xs leading-snug">{item.ratePlanLabel}</p>
+                  {item.quantity > 1 ? (
+                    <p className="text-neutral-500 text-xs mt-0.5">{item.quantity}×</p>
+                  ) : null}
+                </div>
+                <p className="text-neutral-800 font-medium tabular-nums shrink-0 text-right leading-snug">
+                  {formatRoomPrice(item.pricePerNight * item.quantity * item.totalNights)}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )
+      ) : null}
 
       {cart.length > 0 ? (
-        <div className="border-t border-neutral-100 pt-4 flex flex-col gap-3">
+        <div className={`flex flex-col gap-2.5 ${(showStayDetails || showCartItems) ? "border-t border-neutral-100 mt-3 pt-3" : ""}`}>
           {showCoupons ? (
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2.5">
               {appliedCoupon?.valid || (quote?.couponCode && discount > 0) ? (
                 <div className="flex items-start justify-between gap-2 rounded border border-green-200 bg-green-50 px-3 py-2 text-sm">
                   <div className="flex items-start gap-2 text-green-800">
@@ -257,21 +291,115 @@ const BookingSidebar = ({
               </div>
             ) : quote ? (
               <>
+                <div className="flex justify-between text-neutral-700">
+                  <span>Room total</span>
+                  <span>
+                    {formatRoomPrice(
+                      Number(
+                        quote.subtotalAmount ??
+                          cart.reduce(
+                            (sum, item) =>
+                              sum +
+                              item.pricePerNight * item.quantity * item.totalNights,
+                            0
+                          )
+                      )
+                    )}
+                  </span>
+                </div>
                 {discount > 0 ? (
                   <div className="flex justify-between text-green-700">
                     <span>Discount</span>
                     <span>-{formatRoomPrice(discount)}</span>
                   </div>
                 ) : null}
-                <div className="flex justify-between text-neutral-600">
-                  <span>Taxes</span>
-                  <span>{tax != null ? formatRoomPrice(tax) : "—"}</span>
-                </div>
+                {(() => {
+                  const cgstValue = Number(cgst ?? 0);
+                  const sgstValue = Number(sgst ?? 0);
+                  const roomTaxValue =
+                    cgst != null || sgst != null
+                      ? cgstValue + sgstValue
+                      : Number(tax ?? 0);
+                  const processFeeValue =
+                    Number(processingFee ?? 0) + Number(processingFeeGst ?? 0);
+                  const taxTotal = roomTaxValue + processFeeValue;
+                  const hasBreakdown =
+                    cgst != null ||
+                    sgst != null ||
+                    tax != null ||
+                    processFeeValue > 0;
+
+                  if (!hasBreakdown) return null;
+
+                  return (
+                    <div className="flex justify-between text-neutral-600 items-center gap-2">
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <button
+                            type="button"
+                            className="inline-flex items-center gap-1 text-[#4b3621] font-medium hover:opacity-80 transition-opacity"
+                          >
+                            <span>Taxes</span>
+                            <ChevronDown className="h-3.5 w-3.5" />
+                          </button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          align="start"
+                          className="w-64 p-3 space-y-2 text-sm"
+                        >
+                          <p className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500">
+                            Tax breakdown
+                          </p>
+                          {(cgst != null || sgst != null) ? (
+                            <>
+                              <div className="flex justify-between text-neutral-600">
+                                <span>
+                                  CGST
+                                  {halfTaxLabel ? ` ${halfTaxLabel}%` : ""}
+                                </span>
+                                <span className="tabular-nums">
+                                  {formatRoomPrice(cgstValue)}
+                                </span>
+                              </div>
+                              <div className="flex justify-between text-neutral-600">
+                                <span>
+                                  SGST
+                                  {halfTaxLabel ? ` ${halfTaxLabel}%` : ""}
+                                </span>
+                                <span className="tabular-nums">
+                                  {formatRoomPrice(sgstValue)}
+                                </span>
+                              </div>
+                            </>
+                          ) : tax != null ? (
+                            <div className="flex justify-between text-neutral-600">
+                              <span>Taxes</span>
+                              <span className="tabular-nums">
+                                {formatRoomPrice(Number(tax))}
+                              </span>
+                            </div>
+                          ) : null}
+                          {processFeeValue > 0 ? (
+                            <div className="flex justify-between text-neutral-600">
+                              <span>Payment Processing fee</span>
+                              <span className="tabular-nums">
+                                {formatRoomPrice(processFeeValue)}
+                              </span>
+                            </div>
+                          ) : null}
+                        </PopoverContent>
+                      </Popover>
+                      <span className="tabular-nums">
+                        {formatRoomPrice(taxTotal)}
+                      </span>
+                    </div>
+                  );
+                })()}
                 <div className="flex justify-between font-semibold text-[#4b3621] text-base pt-1">
                   <span>Total</span>
                   <span>{total != null ? formatRoomPrice(total) : "—"}</span>
                 </div>
-                <p className="text-xs text-neutral-500">Taxes included</p>
+                <p className="text-xs text-neutral-500">Taxes & fees included</p>
               </>
             ) : (
               <p className="text-xs text-neutral-500 py-1">Totals will appear when available.</p>

@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { format, parseISO } from "date-fns";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, CalendarDays, Clock3, Loader2, Moon, Undo2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -26,13 +26,14 @@ import {
   fetchPublicCoupons,
   type CouponValidation,
 } from "@/services/couponService";
-import { buildBookUrl } from "@/services/roomService";
+import { buildBookUrl, formatRoomPrice } from "@/services/roomService";
 import {
   bookingSession,
   type BookingSession,
   type GuestDetails,
 } from "@/lib/bookingSessionManager";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
@@ -57,6 +58,7 @@ const BookCheckout = () => {
   const [submitting, setSubmitting] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [marriedCoupleConfirmed, setMarriedCoupleConfirmed] = useState(false);
 
   useEffect(() => {
     const saved = bookingSession.load();
@@ -280,6 +282,12 @@ const BookCheckout = () => {
       setFormError("Valid phone number is required");
       return false;
     }
+    if (!marriedCoupleConfirmed) {
+      setFormError(
+        "Please confirm that you have read and understood the couple stay policy before continuing to payment."
+      );
+      return false;
+    }
     setFormError(null);
     return true;
   };
@@ -373,14 +381,29 @@ const BookCheckout = () => {
   }
 
   const config = configQuery.data as BookingConfig | undefined;
+  const nights =
+    quote?.totalNights ??
+    Math.max(
+      1,
+      Math.round(
+        (parseISO(draft.checkOut).getTime() - parseISO(draft.checkIn).getTime()) /
+          (1000 * 60 * 60 * 24)
+      )
+    );
 
   return (
     <div className="min-h-screen bg-[#faf8f5] flex flex-col">
       <Navigation />
       <ProcessingOverlay
-        open={verifying}
-        message="Verifying payment…"
-        detail="Please wait while we confirm your payment. Do not close or refresh this page."
+        open={submitting || verifying}
+        message={
+          verifying ? "Verifying payment…" : "Preparing payment…"
+        }
+        detail={
+          verifying
+            ? "Please wait while we confirm your payment. Do not close or refresh this page."
+            : "Creating your order. Please wait — do not close or refresh this page."
+        }
       />
 
       <section className="relative pt-28 pb-8 bg-[#4b3621]">
@@ -399,26 +422,108 @@ const BookCheckout = () => {
         </div>
       </section>
 
-      <main className="flex-1 container mx-auto px-4 py-10">
-        <div className="grid lg:grid-cols-[1fr_320px] gap-8 items-start">
-          <div className="space-y-4">
-            <Link
-              to={backToRoomsUrl}
-              className="inline-flex items-center gap-2 text-sm font-medium text-[#4b3621] hover:underline"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Edit room selection
-            </Link>
+      <main className="flex-1 container mx-auto px-4 py-8 md:py-10">
+        <Link
+          to={backToRoomsUrl}
+          className="inline-flex items-center gap-2 text-sm font-medium text-[#4b3621] hover:underline mb-5"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Edit room selection
+        </Link>
 
-            <div className="bg-white border border-neutral-200 rounded-lg shadow-sm p-6 md:p-8">
-              <div className="mb-6">
+        <div className="grid lg:grid-cols-[1fr_340px] gap-6 lg:gap-8 items-start">
+          <div className="space-y-5">
+            {/* Stay summary — single source of truth */}
+            <section className="relative overflow-hidden rounded-xl border border-[#4b3621]/15 bg-gradient-to-br from-[#4b3621] via-[#5c4330] to-[#3d2b1a] text-white shadow-lg">
+              <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top_right,_#c9a227,_transparent_55%)]" />
+              <div className="relative p-5 sm:p-7">
+                <div className="flex flex-wrap items-start justify-between gap-3 mb-5">
+                  <div>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#e8d5a3]">
+                      Your stay
+                    </p>
+                    <h2 className="font-playfair text-2xl sm:text-3xl mt-1">
+                      {nights} night{nights === 1 ? "" : "s"} at Hotel Yuvaan
+                    </h2>
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-[#f5e6c8] ring-1 ring-white/15">
+                    <Moon className="h-3.5 w-3.5" />
+                    {nights} night{nights === 1 ? "" : "s"}
+                  </span>
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 mb-5">
+                  <div className="rounded-lg bg-white/10 backdrop-blur-sm px-4 py-3 ring-1 ring-white/10">
+                    <div className="flex items-center gap-2 text-[#e8d5a3] text-[11px] uppercase tracking-wider font-semibold mb-1">
+                      <CalendarDays className="h-3.5 w-3.5" />
+                      Check-in
+                    </div>
+                    <p className="font-playfair text-xl leading-tight">
+                      {format(parseISO(draft.checkIn), "d MMMM yyyy")}
+                    </p>
+                    {config ? (
+                      <p className="text-sm text-white/70 mt-1 inline-flex items-center gap-1.5">
+                        <Clock3 className="h-3.5 w-3.5" />
+                        From {config.checkInTime}
+                      </p>
+                    ) : null}
+                  </div>
+                  <div className="rounded-lg bg-white/10 backdrop-blur-sm px-4 py-3 ring-1 ring-white/10">
+                    <div className="flex items-center gap-2 text-[#e8d5a3] text-[11px] uppercase tracking-wider font-semibold mb-1">
+                      <CalendarDays className="h-3.5 w-3.5" />
+                      Check-out
+                    </div>
+                    <p className="font-playfair text-xl leading-tight">
+                      {format(parseISO(draft.checkOut), "d MMMM yyyy")}
+                    </p>
+                    {config ? (
+                      <p className="text-sm text-white/70 mt-1 inline-flex items-center gap-1.5">
+                        <Clock3 className="h-3.5 w-3.5" />
+                        Till {config.checkOutTime}
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+
+                <div className="border-t border-white/15 pt-4 space-y-2.5">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#e8d5a3]">
+                    Selected rooms
+                  </p>
+                  <ul className="space-y-2">
+                    {cart.map((item, index) => (
+                      <li
+                        key={item.key}
+                        className="flex items-start justify-between gap-3 text-sm"
+                      >
+                        <div className="min-w-0">
+                          <p className="font-medium text-white leading-snug">
+                            Room {index + 1}: {item.roomTypeName}
+                            {item.quantity > 1 ? ` × ${item.quantity}` : ""}
+                          </p>
+                          <p className="text-white/65 text-xs mt-0.5">{item.ratePlanLabel}</p>
+                        </div>
+                        <p className="tabular-nums text-[#f5e6c8] font-medium shrink-0">
+                          {formatRoomPrice(
+                            item.pricePerNight * item.quantity * item.totalNights
+                          )}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            {/* Guest details */}
+            <section className="bg-white border border-neutral-200 rounded-xl shadow-sm p-5 sm:p-7">
+              <div className="mb-5">
                 <h2 className="font-playfair text-2xl text-[#4b3621]">Guest details</h2>
                 <p className="text-sm text-neutral-600 mt-1">
                   You can update your information anytime before confirming.
                 </p>
               </div>
 
-              <form onSubmit={handleContinueToPayment} className="space-y-6">
+              <form onSubmit={handleContinueToPayment} className="space-y-5">
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="firstName">First name</Label>
@@ -426,7 +531,7 @@ const BookCheckout = () => {
                       id="firstName"
                       value={guest.guestFirstName}
                       onChange={(e) => updateGuest({ guestFirstName: e.target.value })}
-                      className="rounded-none mt-1"
+                      className="rounded-sm mt-1"
                     />
                   </div>
                   <div>
@@ -435,7 +540,7 @@ const BookCheckout = () => {
                       id="lastName"
                       value={guest.guestLastName}
                       onChange={(e) => updateGuest({ guestLastName: e.target.value })}
-                      className="rounded-none mt-1"
+                      className="rounded-sm mt-1"
                     />
                   </div>
                 </div>
@@ -447,11 +552,8 @@ const BookCheckout = () => {
                     type="email"
                     value={guest.guestEmail}
                     onChange={(e) => updateGuest({ guestEmail: e.target.value })}
-                    className="rounded-none mt-1"
+                    className="rounded-sm mt-1"
                   />
-                  <p className="text-xs text-neutral-500 mt-1">
-                    Used for confirmation and coupon validation.
-                  </p>
                 </div>
 
                 <div>
@@ -461,12 +563,12 @@ const BookCheckout = () => {
                     type="tel"
                     value={guest.guestPhone}
                     onChange={(e) => updateGuest({ guestPhone: e.target.value })}
-                    className="rounded-none mt-1"
+                    className="rounded-sm mt-1"
                   />
                 </div>
 
                 {accommodatedGuests < totalGuests ? (
-                  <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 px-3 py-2">
+                  <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 px-3 py-2 rounded-sm">
                     Selected rooms fit {accommodatedGuests} of {totalGuests} guests.{" "}
                     <Link to={backToRoomsUrl} className="font-medium underline">
                       Add more rooms
@@ -474,41 +576,81 @@ const BookCheckout = () => {
                   </p>
                 ) : null}
 
+                <div className="rounded-sm border border-[#4b3621]/20 bg-[#faf7f2] px-4 py-3.5 space-y-3">
+                  <p className="text-sm text-[#4b3621] leading-relaxed">
+                    Hotel Yuvaan has a couple stay policy: couple bookings are
+                    for{" "}
+                    <span className="font-semibold">married couples only</span>.
+                    Unmarried couples are not permitted. See our{" "}
+                    <Link
+                      to="/terms"
+                      className="font-medium underline underline-offset-2"
+                    >
+                      Terms &amp; Conditions
+                    </Link>
+                    .
+                  </p>
+                  <div className="flex items-start gap-3">
+                    <Checkbox
+                      id="coupleStayPolicyConfirmed"
+                      checked={marriedCoupleConfirmed}
+                      onCheckedChange={(checked) => {
+                        setMarriedCoupleConfirmed(checked === true);
+                        if (checked === true) setFormError(null);
+                      }}
+                      className="mt-0.5 border-[#4b3621] data-[state=checked]:bg-[#4b3621] data-[state=checked]:border-[#4b3621]"
+                    />
+                    <Label
+                      htmlFor="coupleStayPolicyConfirmed"
+                      className="text-sm text-neutral-700 font-normal leading-snug cursor-pointer"
+                    >
+                      I confirm that I have read and understood the property's
+                      couple stay policy. If this booking is for a couple, all
+                      guests comply with the hotel's eligibility requirements.
+                    </Label>
+                  </div>
+                </div>
+
                 {formError ? <p className="text-sm text-destructive">{formError}</p> : null}
 
                 <Button
                   type="submit"
                   disabled={submitting || verifying || quoteLoading}
-                  className="w-full rounded-none bg-[#4b3621] hover:bg-[#3d2b1a] py-6 text-sm font-semibold tracking-wider uppercase"
+                  className="w-full rounded-sm bg-[#4b3621] hover:bg-[#3d2b1a] py-6 text-sm font-semibold tracking-wider uppercase"
                 >
                   {submitting ? "Opening payment…" : "Continue to payment"}
                 </Button>
               </form>
-            </div>
+            </section>
           </div>
 
-          <BookingSidebar
-            checkIn={draft.checkIn}
-            checkOut={draft.checkOut}
-            cart={cart as CartItem[]}
-            quote={quote}
-            quoteLoading={quoteLoading}
-            config={config ?? null}
-            onContinue={() => undefined}
-            loading={submitting || verifying}
-            availableCoupons={couponsQuery.data ?? []}
-            couponsLoading={couponsQuery.isLoading}
-            appliedCoupon={appliedCoupon}
-            selectedCouponCode={
-              appliedCoupon?.valid ? null : pendingCouponCode || null
-            }
-            applyingCouponCode={applyingCoupon}
-            couponError={couponError}
-            onSelectCoupon={handleApplyCoupon}
-            onRemoveCoupon={handleRemoveCoupon}
-            showCoupons
-            showContinueButton={false}
-          />
+          <div className="lg:sticky lg:top-24 self-start">
+            <BookingSidebar
+              checkIn={draft.checkIn}
+              checkOut={draft.checkOut}
+              cart={cart as CartItem[]}
+              quote={quote}
+              quoteLoading={quoteLoading}
+              config={config ?? null}
+              onContinue={() => undefined}
+              loading={submitting || verifying}
+              availableCoupons={couponsQuery.data ?? []}
+              couponsLoading={couponsQuery.isLoading}
+              appliedCoupon={appliedCoupon}
+              selectedCouponCode={
+                appliedCoupon?.valid ? null : pendingCouponCode || null
+              }
+              applyingCouponCode={applyingCoupon}
+              couponError={couponError}
+              onSelectCoupon={handleApplyCoupon}
+              onRemoveCoupon={handleRemoveCoupon}
+              showCoupons
+              showContinueButton={false}
+              showStayDetails={false}
+              showCartItems={false}
+              title="Payment summary"
+            />
+          </div>
         </div>
       </main>
 
