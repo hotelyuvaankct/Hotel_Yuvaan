@@ -1,6 +1,7 @@
 import React from 'react';
 import { Car, Wifi, Coffee, Waves, Utensils, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import SectionHeader from './SectionHeader';
 
 const FacilitiesSection = () => {
   const facilities = [
@@ -37,21 +38,14 @@ const FacilitiesSection = () => {
   ];
 
   return (
-    <section id="facilities" className="py-16 md:py-24 bg-muted/30">
+    <section id="facilities" className="py-16 md:py-24">
       <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-16 animate-on-scroll">
-          <p className="text-primary text-sm tracking-[0.2em] uppercase mb-4">
-            OUR SERVICES
-          </p>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold font-playfair mb-6">
-            Hotel <span className="text-gradient">Facilities</span>
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Experience world-class amenities and services designed to make your stay
-            comfortable, convenient, and memorable.
-          </p>
-        </div>
+        <SectionHeader
+          eyebrow="OUR SERVICES"
+          title="Hotel"
+          highlight="Facilities"
+          description="Experience world-class amenities and services designed to make your stay comfortable, convenient, and memorable."
+        />
 
         {/* Facilities Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

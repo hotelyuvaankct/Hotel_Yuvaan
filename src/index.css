@@ -6,13 +6,16 @@
 /* Premium Hotel Color Scheme */
 @layer base {
   :root {
-    --background: 45 25% 97%;
+    /* ── Page canvas (change this one value for the whole site) ── */
+    --page-bg: 40 33% 97%;
+
+    --background: var(--page-bg);
     --foreground: 30 15% 15%;
 
-    --card: 45 25% 98%;
+    --card: 40 33% 99%;
     --card-foreground: 30 15% 15%;
 
-    --popover: 45 25% 98%;
+    --popover: 40 33% 99%;
     --popover-foreground: 30 15% 15%;
 
     --primary: 35 65% 45%;
@@ -21,7 +24,7 @@
     --secondary: 35 20% 90%;
     --secondary-foreground: 30 15% 15%;
 
-    --muted: 35 15% 92%;
+    --muted: 40 20% 94%;
     --muted-foreground: 30 10% 45%;
 
     --accent: 35 50% 85%;
@@ -74,13 +77,26 @@
   }
 
   body {
-    @apply bg-background text-foreground font-inter;
+    @apply text-foreground font-inter;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
   
   h1, h2, h3, h4, h5, h6 {
     @apply font-playfair;
   }
+}
+
+/* Owned by <PageBackground /> — single site canvas */
+html,
+body,
+#root {
+  background-color: hsl(var(--page-bg));
+}
+
+.page-background {
+  background-color: hsl(var(--page-bg));
+  color: hsl(var(--foreground));
+  min-height: 100%;
 }
 
 /* Custom Scrollbar */
@@ -109,7 +125,8 @@ html {
 .animate-on-scroll {
   opacity: 0;
   transform: translateY(40px);
-  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .animate-on-scroll.animate {
@@ -120,7 +137,8 @@ html {
 .animate-on-scroll-left {
   opacity: 0;
   transform: translateX(-50px);
-  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .animate-on-scroll-left.animate {
@@ -131,7 +149,8 @@ html {
 .animate-on-scroll-right {
   opacity: 0;
   transform: translateX(50px);
-  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .animate-on-scroll-right.animate {

@@ -1,14 +1,13 @@
 import React from "react";
 import {
-  Award,
-  Users,
-  Clock,
   MapPin,
   Phone,
   ChevronRight,
 } from "lucide-react";
 import { useAppConfig } from "@/hooks/useAppConfig";
 import { Button } from "@/components/ui/button";
+import SectionHeader from "./SectionHeader";
+import StatsRow from "./StatsRow";
 
 const AboutSection = () => {
   const { data: contact } = useAppConfig();
@@ -16,98 +15,47 @@ const AboutSection = () => {
   return (
     <section
       id="about"
-      className="pt-10 md:pt-12 pb-16 md:pb-24 bg-background relative overflow-hidden"
+      className="pt-10 md:pt-12 pb-16 md:pb-24 relative"
     >
-      {/* Decorative elements */}
-      <div className="absolute top-0 left-0 w-32 h-32 bg-gold-500/10 rounded-full filter blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-      <div className="absolute bottom-0 right-0 w-64 h-64 bg-primary/10 rounded-full filter blur-3xl translate-x-1/2 translate-y-1/2"></div>
-
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Content */}
           <div className="animate-on-scroll-left">
-            <div className="relative inline-block mb-6">
-              <p className="text-primary text-sm tracking-[0.2em] uppercase mb-4 relative z-10">
-                HOTEL YUVAAN LUXURY HOTEL
-              </p>
-              <div className="absolute -bottom-1 left-0 w-full h-1 bg-gradient-to-r from-gold-500 to-gold-300 rounded-full"></div>
-            </div>
+            <SectionHeader
+              align="left"
+              animate={false}
+              className="mb-8"
+              eyebrow="HOTEL YUVAAN LUXURY HOTEL"
+              title="Enjoy a Luxury"
+              highlight="Experience"
+              description={
+                <>
+                  Welcome to the finest five-star deluxe hotel in the heart of the
+                  city.{" "}
+                  <span className="font-medium text-foreground">Hotel Yuvaan</span>{" "}
+                  offers unparalleled luxury and comfort with world-class amenities
+                  and exceptional hospitality that creates unforgettable memories
+                  for our distinguished guests.
+                  <br />
+                  <br />
+                  Our exquisite hotel features elegantly appointed rooms and
+                  suites, each meticulously designed with contemporary furnishings
+                  and premium amenities. Experience fine dining at our signature
+                  restaurant, rejuvenate at our award-winning spa, or host your
+                  special events in our sophisticated venues.
+                </>
+              }
+            />
 
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-playfair mb-8 text-foreground relative">
-              <span className="relative z-10">
-                Enjoy a Luxury
-                <br />
-                <span className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-gold-600 via-gold-500 to-gold-300">
-                  Experience
-                </span>
-              </span>
-              <span className="absolute -bottom-2 left-0 text-8xl opacity-5 font-bold text-gold-500 select-none">
-                Luxury
-              </span>
-            </h2>
-
-            <div className="space-y-4 text-muted-foreground mb-8 relative">
-              <div className="absolute -left-8 top-0 h-full w-1 bg-gradient-to-b from-gold-500 to-transparent rounded-full"></div>
-              <p className="relative pl-4">
-                Welcome to the finest five-star deluxe hotel in the heart of the
-                city.{" "}
-                <span className="font-medium text-foreground">
-                  Hotel Yuvaan
-                </span>{" "}
-                offers unparalleled luxury and comfort with world-class
-                amenities and exceptional hospitality that creates unforgettable
-                memories for our distinguished guests.
-              </p>
-
-              <p className="relative pl-4">
-                Our exquisite hotel features elegantly appointed rooms and
-                suites, each meticulously designed with contemporary furnishings
-                and premium amenities. Experience fine dining at our signature
-                restaurant, rejuvenate at our award-winning spa, or host your
-                special events in our sophisticated venues.
-              </p>
-            </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-              {[
-                {
-                  value: "16+",
-                  label: "Luxury Rooms",
-                  icon: <Award className="w-5 h-5 text-gold-500" />,
-                },
-                {
-                  value: "2+",
-                  label: "Years Experience",
-                  icon: <Clock className="w-5 h-5 text-gold-500" />,
-                },
-                {
-                  value: "1000+",
-                  label: "Happy Guests",
-                  icon: <Users className="w-5 h-5 text-gold-500" />,
-                },
-                {
-                  value: "24/7",
-                  label: "Service",
-                  icon: <Phone className="w-5 h-5 text-gold-500" />,
-                },
-              ].map((stat, index) => (
-                <div
-                  key={index}
-                  className="bg-gradient-to-br from-background to-muted/50 p-4 rounded-xl border border-muted hover:border-gold-300 transition-all hover:shadow-lg"
-                >
-                  <div className="flex items-center justify-center mb-2">
-                    {stat.icon}
-                  </div>
-                  <div className="text-2xl font-bold text-primary mb-1">
-                    {stat.value}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </div>
+            <StatsRow
+              className="mb-8"
+              items={[
+                { value: "16+", label: "Luxury Rooms" },
+                { value: "2+", label: "Years Experience" },
+                { value: "1000+", label: "Happy Guests" },
+                { value: "24/7", label: "Service" },
+              ]}
+            />
 
             {/* CTA */}
             <div className="flex flex-col sm:flex-row gap-4">

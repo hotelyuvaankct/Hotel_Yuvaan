@@ -1,24 +1,21 @@
-
-import React, { useEffect } from 'react';
 import Navigation from '../components/Navigation';
 import HeroSection from '../components/HeroSection';
 import AboutSection from '../components/AboutSection';
 import RoomsSection from '../components/RoomsSection';
 import RestaurantSection from '../components/RestaurantSection';
 import FacilitiesSection from '../components/FacilitiesSection';
-import TestimonialsSection from '../components/TestimonialsSection';
-import EventsSection from '../components/EventsSection';
 import GallerySection from '../components/GallerySection';
 import CouponsSection from '../components/CouponsSection';
 import ContactSection from '../components/ContactSection';
 import Footer from '../components/Footer';
+import PageBackground from '../components/PageBackground';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const Index = () => {
   useScrollAnimation();
 
   return (
-    <div className="min-h-screen overflow-hidden">
+    <PageBackground>
       <Navigation />
       <HeroSection />
       <AboutSection />
@@ -31,7 +28,7 @@ const Index = () => {
       <CouponsSection />
       <ContactSection />
       <Footer />
-    </div>
+    </PageBackground>
   );
 };
 

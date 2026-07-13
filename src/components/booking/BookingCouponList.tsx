@@ -13,7 +13,6 @@ interface BookingCouponListProps {
   applyingCode?: string | null;
   appliedCode?: string | null;
   cartSubtotal: number;
-  error?: string | null;
   onSelectCoupon: (code: string) => void;
   onRemoveCoupon?: () => void;
 }
@@ -29,7 +28,6 @@ const BookingCouponList = ({
   applyingCode,
   appliedCode,
   cartSubtotal,
-  error,
   onSelectCoupon,
   onRemoveCoupon,
 }: BookingCouponListProps) => {
@@ -164,7 +162,6 @@ const BookingCouponList = ({
           );
         })}
       </ul>
-      {error ? <p className="text-xs text-red-600">{error}</p> : null}
     </div>
   );
 };
