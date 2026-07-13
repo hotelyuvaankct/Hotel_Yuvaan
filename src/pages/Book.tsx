@@ -707,7 +707,7 @@ const RoomCard = ({
         <>
           <div className="px-3 sm:px-5 pt-2.5 sm:pt-3 pb-1">
             <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
-              Choose a rate
+              Choose a rate and add rooms
             </p>
           </div>
           {ratePlans && ratePlans.length > 0 ? (
@@ -753,29 +753,45 @@ const RoomCard = ({
                           per night + taxes
                         </p>
                       </div>
-                      <div className="inline-flex items-center border border-neutral-300 rounded-sm shrink-0">
+                      {qty === 0 ? (
                         <button
                           type="button"
-                          className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center disabled:opacity-40 touch-manipulation"
-                          onClick={() => onQuantityChange(plan, -1)}
-                          disabled={qty <= 0}
-                          aria-label={`Decrease ${plan.label}`}
-                        >
-                          <Minus className="h-3.5 w-3.5" />
-                        </button>
-                        <span className="h-8 sm:h-9 min-w-[1.75rem] flex items-center justify-center border-x border-neutral-300 text-sm tabular-nums">
-                          {qty}
-                        </span>
-                        <button
-                          type="button"
-                          className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center disabled:opacity-40 touch-manipulation"
+                          className="h-8 sm:h-9 px-3 sm:px-4 text-xs sm:text-sm font-semibold tracking-wide uppercase text-[#4b3621] border border-[#d4c4a8] rounded-sm bg-white hover:bg-[#faf8f5] disabled:opacity-40 touch-manipulation whitespace-nowrap"
                           onClick={() => onQuantityChange(plan, 1)}
                           disabled={roomTypeSelectedTotal >= room.availableRooms}
-                          aria-label={`Increase ${plan.label}`}
+                          aria-label={`Add room — ${plan.label}`}
                         >
-                          <Plus className="h-3.5 w-3.5" />
+                          Add room
                         </button>
-                      </div>
+                      ) : (
+                        <div className="flex flex-col items-end gap-1">
+                          <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400 leading-none">
+                            Rooms
+                          </p>
+                          <div className="inline-flex items-center border border-neutral-300 rounded-sm shrink-0">
+                            <button
+                              type="button"
+                              className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center disabled:opacity-40 touch-manipulation"
+                              onClick={() => onQuantityChange(plan, -1)}
+                              aria-label={`Remove room — ${plan.label}`}
+                            >
+                              <Minus className="h-3.5 w-3.5" />
+                            </button>
+                            <span className="h-8 sm:h-9 min-w-[3.25rem] px-1.5 flex items-center justify-center border-x border-neutral-300 text-sm tabular-nums text-[#4b3621]">
+                              {qty}
+                            </span>
+                            <button
+                              type="button"
+                              className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center disabled:opacity-40 touch-manipulation"
+                              onClick={() => onQuantityChange(plan, 1)}
+                              disabled={roomTypeSelectedTotal >= room.availableRooms}
+                              aria-label={`Add room — ${plan.label}`}
+                            >
+                              <Plus className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </li>
                 );

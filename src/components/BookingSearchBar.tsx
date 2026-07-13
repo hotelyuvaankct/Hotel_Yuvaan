@@ -5,6 +5,7 @@ import {
   addDays,
   parseISO,
   isBefore,
+  isAfter,
   startOfToday,
   startOfDay,
 } from "date-fns";
@@ -28,6 +29,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { MAX_STAY_DAYS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 interface RoomGuests {
@@ -50,7 +52,6 @@ export const GuestSelectorModal: React.FC<GuestSelectorModalProps> = ({
   onChange,
   config,
 }) => {
-  const maxRooms = config?.maxRooms ?? 10;
   const minAdults = config?.minAdultsPerRoom ?? 1;
   const maxAdults = config?.maxAdultsPerRoom ?? 4;
   const maxChildren = config?.maxChildrenPerRoom ?? 2;
@@ -59,11 +60,6 @@ export const GuestSelectorModal: React.FC<GuestSelectorModalProps> = ({
     onChange(
       rooms.map((room, i) => (i === index ? { ...room, ...patch } : room))
     );
-  };
-
-  const addRoom = () => {
-    if (rooms.length >= maxRooms) return;
-    onChange([...rooms, { adults: 2, children: 0 }]);
   };
 
   const removeRoom = (index: number) => {
@@ -121,16 +117,7 @@ export const GuestSelectorModal: React.FC<GuestSelectorModalProps> = ({
           ))}
         </div>
 
-        <div className="flex items-center justify-between gap-3 border-t border-[#e8dfd0] px-6 py-4 bg-[#faf8f5]">
-          <Button
-            type="button"
-            variant="outline"
-            className="rounded-md border-[#d4c4a8] text-[#4b3621] hover:bg-[#f5efe6]"
-            onClick={addRoom}
-            disabled={rooms.length >= maxRooms}
-          >
-            + Add a room
-          </Button>
+        <div className="flex items-center justify-end gap-3 border-t border-[#e8dfd0] px-6 py-4 bg-[#faf8f5]">
           <Button
             type="button"
             className="rounded-md bg-[#4b3621] hover:bg-[#3d2b1a] text-white px-8"
@@ -224,7 +211,19 @@ const BookingSearchBar: React.FC = () => {
     const urlRoomGuests = decodeRoomGuests(searchParams.get("roomGuests"));
 
     if (urlCheckIn) setCheckIn(urlCheckIn);
-    if (urlCheckOut) setCheckOut(urlCheckOut);
+    if (urlCheckOut) {
+      if (urlCheckIn) {
+        const maxCheckOut = addDays(parseISO(urlCheckIn), MAX_STAY_DAYS);
+        const requestedCheckOut = parseISO(urlCheckOut);
+        setCheckOut(
+          toInputDate(
+            isAfter(requestedCheckOut, maxCheckOut) ? maxCheckOut : requestedCheckOut
+          )
+        );
+      } else {
+        setCheckOut(urlCheckOut);
+      }
+    }
     if (urlRoomGuests) setGuestRooms(urlRoomGuests);
   }, [searchParams]);
 
@@ -242,10 +241,14 @@ const BookingSearchBar: React.FC = () => {
 
   const handleCheckInChange = (value: string) => {
     setCheckIn(value);
-    const checkInDate = parseISO(value);
+    const nextCheckIn = parseISO(value);
     const checkOutDate = parseISO(checkOut);
-    if (!isBefore(checkInDate, checkOutDate)) {
-      setCheckOut(toInputDate(addDays(checkInDate, 1)));
+    const maxCheckOut = addDays(nextCheckIn, MAX_STAY_DAYS);
+
+    if (!isBefore(nextCheckIn, checkOutDate)) {
+      setCheckOut(toInputDate(addDays(nextCheckIn, 1)));
+    } else if (isAfter(checkOutDate, maxCheckOut)) {
+      setCheckOut(toInputDate(maxCheckOut));
     }
   };
 
@@ -267,6 +270,7 @@ const BookingSearchBar: React.FC = () => {
   const checkInDate = parseISO(checkIn);
   const checkOutDate = parseISO(checkOut);
   const minCheckOut = addDays(checkInDate, 1);
+  const maxCheckOut = addDays(checkInDate, MAX_STAY_DAYS);
 
   return (
     <>
@@ -301,7 +305,10 @@ const BookingSearchBar: React.FC = () => {
             open={checkOutOpen}
             onOpenChange={setCheckOutOpen}
             selected={checkOutDate}
-            disabled={(date) => startOfDay(date) < minCheckOut}
+            disabled={(date) => {
+              const day = startOfDay(date);
+              return day < minCheckOut || day > maxCheckOut;
+            }}
             onSelect={(date) => {
               if (!date) return;
               setCheckOut(toInputDate(date));
@@ -390,8 +397,10 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
       sideOffset={8}
     >
       <Calendar
+        key={selected.toISOString()}
         mode="single"
         selected={selected}
+        defaultMonth={selected}
         onSelect={onSelect}
         disabled={disabled}
         initialFocus
