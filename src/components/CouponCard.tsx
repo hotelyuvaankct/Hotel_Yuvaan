@@ -1,5 +1,5 @@
 import { format, parseISO, addDays, startOfToday } from "date-fns";
-import { Tag } from "lucide-react";
+import { ArrowRight, CalendarDays, Tag } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   formatCouponDiscount,
@@ -28,47 +28,49 @@ const CouponCard = ({ coupon, index = 0 }: CouponCardProps) => {
 
   return (
     <article
-      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-[#e8dfd0] bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg animate-on-scroll"
+      className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-[#e8dfd0] bg-white shadow-[0_4px_24px_rgba(75,54,33,0.06)] transition-all duration-300 hover:border-[#c9a227]/50 hover:shadow-[0_8px_32px_rgba(75,54,33,0.12)] animate-on-scroll"
       style={{ animationDelay: `${index * 0.08}s` }}
     >
-      <div className="bg-gradient-to-r from-[#4b3621] to-[#8b7355] px-5 py-4 text-white">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <Tag className="h-4 w-4 shrink-0 opacity-90" />
-            <span className="font-mono text-sm font-semibold tracking-widest">
-              {coupon.code}
-            </span>
-          </div>
-          <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-medium">
-            {formatCouponDiscount(coupon)}
+      <div className="flex items-center justify-between gap-3 border-b border-[#e8dfd0] bg-[#faf8f5] px-5 py-3.5">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[#4b3621]/10 text-[#b8892f]">
+            <Tag className="h-4 w-4" />
+          </span>
+          <span className="truncate font-mono text-sm font-semibold tracking-[0.14em] text-[#4b3621]">
+            {coupon.code}
           </span>
         </div>
+        <span className="shrink-0 rounded-md bg-gradient-to-r from-[#c9a227] to-[#b8892f] px-2.5 py-1 text-[11px] font-semibold text-white">
+          {formatCouponDiscount(coupon)}
+        </span>
       </div>
 
       <div className="flex flex-1 flex-col p-5">
-        <h3 className="font-playfair text-xl font-semibold text-[#4b3621] mb-2">
+        <h3 className="font-inter text-lg font-semibold text-[#4b3621] leading-snug mb-2">
           {coupon.title}
         </h3>
         {coupon.description ? (
-          <p className="text-sm text-neutral-600 mb-4 line-clamp-3 flex-1">
+          <p className="text-sm text-[#6b5a45] mb-4 line-clamp-3 flex-1 leading-relaxed">
             {coupon.description}
           </p>
         ) : (
           <div className="flex-1" />
         )}
 
-        <div className="space-y-1 text-xs text-neutral-500 mb-5">
-          <p>
+        <div className="mb-5 space-y-1.5 text-xs text-[#8b7355]">
+          <p className="inline-flex items-center gap-1.5">
+            <CalendarDays className="h-3.5 w-3.5 shrink-0 text-[#b8892f]" />
             Valid till {format(parseISO(coupon.expiryDate), "d MMMM yyyy")}
           </p>
-          {minBooking ? <p>{minBooking}</p> : null}
+          {minBooking ? <p className="pl-5">{minBooking}</p> : null}
         </div>
 
         <Link
           to={bookUrl}
-          className="inline-flex w-full items-center justify-center rounded-full bg-primary py-3 text-sm font-semibold tracking-wider text-primary-foreground transition-colors hover:bg-primary/90"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-gradient-to-r from-[#c9a227] via-[#b8892f] to-[#4b3621] py-3 text-sm font-semibold tracking-[0.12em] uppercase text-white transition-all hover:brightness-105 active:scale-[0.99]"
         >
-          BOOK WITH CODE
+          Book with code
+          <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
     </article>

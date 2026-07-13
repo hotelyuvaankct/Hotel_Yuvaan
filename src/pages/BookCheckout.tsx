@@ -37,6 +37,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import {
+  sanitizePhoneInput,
+  validateGuestFields,
+  type GuestFieldErrors,
+} from "@/lib/guestValidation";
 
 const emptyGuest: GuestDetails = {
   guestFirstName: "",
@@ -58,6 +63,7 @@ const BookCheckout = () => {
   const [submitting, setSubmitting] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<GuestFieldErrors>({});
   const [marriedCoupleConfirmed, setMarriedCoupleConfirmed] = useState(false);
 
   useEffect(() => {
@@ -120,6 +126,14 @@ const BookCheckout = () => {
       }
       return next;
     });
+    setFieldErrors((current) => {
+      const next = { ...current };
+      for (const key of Object.keys(patch) as (keyof GuestDetails)[]) {
+        delete next[key];
+      }
+      return next;
+    });
+    setFormError(null);
   };
 
   const handleApplyCoupon = (code: string) => {
@@ -266,28 +280,21 @@ const BookCheckout = () => {
   };
 
   const validateGuestForm = (): boolean => {
-    if (!guest.guestFirstName.trim()) {
-      setFormError("First name is required");
+    const errors = validateGuestFields(guest);
+    setFieldErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
+      setFormError("Please fix the highlighted fields before continuing.");
       return false;
     }
-    if (!guest.guestLastName.trim()) {
-      setFormError("Last name is required");
-      return false;
-    }
-    if (!guest.guestEmail.trim() || !guest.guestEmail.includes("@")) {
-      setFormError("Valid email is required");
-      return false;
-    }
-    if (!guest.guestPhone.trim() || guest.guestPhone.trim().length < 10) {
-      setFormError("Valid phone number is required");
-      return false;
-    }
+
     if (!marriedCoupleConfirmed) {
       setFormError(
         "Please confirm that you have read and understood the couple stay policy before continuing to payment."
       );
       return false;
     }
+
     setFormError(null);
     return true;
   };
@@ -408,7 +415,7 @@ const BookCheckout = () => {
 
       <section className="relative pt-28 pb-8 bg-[#4b3621]">
         <div className="container mx-auto px-4">
-          <h1 className="font-playfair text-3xl md:text-4xl text-white mt-6 mb-2">
+          <h1 className="text-3xl md:text-4xl font-semibold text-white mt-6 mb-2">
             Complete your booking
           </h1>
           <p className="text-white/80 text-sm">
@@ -442,7 +449,7 @@ const BookCheckout = () => {
                     <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#e8d5a3]">
                       Your stay
                     </p>
-                    <h2 className="font-playfair text-2xl sm:text-3xl mt-1">
+                    <h2 className="text-2xl sm:text-3xl font-semibold mt-1">
                       {nights} night{nights === 1 ? "" : "s"} at Hotel Yuvaan
                     </h2>
                   </div>
@@ -458,7 +465,7 @@ const BookCheckout = () => {
                       <CalendarDays className="h-3.5 w-3.5" />
                       Check-in
                     </div>
-                    <p className="font-playfair text-xl leading-tight">
+                    <p className="text-xl font-semibold leading-tight">
                       {format(parseISO(draft.checkIn), "d MMMM yyyy")}
                     </p>
                     {config ? (
@@ -473,7 +480,7 @@ const BookCheckout = () => {
                       <CalendarDays className="h-3.5 w-3.5" />
                       Check-out
                     </div>
-                    <p className="font-playfair text-xl leading-tight">
+                    <p className="text-xl font-semibold leading-tight">
                       {format(parseISO(draft.checkOut), "d MMMM yyyy")}
                     </p>
                     {config ? (
@@ -517,13 +524,13 @@ const BookCheckout = () => {
             {/* Guest details */}
             <section className="bg-white border border-neutral-200 rounded-xl shadow-sm p-5 sm:p-7">
               <div className="mb-5">
-                <h2 className="font-playfair text-2xl text-[#4b3621]">Guest details</h2>
+                <h2 className="text-2xl font-semibold text-[#4b3621]">Guest details</h2>
                 <p className="text-sm text-neutral-600 mt-1">
                   You can update your information anytime before confirming.
                 </p>
               </div>
 
-              <form onSubmit={handleContinueToPayment} className="space-y-5">
+              <form onSubmit={handleContinueToPayment} className="space-y-5" noValidate>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="firstName">First name</Label>
@@ -532,7 +539,13 @@ const BookCheckout = () => {
                       value={guest.guestFirstName}
                       onChange={(e) => updateGuest({ guestFirstName: e.target.value })}
                       className="rounded-sm mt-1"
+                      autoComplete="given-name"
+                      placeholder="Enter first name"
+                      aria-invalid={Boolean(fieldErrors.guestFirstName)}
                     />
+                    {fieldErrors.guestFirstName ? (
+                      <p className="text-sm text-destructive mt-1">{fieldErrors.guestFirstName}</p>
+                    ) : null}
                   </div>
                   <div>
                     <Label htmlFor="lastName">Last name</Label>
@@ -541,7 +554,13 @@ const BookCheckout = () => {
                       value={guest.guestLastName}
                       onChange={(e) => updateGuest({ guestLastName: e.target.value })}
                       className="rounded-sm mt-1"
+                      autoComplete="family-name"
+                      placeholder="Enter last name"
+                      aria-invalid={Boolean(fieldErrors.guestLastName)}
                     />
+                    {fieldErrors.guestLastName ? (
+                      <p className="text-sm text-destructive mt-1">{fieldErrors.guestLastName}</p>
+                    ) : null}
                   </div>
                 </div>
 
@@ -550,10 +569,17 @@ const BookCheckout = () => {
                   <Input
                     id="email"
                     type="email"
+                    inputMode="email"
                     value={guest.guestEmail}
                     onChange={(e) => updateGuest({ guestEmail: e.target.value })}
                     className="rounded-sm mt-1"
+                    autoComplete="email"
+                    placeholder="name@example.com"
+                    aria-invalid={Boolean(fieldErrors.guestEmail)}
                   />
+                  {fieldErrors.guestEmail ? (
+                    <p className="text-sm text-destructive mt-1">{fieldErrors.guestEmail}</p>
+                  ) : null}
                 </div>
 
                 <div>
@@ -561,10 +587,19 @@ const BookCheckout = () => {
                   <Input
                     id="phone"
                     type="tel"
+                    inputMode="tel"
                     value={guest.guestPhone}
-                    onChange={(e) => updateGuest({ guestPhone: e.target.value })}
+                    onChange={(e) =>
+                      updateGuest({ guestPhone: sanitizePhoneInput(e.target.value) })
+                    }
                     className="rounded-sm mt-1"
+                    autoComplete="tel"
+                    placeholder="e.g. 9876543210"
+                    aria-invalid={Boolean(fieldErrors.guestPhone)}
                   />
+                  {fieldErrors.guestPhone ? (
+                    <p className="text-sm text-destructive mt-1">{fieldErrors.guestPhone}</p>
+                  ) : null}
                 </div>
 
                 {accommodatedGuests < totalGuests ? (
