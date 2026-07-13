@@ -18,14 +18,14 @@ const buttonVariants = cva(
       variant: {
         /** Solid gold fill — primary marketing CTA */
         default:
-          "bg-primary text-primary-foreground shadow-[0_4px_14px_rgba(201,137,10,0.35)] hover:bg-primary/90",
+          "bg-primary text-primary-foreground hover:bg-primary/90",
         solid:
-          "bg-primary text-primary-foreground shadow-[0_4px_14px_rgba(201,137,10,0.35)] hover:bg-primary/90",
+          "bg-primary text-primary-foreground hover:bg-primary/90",
         /** Cream fill + gold border/text */
         outline:
           "border-[1.5px] border-primary bg-[#fff8ee] text-primary hover:bg-primary/10",
         /** Hotel brown fill */
-        dark: "bg-[#4b3621] text-white shadow-md hover:bg-[#3d2b1a]",
+        dark: "bg-[#4b3621] text-white hover:bg-[#3d2b1a]",
         /** Transparent on dark imagery */
         ghost:
           "border-[1.5px] border-white/40 bg-transparent text-white hover:border-white hover:bg-white/10",
@@ -33,7 +33,7 @@ const buttonVariants = cva(
         soft: "bg-[#f3ebe0] text-[#4b3621] hover:bg-[#ebe1d2]",
         secondary: "bg-[#f3ebe0] text-[#4b3621] hover:bg-[#ebe1d2]",
         destructive:
-          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         /** Text-only; height not forced */
         link: "h-auto rounded-none px-0 text-primary underline-offset-4 hover:underline",
         /** Compact UI (calendar days, etc.) — not a marketing CTA */
