@@ -11,6 +11,7 @@ import {
   GALLERY_CATEGORY_FILTER_ALL,
   type GalleryCategoryFilter,
 } from "@/lib/galleryCategories";
+import { Button } from "@/components/ui/button";
 
 const PAGE_SIZE = 12;
 
@@ -63,17 +64,15 @@ const Gallery = () => {
           <div className="mb-12 animate-on-scroll">
             <div className="flex flex-wrap justify-center gap-4">
               {GALLERY_CATEGORY_FILTERS.map((category) => (
-                <button
+                <Button
                   key={category}
+                  type="button"
+                  size="sm"
+                  variant={activeCategory === category ? "solid" : "outline"}
                   onClick={() => handleCategoryChange(category)}
-                  className={`px-6 py-2 rounded-full border transition-all duration-300 ${
-                    activeCategory === category
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                  }`}
                 >
                   {category}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -113,31 +112,33 @@ const Gallery = () => {
 
               {totalPages > 1 && (
                 <div className="mt-12 flex items-center justify-center gap-4">
-                  <button
+                  <Button
                     type="button"
+                    variant="outline"
+                    size="sm"
                     onClick={() => setPage((current) => Math.max(0, current - 1))}
                     disabled={page === 0 || isFetching}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary text-primary disabled:opacity-40 disabled:cursor-not-allowed hover:bg-primary hover:text-primary-foreground transition-colors"
                   >
                     <ChevronLeft className="h-4 w-4" />
                     Previous
-                  </button>
+                  </Button>
                   <span className="text-sm text-muted-foreground">
                     Page {page + 1} of {totalPages}
                   </span>
-                  <button
+                  <Button
                     type="button"
+                    variant="outline"
+                    size="sm"
                     onClick={() =>
                       setPage((current) =>
                         Math.min(totalPages - 1, current + 1)
                       )
                     }
                     disabled={page + 1 >= totalPages || isFetching}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary text-primary disabled:opacity-40 disabled:cursor-not-allowed hover:bg-primary hover:text-primary-foreground transition-colors"
                   >
                     Next
                     <ChevronRight className="h-4 w-4" />
-                  </button>
+                  </Button>
                 </div>
               )}
             </>
@@ -161,12 +162,16 @@ const Gallery = () => {
               alt="Gallery Image Full"
               className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
             />
-            <button
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
               onClick={() => setSelectedImage(null)}
-              className="absolute top-4 right-4 md:top-8 md:right-8 bg-black/50 text-white p-3 rounded-full hover:bg-black/70 hover:scale-110 transition-all duration-300 z-10"
+              className="absolute top-4 right-4 md:top-8 md:right-8 bg-black/50 hover:bg-black/70 border-0 z-10"
+              aria-label="Close"
             >
               <X className="w-6 h-6" />
-            </button>
+            </Button>
           </div>
         </div>
       )}

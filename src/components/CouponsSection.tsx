@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import CouponCard from "./CouponCard";
 import { fetchPublicCoupons } from "@/services/couponService";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { Button } from "@/components/ui/button";
 
 const PREVIEW_LIMIT = 3;
 
@@ -59,12 +60,9 @@ const CouponsSection = () => {
 
         {!isLoading && coupons.length > PREVIEW_LIMIT && (
           <div className="mt-12 text-center animate-on-scroll">
-            <Link
-              to="/coupons"
-              className="inline-flex items-center justify-center rounded-md bg-gradient-to-r from-[#c9a227] via-[#b8892f] to-[#4b3621] py-3 px-8 text-sm font-semibold tracking-[0.12em] uppercase text-white transition-all hover:brightness-105"
-            >
-              View all offers
-            </Link>
+            <Button asChild variant="solid" className="tracking-[0.12em] uppercase">
+              <Link to="/coupons">View all offers</Link>
+            </Button>
           </div>
         )}
            </div>

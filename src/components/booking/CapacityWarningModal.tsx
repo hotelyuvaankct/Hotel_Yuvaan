@@ -66,13 +66,10 @@ const CapacityWarningModal = ({
           ))}
         </ul>
         <div className="flex justify-end gap-3">
-          <Button variant="outline" onClick={onSelectMore} className="rounded-none">
+          <Button variant="outline" onClick={onSelectMore}>
             Select more rooms
           </Button>
-          <Button
-            onClick={onContinueAnyway}
-            className="rounded-none bg-[#4b3621] hover:bg-[#3d2b1a]"
-          >
+          <Button variant="dark" onClick={onContinueAnyway}>
             Continue
           </Button>
         </div>

@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const RATING_LABELS: Record<number, string> = {
@@ -85,28 +86,24 @@ const FloatingReviewWidget = () => {
 
   return (
     <>
-      <button
+      <Button
         type="button"
+        variant="solid"
+        size="sm"
         onClick={() => setOpen(true)}
-        className="fixed right-4 bottom-6 z-40 flex items-center gap-2 rounded-full bg-primary px-4 py-3 text-primary-foreground shadow-lg transition-all hover:scale-105 hover:bg-primary/90 md:right-6 md:bottom-8 md:px-5"
+        className="fixed right-4 bottom-6 z-40 shadow-lg hover:scale-105 md:right-6 md:bottom-8"
         aria-label="Leave a review"
       >
         <Star className="h-5 w-5 fill-current" />
-        <span className="text-sm font-semibold hidden sm:inline">
-          Leave a Review
-        </span>
-      </button>
+        <span className="hidden sm:inline">Leave a Review</span>
+      </Button>
 
       <Dialog open={open} onOpenChange={(next) => !next && handleClose()}>
         <DialogContent className="max-w-xl gap-0 p-0 overflow-hidden">
           <div className="border-b px-6 py-4">
-            <button
-              type="button"
-              onClick={handleClose}
-              className="text-sm font-medium text-primary hover:underline"
-            >
+            <Button type="button" variant="link" onClick={handleClose}>
               Back
-            </button>
+            </Button>
           </div>
 
           <form onSubmit={handleSubmit} className="px-6 pb-6 pt-4">
@@ -155,13 +152,9 @@ const FloatingReviewWidget = () => {
             />
 
             <div className="mt-6 flex justify-end">
-              <button
-                type="submit"
-                disabled={loading}
-                className="rounded-lg bg-foreground px-6 py-3 text-sm font-semibold text-background transition-opacity hover:opacity-90 disabled:opacity-60"
-              >
+              <Button type="submit" variant="dark" disabled={loading}>
                 {loading ? "Saving..." : "Save and Continue"}
-              </button>
+              </Button>
             </div>
           </form>
         </DialogContent>

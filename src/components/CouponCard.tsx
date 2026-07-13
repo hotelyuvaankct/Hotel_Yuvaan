@@ -7,6 +7,7 @@ import {
   type PublicCoupon,
 } from "@/services/couponService";
 import { buildBookUrl } from "@/services/roomService";
+import { Button } from "@/components/ui/button";
 
 interface CouponCardProps {
   coupon: PublicCoupon;
@@ -65,13 +66,12 @@ const CouponCard = ({ coupon, index = 0 }: CouponCardProps) => {
           {minBooking ? <p className="pl-5">{minBooking}</p> : null}
         </div>
 
-        <Link
-          to={bookUrl}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-gradient-to-r from-[#c9a227] via-[#b8892f] to-[#4b3621] py-3 text-sm font-semibold tracking-[0.12em] uppercase text-white transition-all hover:brightness-105 active:scale-[0.99]"
-        >
-          Book with code
-          <ArrowRight className="h-4 w-4" />
-        </Link>
+        <Button asChild variant="solid" className="w-full tracking-[0.12em] uppercase">
+          <Link to={bookUrl}>
+            Book with code
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </Button>
       </div>
     </article>
   );

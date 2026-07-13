@@ -5,6 +5,7 @@ import {
   formatCouponMinBooking,
   type PublicCoupon,
 } from "@/services/couponService";
+import { Button } from "@/components/ui/button";
 
 interface BookingCouponListProps {
   coupons: PublicCoupon[];
@@ -124,18 +125,22 @@ const BookingCouponList = ({
                     {isApplying ? (
                       <Loader2 className="h-4 w-4 animate-spin text-[#4b3621]" />
                     ) : isApplied ? (
-                      <button
+                      <Button
                         type="button"
+                        variant="outline"
+                        size="icon-sm"
                         onClick={() => onRemoveCoupon?.()}
-                        className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-green-300 bg-white text-green-700 hover:bg-green-100 hover:text-green-900"
+                        className="border-green-300 bg-white text-green-700 hover:bg-green-100 hover:text-green-900 h-8 w-8"
                         aria-label={`Remove ${coupon.code}`}
                         title="Remove"
                       >
                         <X className="h-4 w-4" />
-                      </button>
+                      </Button>
                     ) : (
-                      <button
+                      <Button
                         type="button"
+                        variant="outline"
+                        size="sm"
                         onClick={() => {
                           if (!eligible) {
                             setIneligibleAttemptCode(coupon.code);
@@ -144,13 +149,13 @@ const BookingCouponList = ({
                           setIneligibleAttemptCode(null);
                           onSelectCoupon(coupon.code);
                         }}
-                        className="inline-flex h-8 items-center gap-1 rounded-md border border-[#d4c4a8] bg-white px-2.5 text-[11px] font-semibold uppercase tracking-wide text-[#4b3621] hover:bg-[#faf8f5]"
+                        className="h-8 px-2.5 text-[11px] uppercase tracking-wide"
                         aria-label={`Apply ${coupon.code}`}
                         title="Apply"
                       >
                         <Check className="h-3.5 w-3.5" />
                         Apply
-                      </button>
+                      </Button>
                     )}
                   </div>
                 </div>

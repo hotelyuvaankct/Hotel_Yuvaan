@@ -296,15 +296,16 @@ const BookingView = () => {
                 </div>
 
                 {booking.receiptDownloadUrl ? (
-                  <a
-                    href={booking.receiptDownloadUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-6 inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-sm bg-[#4b3621] px-5 py-3 text-sm font-semibold tracking-wide text-white transition-colors hover:bg-[#3d2b1a]"
-                  >
-                    <Download className="h-4 w-4" />
-                    Download receipt (PDF)
-                  </a>
+                  <Button asChild variant="dark" className="mt-6 w-full sm:w-auto">
+                    <a
+                      href={booking.receiptDownloadUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Download className="h-4 w-4" />
+                      Download receipt (PDF)
+                    </a>
+                  </Button>
                 ) : null}
 
                 {isCancelled && booking.cancellationReason ? (
@@ -327,14 +328,15 @@ const BookingView = () => {
                           View policy
                         </Link>
                       </p>
-                      <button
+                      <Button
                         type="button"
+                        variant="link"
                         onClick={() => setShowCancelForm(true)}
-                        className="inline-flex items-center gap-1 text-sm font-medium text-neutral-500 hover:text-red-700 transition-colors"
+                        className="text-neutral-500 hover:text-red-700"
                       >
                         Cancel booking
                         <ChevronDown className="h-4 w-4" />
-                      </button>
+                      </Button>
                     </div>
                   ) : (
                     <div>
@@ -342,18 +344,19 @@ const BookingView = () => {
                         <h2 className="font-playfair text-xl text-[#4b3621]">
                           Cancel booking
                         </h2>
-                        <button
+                        <Button
                           type="button"
+                          variant="link"
                           onClick={() => {
                             setShowCancelForm(false);
                             setOtpSent(false);
                             setOtpCode("");
                             setEmailError(null);
                           }}
-                          className="text-sm text-neutral-500 hover:text-[#4b3621]"
+                          className="text-neutral-500 hover:text-[#4b3621]"
                         >
                           Close
-                        </button>
+                        </Button>
                       </div>
                       <p className="text-sm text-neutral-600 mb-4 leading-relaxed">
                         We will send a one-time code to the email you used when
@@ -389,7 +392,6 @@ const BookingView = () => {
                           <Button
                             type="button"
                             variant="outline"
-                            className="rounded-sm bg-white"
                             onClick={() => {
                               if (
                                 !cancelEmail.trim() ||
@@ -434,7 +436,6 @@ const BookingView = () => {
                             <Button
                               type="button"
                               variant="destructive"
-                              className="rounded-sm"
                               onClick={() => cancelMutation.mutate()}
                               disabled={!otpCode || cancelMutation.isPending}
                             >

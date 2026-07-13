@@ -6,6 +6,7 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPublicCoupons } from "@/services/couponService";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const Coupons = () => {
   const { data: coupons = [], isLoading, isError } = useQuery({
@@ -51,12 +52,9 @@ const Coupons = () => {
               <p className="text-lg text-muted-foreground mb-6">
                 No active coupons at the moment.
               </p>
-              <Link
-                to="/book"
-                className="inline-flex items-center justify-center rounded-md bg-gradient-to-r from-[#c9a227] via-[#b8892f] to-[#4b3621] py-3 px-8 text-sm font-semibold tracking-[0.12em] uppercase text-white transition-all hover:brightness-105"
-              >
-                BOOK WITHOUT COUPON
-              </Link>
+              <Button asChild variant="solid" className="tracking-[0.12em] uppercase">
+                <Link to="/book">BOOK WITHOUT COUPON</Link>
+              </Button>
             </div>
           )}
 

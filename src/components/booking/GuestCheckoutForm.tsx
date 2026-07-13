@@ -132,8 +132,9 @@ const GuestCheckoutForm = ({
           </div>
           <Button
             type="submit"
+            variant="dark"
             disabled={loading}
-            className="w-full rounded-none bg-[#4b3621] hover:bg-[#3d2b1a]"
+            className="w-full"
           >
             {loading ? "Confirming…" : "Confirm booking"}
           </Button>

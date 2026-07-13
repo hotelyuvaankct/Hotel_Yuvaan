@@ -1,6 +1,6 @@
-
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const TestimonialsSection = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -93,12 +93,15 @@ const TestimonialsSection = () => {
 
             {/* Navigation */}
             <div className="flex items-center justify-center space-x-6">
-              <button
+              <Button
+                type="button"
+                variant="outline"
+                size="icon-sm"
                 onClick={prevTestimonial}
-                className="p-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors duration-300"
+                aria-label="Previous testimonial"
               >
                 <ChevronLeft className="w-5 h-5" />
-              </button>
+              </Button>
 
               {/* Dots */}
               <div className="flex space-x-2">
@@ -112,12 +115,15 @@ const TestimonialsSection = () => {
                 ))}
               </div>
 
-              <button
+              <Button
+                type="button"
+                variant="outline"
+                size="icon-sm"
                 onClick={nextTestimonial}
-                className="p-2 rounded-full border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors duration-300"
+                aria-label="Next testimonial"
               >
                 <ChevronRight className="w-5 h-5" />
-              </button>
+              </Button>
             </div>
           </div>
         </div>

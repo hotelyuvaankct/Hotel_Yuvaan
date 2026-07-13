@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import GalleryCard from "./GalleryCard";
 import { fetchGalleryPreview } from "@/services/galleryService";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { Button } from "@/components/ui/button";
 
 const GallerySection = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -66,12 +67,9 @@ const GallerySection = () => {
         )}
 
         <div className="mt-12 text-center animate-on-scroll">
-          <Link
-            to="/gallery"
-            className="inline-block bg-primary text-primary-foreground py-3 px-8 rounded-full hover:bg-primary/90 transition-all duration-300 font-semibold tracking-wider text-sm shadow-lg hover:shadow-xl"
-          >
-            VIEW FULL GALLERY
-          </Link>
+          <Button asChild variant="solid" className="tracking-wider">
+            <Link to="/gallery">VIEW FULL GALLERY</Link>
+          </Button>
         </div>
       </div>
 
@@ -89,12 +87,16 @@ const GallerySection = () => {
               alt="Gallery Image"
               className="max-w-full max-h-full object-contain rounded-lg"
             />
-            <button
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
               onClick={() => setSelectedImage(null)}
-              className="absolute top-4 right-4 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors duration-300"
+              className="absolute top-4 right-4 bg-black/50 hover:bg-black/70 border-0"
+              aria-label="Close"
             >
               <X className="w-6 h-6" />
-            </button>
+            </Button>
           </div>
         </div>
       )}

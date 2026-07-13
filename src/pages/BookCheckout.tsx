@@ -650,8 +650,9 @@ const BookCheckout = () => {
 
                 <Button
                   type="submit"
+                  variant="dark"
                   disabled={submitting || verifying || quoteLoading}
-                  className="w-full rounded-sm bg-[#4b3621] hover:bg-[#3d2b1a] py-6 text-sm font-semibold tracking-wider uppercase"
+                  className="w-full tracking-wider uppercase"
                 >
                   {submitting ? "Opening payment…" : "Continue to payment"}
                 </Button>
