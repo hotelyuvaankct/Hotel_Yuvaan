@@ -5,6 +5,7 @@ import {
   addDays,
   parseISO,
   isBefore,
+  isAfter,
   startOfToday,
   startOfDay,
 } from "date-fns";
@@ -28,6 +29,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { MAX_STAY_DAYS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 interface RoomGuests {
@@ -50,7 +52,6 @@ export const GuestSelectorModal: React.FC<GuestSelectorModalProps> = ({
   onChange,
   config,
 }) => {
-  const maxRooms = config?.maxRooms ?? 10;
   const minAdults = config?.minAdultsPerRoom ?? 1;
   const maxAdults = config?.maxAdultsPerRoom ?? 4;
   const maxChildren = config?.maxChildrenPerRoom ?? 2;
@@ -59,11 +60,6 @@ export const GuestSelectorModal: React.FC<GuestSelectorModalProps> = ({
     onChange(
       rooms.map((room, i) => (i === index ? { ...room, ...patch } : room))
     );
-  };
-
-  const addRoom = () => {
-    if (rooms.length >= maxRooms) return;
-    onChange([...rooms, { adults: 2, children: 0 }]);
   };
 
   const removeRoom = (index: number) => {
@@ -91,14 +87,16 @@ export const GuestSelectorModal: React.FC<GuestSelectorModalProps> = ({
                   Room {index + 1}
                 </p>
                 {index > 0 && (
-                  <button
+                  <Button
                     type="button"
+                    variant="link"
+                    size="sm"
                     onClick={() => removeRoom(index)}
-                    className="text-neutral-400 hover:text-red-600 transition-colors"
+                    className="h-auto p-0 text-neutral-400 hover:text-red-600"
                     aria-label={`Remove room ${index + 1}`}
                   >
                     <Trash2 className="h-4 w-4" />
-                  </button>
+                  </Button>
                 )}
               </div>
 
@@ -121,19 +119,10 @@ export const GuestSelectorModal: React.FC<GuestSelectorModalProps> = ({
           ))}
         </div>
 
-        <div className="flex items-center justify-between gap-3 border-t border-[#e8dfd0] px-6 py-4 bg-[#faf8f5]">
+        <div className="flex items-center justify-end gap-3 border-t border-[#e8dfd0] px-6 py-4 bg-[#faf8f5]">
           <Button
             type="button"
-            variant="outline"
-            className="rounded-md border-[#d4c4a8] text-[#4b3621] hover:bg-[#f5efe6]"
-            onClick={addRoom}
-            disabled={rooms.length >= maxRooms}
-          >
-            + Add a room
-          </Button>
-          <Button
-            type="button"
-            className="rounded-md bg-[#4b3621] hover:bg-[#3d2b1a] text-white px-8"
+            variant="dark"
             onClick={() => onOpenChange(false)}
           >
             Done
@@ -161,28 +150,32 @@ const CounterRow: React.FC<CounterRowProps> = ({
 }) => (
   <div>
     <p className="text-sm text-[#6b5a45] mb-2">{label}</p>
-    <div className="inline-flex items-center border border-[#d4c4a8] rounded-md overflow-hidden">
-      <button
+    <div className="inline-flex items-center border border-[#d4c4a8] rounded-full overflow-hidden">
+      <Button
         type="button"
-        className="h-10 w-10 flex items-center justify-center text-[#4b3621] hover:bg-[#f5efe6] disabled:opacity-40"
+        variant="subtle"
+        size="icon-sm"
+        className="rounded-none text-[#4b3621] hover:bg-[#f5efe6]"
         onClick={() => onChange(Math.max(min, value - 1))}
         disabled={value <= min}
         aria-label={`Decrease ${label}`}
       >
         <Minus className="h-4 w-4" />
-      </button>
+      </Button>
       <span className="h-10 min-w-[3rem] px-3 flex items-center justify-center border-x border-[#d4c4a8] text-sm font-medium text-[#4b3621]">
         {value}
       </span>
-      <button
+      <Button
         type="button"
-        className="h-10 w-10 flex items-center justify-center text-[#4b3621] hover:bg-[#f5efe6] disabled:opacity-40"
+        variant="subtle"
+        size="icon-sm"
+        className="rounded-none text-[#4b3621] hover:bg-[#f5efe6]"
         onClick={() => onChange(max != null ? Math.min(max, value + 1) : value + 1)}
         disabled={max != null && value >= max}
         aria-label={`Increase ${label}`}
       >
         <Plus className="h-4 w-4" />
-      </button>
+      </Button>
     </div>
   </div>
 );
@@ -224,7 +217,19 @@ const BookingSearchBar: React.FC = () => {
     const urlRoomGuests = decodeRoomGuests(searchParams.get("roomGuests"));
 
     if (urlCheckIn) setCheckIn(urlCheckIn);
-    if (urlCheckOut) setCheckOut(urlCheckOut);
+    if (urlCheckOut) {
+      if (urlCheckIn) {
+        const maxCheckOut = addDays(parseISO(urlCheckIn), MAX_STAY_DAYS);
+        const requestedCheckOut = parseISO(urlCheckOut);
+        setCheckOut(
+          toInputDate(
+            isAfter(requestedCheckOut, maxCheckOut) ? maxCheckOut : requestedCheckOut
+          )
+        );
+      } else {
+        setCheckOut(urlCheckOut);
+      }
+    }
     if (urlRoomGuests) setGuestRooms(urlRoomGuests);
   }, [searchParams]);
 
@@ -242,10 +247,14 @@ const BookingSearchBar: React.FC = () => {
 
   const handleCheckInChange = (value: string) => {
     setCheckIn(value);
-    const checkInDate = parseISO(value);
+    const nextCheckIn = parseISO(value);
     const checkOutDate = parseISO(checkOut);
-    if (!isBefore(checkInDate, checkOutDate)) {
-      setCheckOut(toInputDate(addDays(checkInDate, 1)));
+    const maxCheckOut = addDays(nextCheckIn, MAX_STAY_DAYS);
+
+    if (!isBefore(nextCheckIn, checkOutDate)) {
+      setCheckOut(toInputDate(addDays(nextCheckIn, 1)));
+    } else if (isAfter(checkOutDate, maxCheckOut)) {
+      setCheckOut(toInputDate(maxCheckOut));
     }
   };
 
@@ -267,16 +276,17 @@ const BookingSearchBar: React.FC = () => {
   const checkInDate = parseISO(checkIn);
   const checkOutDate = parseISO(checkOut);
   const minCheckOut = addDays(checkInDate, 1);
+  const maxCheckOut = addDays(checkInDate, MAX_STAY_DAYS);
 
   return (
     <>
-      <div className="w-full max-w-6xl mx-auto bg-white/95 backdrop-blur-sm rounded-lg shadow-[0_8px_40px_rgba(75,54,33,0.15)] border border-[#e8dfd0] overflow-hidden">
+      <div className="w-full max-w-6xl mx-auto overflow-hidden rounded-2xl bg-white shadow-[0_12px_40px_rgba(45,30,15,0.32)]">
         <div className="flex flex-col lg:flex-row lg:items-stretch">
-          <div className="hidden lg:flex flex-col justify-center px-6 py-5 min-w-[170px] border-b lg:border-b-0 lg:border-r border-[#e8dfd0] bg-[#faf8f5]">
-            <p className="font-playfair text-xl text-[#4b3621] font-semibold leading-tight">
+          <div className="hidden lg:flex flex-col justify-center px-6 py-5 min-w-[170px] border-b lg:border-b-0 lg:border-r border-[#ebe3d6] bg-[#faf8f5]">
+            <p className="font-playfair text-xl font-semibold leading-tight text-[#4b3621]">
               Book Online
             </p>
-            <p className="text-xs text-[#8b7355] mt-1">Guaranteed accommodation</p>
+            <p className="mt-1 text-xs text-[#8b7355]">Guaranteed accommodation</p>
           </div>
 
           <DatePickerField
@@ -301,7 +311,10 @@ const BookingSearchBar: React.FC = () => {
             open={checkOutOpen}
             onOpenChange={setCheckOutOpen}
             selected={checkOutDate}
-            disabled={(date) => startOfDay(date) < minCheckOut}
+            disabled={(date) => {
+              const day = startOfDay(date);
+              return day < minCheckOut || day > maxCheckOut;
+            }}
             onSelect={(date) => {
               if (!date) return;
               setCheckOut(toInputDate(date));
@@ -312,24 +325,27 @@ const BookingSearchBar: React.FC = () => {
           <button
             type="button"
             onClick={() => setGuestModalOpen(true)}
-            className="flex items-center gap-3 px-5 py-4 border-b lg:border-b-0 lg:border-r border-[#e8dfd0] text-left hover:bg-[#faf8f5] transition-colors min-w-[200px]"
+            className="flex min-w-[210px] flex-1 items-center gap-3 border-b border-[#ebe3d6] px-5 py-4 text-left transition-colors hover:bg-[#faf8f5] lg:border-b-0 lg:border-r"
           >
-            <Users className="h-4 w-4 text-[#b8892f] shrink-0" />
-            <div>
-              <p className="text-[11px] uppercase tracking-wider text-[#8b7355] mb-0.5">
+            <Users className="h-5 w-5 shrink-0 text-[#b8892f] stroke-[1.5]" />
+            <div className="min-w-0">
+              <p className="mb-0.5 text-[11px] font-medium uppercase tracking-[0.14em] text-[#a89070]">
                 Guests
               </p>
-              <p className="text-sm text-[#4b3621] font-medium">{guestSummary}</p>
+              <p className="truncate text-[15px] font-semibold leading-snug text-[#4b3621]">
+                {guestSummary}
+              </p>
             </div>
           </button>
 
-          <button
+          <Button
             type="button"
+            variant="solid"
             onClick={handleSearch}
-            className="px-8 py-5 text-sm font-semibold tracking-[0.15em] uppercase text-white bg-gradient-to-r from-[#c9a227] via-[#b8892f] to-[#4b3621] hover:brightness-105 active:scale-[0.99] transition-all"
+            className="h-14 shrink-0 !rounded-none bg-[#c1862d] px-10 text-[13px] font-semibold uppercase tracking-[0.16em] text-white shadow-none hover:bg-[#b07828] hover:brightness-100 lg:h-auto lg:min-h-full lg:self-stretch"
           >
             Find Room
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -369,18 +385,19 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
       <button
         type="button"
         className={cn(
-          "flex items-center gap-3 px-5 py-4 border-b lg:border-b-0 lg:border-r border-[#e8dfd0]",
-          "text-left hover:bg-[#faf8f5] transition-colors min-w-[180px] w-full",
+          "flex w-full min-w-[180px] items-center gap-3 border-b border-[#ebe3d6] px-5 py-4 text-left transition-colors hover:bg-[#faf8f5] lg:border-b-0 lg:border-r",
           open && "bg-[#faf8f5] ring-1 ring-inset ring-[#c9a227]/40"
         )}
         aria-label={`Select ${label}`}
       >
-        <CalendarIcon className="h-4 w-4 text-[#b8892f] shrink-0" />
-        <div>
-          <p className="text-[11px] uppercase tracking-wider text-[#8b7355] mb-0.5">
+        <CalendarIcon className="h-5 w-5 shrink-0 text-[#b8892f] stroke-[1.5]" />
+        <div className="min-w-0">
+          <p className="mb-0.5 text-[11px] font-medium uppercase tracking-[0.14em] text-[#a89070]">
             {label}
           </p>
-          <p className="text-sm text-[#4b3621] font-medium">{displayValue}</p>
+          <p className="truncate text-[15px] font-semibold leading-snug text-[#4b3621]">
+            {displayValue}
+          </p>
         </div>
       </button>
     </PopoverTrigger>
@@ -390,8 +407,10 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
       sideOffset={8}
     >
       <Calendar
+        key={selected.toISOString()}
         mode="single"
         selected={selected}
+        defaultMonth={selected}
         onSelect={onSelect}
         disabled={disabled}
         initialFocus

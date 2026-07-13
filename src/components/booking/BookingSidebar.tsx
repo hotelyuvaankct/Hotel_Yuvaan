@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { format, parseISO } from "date-fns";
-import { ChevronDown, Loader2, Tag, X } from "lucide-react";
+import { ChevronDown, ChevronRight, Loader2, Tag, X } from "lucide-react";
 import { formatRoomPrice } from "@/services/roomService";
 import type { BookingConfig, BookingQuote } from "@/services/bookingService";
 import type { CouponValidation, PublicCoupon } from "@/services/couponService";
@@ -10,6 +10,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
 
 export type CartItem = {
   key: string;
@@ -71,7 +72,7 @@ const BookingSidebar = ({
   onRemoveCoupon,
   showCoupons = false,
   showContinueButton = true,
-  continueLabel = "Continue ›",
+  continueLabel = "Continue",
   selectedCouponCode,
   showStayDetails = true,
   showCartItems = true,
@@ -126,9 +127,23 @@ const BookingSidebar = ({
     (appliedCoupon?.valid ? appliedCoupon.code : null) ??
     selectedCouponCode;
 
+  const appliedCodeNormalized = couponCode?.trim().toUpperCase() ?? "";
+  const isPublicListCoupon =
+    Boolean(appliedCodeNormalized) &&
+    availableCoupons.some(
+      (coupon) => coupon.code.toUpperCase() === appliedCodeNormalized
+    );
+  /** Manually entered / backoffice code — not in the public offers list. */
+  const isBackofficeCoupon = Boolean(appliedCodeNormalized) && !isPublicListCoupon;
+  const showTopAppliedBanner =
+    isBackofficeCoupon &&
+    (Boolean(appliedCoupon?.valid) ||
+      Boolean(quote?.couponCode && discount > 0) ||
+      Boolean(selectedCouponCode));
+
   return (
     <aside className="w-full bg-white border border-neutral-200 rounded-xl shadow-sm p-5 sm:p-7">
-      <h2 className="font-playfair text-lg sm:text-xl font-semibold text-[#4b3621] tracking-tight leading-tight mb-4">
+      <h2 className="text-lg sm:text-xl font-semibold text-[#4b3621] tracking-tight leading-tight mb-4">
         {title}
       </h2>
 
@@ -182,7 +197,8 @@ const BookingSidebar = ({
         <div className={`flex flex-col gap-2.5 ${(showStayDetails || showCartItems) ? "border-t border-neutral-100 mt-3 pt-3" : ""}`}>
           {showCoupons ? (
             <div className="flex flex-col gap-2.5">
-              {appliedCoupon?.valid || (quote?.couponCode && discount > 0) ? (
+              {showTopAppliedBanner &&
+              (appliedCoupon?.valid || (quote?.couponCode && discount > 0)) ? (
                 <div className="flex items-start justify-between gap-2 rounded border border-green-200 bg-green-50 px-3 py-2 text-sm">
                   <div className="flex items-start gap-2 text-green-800">
                     <Tag className="h-4 w-4 mt-0.5 shrink-0" />
@@ -198,17 +214,19 @@ const BookingSidebar = ({
                     </div>
                   </div>
                   {onRemoveCoupon ? (
-                    <button
+                    <Button
                       type="button"
+                      variant="link"
+                      size="sm"
                       onClick={onRemoveCoupon}
-                      className="text-green-700 hover:text-green-900"
+                      className="h-auto p-0 text-green-700 hover:text-green-900"
                       aria-label="Remove coupon"
                     >
                       <X className="h-4 w-4" />
-                    </button>
+                    </Button>
                   ) : null}
                 </div>
-              ) : selectedCouponCode ? (
+              ) : showTopAppliedBanner && selectedCouponCode ? (
                 <div className="flex items-start justify-between gap-2 rounded border border-amber-200 bg-amber-50 px-3 py-2 text-sm">
                   <div className="flex items-start gap-2 text-amber-900">
                     <Tag className="h-4 w-4 mt-0.5 shrink-0" />
@@ -224,20 +242,21 @@ const BookingSidebar = ({
                     </div>
                   </div>
                   {onRemoveCoupon ? (
-                    <button
+                    <Button
                       type="button"
+                      variant="link"
+                      size="sm"
                       onClick={onRemoveCoupon}
-                      className="text-amber-800 hover:text-amber-950"
+                      className="h-auto p-0 text-amber-800 hover:text-amber-950"
                       aria-label="Remove coupon"
                     >
                       <X className="h-4 w-4" />
-                    </button>
+                    </Button>
                   ) : null}
                 </div>
               ) : null}
 
-              {!appliedCoupon?.valid && !(quote?.couponCode && discount > 0) ? (
-                <div className="space-y-1.5">
+              <div className="space-y-1.5">
                   <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
                     Have a coupon code?
                   </p>
@@ -255,21 +274,21 @@ const BookingSidebar = ({
                       placeholder="Enter code"
                       className="min-w-0 flex-1 rounded border border-neutral-300 px-3 py-2 text-sm uppercase tracking-wider placeholder:normal-case placeholder:tracking-normal focus:border-[#4b3621] focus:outline-none"
                     />
-                    <button
+                    <Button
                       type="button"
+                      variant="dark"
+                      size="sm"
                       onClick={handleApplyManual}
                       disabled={!manualCode.trim() || isApplyingManual}
-                      className="shrink-0 rounded bg-[#4b3621] px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isApplyingManual ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
                       ) : (
                         "Apply"
                       )}
-                    </button>
+                    </Button>
                   </div>
                 </div>
-              ) : null}
 
               <BookingCouponList
                 coupons={availableCoupons}
@@ -279,6 +298,7 @@ const BookingSidebar = ({
                 cartSubtotal={subtotalForEligibility}
                 error={couponError}
                 onSelectCoupon={onSelectCoupon ?? (() => undefined)}
+                onRemoveCoupon={onRemoveCoupon}
               />
             </div>
           ) : null}
@@ -409,14 +429,22 @@ const BookingSidebar = ({
       ) : null}
 
       {showContinueButton ? (
-        <button
+        <Button
           type="button"
+          variant="solid"
           onClick={onContinue}
           disabled={continueDisabled || cart.length === 0 || loading || quoteLoading}
-          className="mt-4 w-full py-3 text-sm font-semibold tracking-wider uppercase text-white bg-gradient-to-r from-[#c9a227] to-[#4b3621] hover:opacity-95 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+          className="mt-4 w-full tracking-wider uppercase"
         >
-          {loading ? "Processing…" : continueLabel}
-        </button>
+          {loading ? (
+            "Processing…"
+          ) : (
+            <>
+              {continueLabel}
+              <ChevronRight className="h-4 w-4" />
+            </>
+          )}
+        </Button>
       ) : null}
     </aside>
   );

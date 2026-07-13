@@ -6,6 +6,7 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPublicCoupons } from "@/services/couponService";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const Coupons = () => {
   const { data: coupons = [], isLoading, isError } = useQuery({
@@ -21,14 +22,14 @@ const Coupons = () => {
 
       <main className="flex-1 pt-32 pb-16">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16 animate-on-scroll">
-            <p className="text-primary text-sm tracking-[0.2em] uppercase mb-4">
-              SPECIAL OFFERS
+          <div className="text-center mb-12 md:mb-16 animate-on-scroll">
+            <p className="text-[#b8892f] text-sm font-semibold tracking-[0.2em] uppercase mb-3">
+              Special offers
             </p>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-playfair mb-6">
-              Hotel <span className="text-gradient">Coupons</span>
+            <h1 className="font-inter text-3xl md:text-4xl lg:text-5xl font-semibold text-[#4b3621] mb-4">
+              Hotel coupons
             </h1>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-[#6b5a45] max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
               Browse all active promo codes for Hotel Yuvaan. Select a coupon and
               apply it when you complete your booking on our website.
             </p>
@@ -51,12 +52,9 @@ const Coupons = () => {
               <p className="text-lg text-muted-foreground mb-6">
                 No active coupons at the moment.
               </p>
-              <Link
-                to="/book"
-                className="inline-block bg-primary text-primary-foreground py-3 px-8 rounded-full font-semibold tracking-wider text-sm"
-              >
-                BOOK WITHOUT COUPON
-              </Link>
+              <Button asChild variant="solid" className="tracking-[0.12em] uppercase">
+                <Link to="/book">BOOK WITHOUT COUPON</Link>
+              </Button>
             </div>
           )}
 

@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Clock, Users, Utensils, Wine, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -219,22 +220,18 @@ const RestaurantSection = () => {
             ))}
           </div>
         </motion.div>
-        <a
-          href="https://drive.google.com/file/d/1o3e9A316SvHd_okVKtFU9J4hAEHLK-xH/view?usp=sharing"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <div className="flex justify-center mt-12">
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 bg-gold-500/10 border border-gold-300 text-gold-600 px-8 py-3 rounded-full font-medium hover:shadow-md transition-all
-            hover:bg-gold-500/20 "
+        <div className="flex justify-center mt-12">
+          <Button asChild variant="outline">
+            <a
+              href="https://drive.google.com/file/d/1o3e9A316SvHd_okVKtFU9J4hAEHLK-xH/view?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               View Full Menu
               <ChevronRight className="w-5 h-5" />
-            </motion.button>
-          </div>
-        </a>
+            </a>
+          </Button>
+        </div>
       </div>
     </section>
   );

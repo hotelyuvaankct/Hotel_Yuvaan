@@ -6,6 +6,7 @@ import {
   CarouselItem,
 } from "../components/ui/carousel";
 import { getAmenityIcon, getAmenityLabel } from "@/lib/amenities";
+import { Button } from "@/components/ui/button";
 
 interface Room {
   type: string;
@@ -76,14 +77,11 @@ const RoomPopup: React.FC<RoomPopupProps> = ({ open, onClose, room }) => {
             })}
           </ul>
         </div>
-        <a
-          href={room.bookingUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block w-full bg-primary text-white text-center py-2 rounded hover:bg-primary/90 transition"
-        >
-          Book Now
-        </a>
+        <Button asChild variant="solid" className="w-full">
+          <a href={room.bookingUrl} target="_blank" rel="noopener noreferrer">
+            Book Now
+          </a>
+        </Button>
       </div>
     </Dialog>
   );

@@ -8,6 +8,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  sanitizePhoneInput,
+  validateGuestFields,
+  type GuestFieldErrors,
+} from "@/lib/guestValidation";
 
 export interface GuestFormData {
   guestFirstName: string;
@@ -35,27 +40,22 @@ const GuestCheckoutForm = ({
     guestEmail: "",
     guestPhone: "",
   });
-  const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<GuestFieldErrors>({});
+
+  const updateField = <K extends keyof GuestFormData>(key: K, value: GuestFormData[K]) => {
+    setForm((prev) => ({ ...prev, [key]: value }));
+    setFieldErrors((prev) => {
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+  };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    if (!form.guestFirstName.trim()) {
-      setError("First name is required");
-      return;
-    }
-    if (!form.guestLastName.trim()) {
-      setError("Last name is required");
-      return;
-    }
-    if (!form.guestEmail.trim() || !form.guestEmail.includes("@")) {
-      setError("Valid email is required");
-      return;
-    }
-    if (!form.guestPhone.trim() || form.guestPhone.trim().length < 10) {
-      setError("Valid phone number is required");
-      return;
-    }
-    setError(null);
+    const errors = validateGuestFields(form);
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) return;
     onSubmit(form);
   };
 
@@ -63,33 +63,39 @@ const GuestCheckoutForm = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md rounded-none">
         <DialogHeader>
-          <DialogTitle className="font-playfair text-xl text-[#4b3621]">
+          <DialogTitle className="text-xl font-semibold text-[#4b3621]">
             Guest details
           </DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <Label htmlFor="firstName">First name</Label>
               <Input
                 id="firstName"
                 value={form.guestFirstName}
-                onChange={(e) =>
-                  setForm((prev) => ({ ...prev, guestFirstName: e.target.value }))
-                }
+                onChange={(e) => updateField("guestFirstName", e.target.value)}
                 className="rounded-none"
+                placeholder="Enter first name"
+                aria-invalid={Boolean(fieldErrors.guestFirstName)}
               />
+              {fieldErrors.guestFirstName ? (
+                <p className="text-sm text-destructive mt-1">{fieldErrors.guestFirstName}</p>
+              ) : null}
             </div>
             <div>
               <Label htmlFor="lastName">Last name</Label>
               <Input
                 id="lastName"
                 value={form.guestLastName}
-                onChange={(e) =>
-                  setForm((prev) => ({ ...prev, guestLastName: e.target.value }))
-                }
+                onChange={(e) => updateField("guestLastName", e.target.value)}
                 className="rounded-none"
+                placeholder="Enter last name"
+                aria-invalid={Boolean(fieldErrors.guestLastName)}
               />
+              {fieldErrors.guestLastName ? (
+                <p className="text-sm text-destructive mt-1">{fieldErrors.guestLastName}</p>
+              ) : null}
             </div>
           </div>
           <div>
@@ -97,30 +103,38 @@ const GuestCheckoutForm = ({
             <Input
               id="email"
               type="email"
+              inputMode="email"
               value={form.guestEmail}
-              onChange={(e) =>
-                setForm((prev) => ({ ...prev, guestEmail: e.target.value }))
-              }
+              onChange={(e) => updateField("guestEmail", e.target.value)}
               className="rounded-none"
+              placeholder="name@example.com"
+              aria-invalid={Boolean(fieldErrors.guestEmail)}
             />
+            {fieldErrors.guestEmail ? (
+              <p className="text-sm text-destructive mt-1">{fieldErrors.guestEmail}</p>
+            ) : null}
           </div>
           <div>
             <Label htmlFor="phone">Phone</Label>
             <Input
               id="phone"
               type="tel"
+              inputMode="tel"
               value={form.guestPhone}
-              onChange={(e) =>
-                setForm((prev) => ({ ...prev, guestPhone: e.target.value }))
-              }
+              onChange={(e) => updateField("guestPhone", sanitizePhoneInput(e.target.value))}
               className="rounded-none"
+              placeholder="e.g. 9876543210"
+              aria-invalid={Boolean(fieldErrors.guestPhone)}
             />
+            {fieldErrors.guestPhone ? (
+              <p className="text-sm text-destructive mt-1">{fieldErrors.guestPhone}</p>
+            ) : null}
           </div>
-          {error && <p className="text-sm text-destructive">{error}</p>}
           <Button
             type="submit"
+            variant="dark"
             disabled={loading}
-            className="w-full rounded-none bg-[#4b3621] hover:bg-[#3d2b1a]"
+            className="w-full"
           >
             {loading ? "Confirming…" : "Confirm booking"}
           </Button>

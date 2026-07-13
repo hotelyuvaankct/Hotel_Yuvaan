@@ -24,6 +24,7 @@ import {
   ShieldCheck,
   ShowerHead,
   Sparkles,
+  ChevronRight,
   type LucideIcon,
 } from "lucide-react";
 import Autoplay from "embla-carousel-autoplay";
@@ -58,6 +59,7 @@ import {
   normalizeStorageUrl,
 } from "@/services/roomService";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 const Book = () => {
   const [searchParams] = useSearchParams();
@@ -447,12 +449,9 @@ const Book = () => {
                       <p className="text-muted-foreground mb-6">
                         Try different dates or reduce the number of guests.
                       </p>
-                      <Link
-                        to="/#rooms"
-                        className="inline-block bg-primary text-primary-foreground px-6 py-3 rounded-sm text-sm font-semibold tracking-wider uppercase"
-                      >
-                        View All Room Types
-                      </Link>
+                      <Button asChild variant="solid" className="tracking-wider uppercase">
+                        <Link to="/#rooms">View All Room Types</Link>
+                      </Button>
                     </div>
                   ) : (
                     roomsWithImages.map((room) => (
@@ -489,13 +488,16 @@ const Book = () => {
                 </span>
               ) : null}
             </div>
-            <button
+            <Button
               type="button"
+              variant="solid"
+              size="sm"
               onClick={handleContinue}
-              className="px-5 py-2.5 text-sm font-semibold tracking-wider uppercase text-white bg-gradient-to-r from-[#c9a227] to-[#4b3621] hover:opacity-95 transition-opacity"
+              className="tracking-wider uppercase"
             >
-              Continue to checkout ›
-            </button>
+              Continue to checkout
+              <ChevronRight className="h-4 w-4" />
+            </Button>
           </div>
         </div>
       ) : null}
@@ -707,7 +709,7 @@ const RoomCard = ({
         <>
           <div className="px-3 sm:px-5 pt-2.5 sm:pt-3 pb-1">
             <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400">
-              Choose a rate
+              Choose a rate and add rooms
             </p>
           </div>
           {ratePlans && ratePlans.length > 0 ? (
@@ -753,29 +755,51 @@ const RoomCard = ({
                           per night + taxes
                         </p>
                       </div>
-                      <div className="inline-flex items-center border border-neutral-300 rounded-sm shrink-0">
-                        <button
+                      {qty === 0 ? (
+                        <Button
                           type="button"
-                          className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center disabled:opacity-40 touch-manipulation"
-                          onClick={() => onQuantityChange(plan, -1)}
-                          disabled={qty <= 0}
-                          aria-label={`Decrease ${plan.label}`}
-                        >
-                          <Minus className="h-3.5 w-3.5" />
-                        </button>
-                        <span className="h-8 sm:h-9 min-w-[1.75rem] flex items-center justify-center border-x border-neutral-300 text-sm tabular-nums">
-                          {qty}
-                        </span>
-                        <button
-                          type="button"
-                          className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center disabled:opacity-40 touch-manipulation"
+                          variant="outline"
+                          size="sm"
+                          className="h-8 sm:h-9 px-3 sm:px-4 text-xs sm:text-sm uppercase tracking-wide"
                           onClick={() => onQuantityChange(plan, 1)}
                           disabled={roomTypeSelectedTotal >= room.availableRooms}
-                          aria-label={`Increase ${plan.label}`}
+                          aria-label={`Add room — ${plan.label}`}
                         >
-                          <Plus className="h-3.5 w-3.5" />
-                        </button>
-                      </div>
+                          Add room
+                        </Button>
+                      ) : (
+                        <div className="flex flex-col items-end gap-1">
+                          <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400 leading-none">
+                            Rooms
+                          </p>
+                          <div className="inline-flex items-center border border-neutral-300 rounded-full shrink-0 overflow-hidden">
+                            <Button
+                              type="button"
+                              variant="subtle"
+                              size="icon-sm"
+                              className="h-8 w-8 sm:h-9 sm:w-9 rounded-none"
+                              onClick={() => onQuantityChange(plan, -1)}
+                              aria-label={`Remove room — ${plan.label}`}
+                            >
+                              <Minus className="h-3.5 w-3.5" />
+                            </Button>
+                            <span className="h-8 sm:h-9 min-w-[3.25rem] px-1.5 flex items-center justify-center border-x border-neutral-300 text-sm tabular-nums text-[#4b3621]">
+                              {qty}
+                            </span>
+                            <Button
+                              type="button"
+                              variant="subtle"
+                              size="icon-sm"
+                              className="h-8 w-8 sm:h-9 sm:w-9 rounded-none"
+                              onClick={() => onQuantityChange(plan, 1)}
+                              disabled={roomTypeSelectedTotal >= room.availableRooms}
+                              aria-label={`Add room — ${plan.label}`}
+                            >
+                              <Plus className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </li>
                 );

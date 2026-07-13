@@ -4,6 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { FaArrowRightToBracket, FaArrowRotateRight } from "react-icons/fa6";
 import { submitContact } from "@/services/contactService";
 import { useAppConfig } from "@/hooks/useAppConfig";
+import { Button } from "@/components/ui/button";
 
 const ContactSection = () => {
   const { data: contact, isLoading } = useAppConfig();
@@ -212,31 +213,27 @@ const ContactSection = () => {
                 </div>
 
                 <div className="flex flex-col md:flex-row justify-between gap-4">
-                  <button
+                  <Button
                     type="reset"
+                    variant="soft"
                     disabled={loading}
-                    className="w-full md:w-1/2 bg-secondary text-secondary-foreground py-3 rounded-lg font-semibold transition-colors duration-300 border border-secondary hover:bg-secondary/80 hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary disabled:opacity-60 disabled:cursor-not-allowed shadow-sm mb-2 md:mb-0"
+                    className="w-full md:w-1/2"
                     onClick={() =>
                       setFormData({ name: "", email: "", message: "" })
                     }
                   >
-                    <div className="flex items-center justify-center space-x-2">
-                      <FaArrowRotateRight size={20} />
-                      <p>Reset Form</p>
-                    </div>
-                  </button>
-                  <button
+                    <FaArrowRotateRight size={20} />
+                    Reset Form
+                  </Button>
+                  <Button
                     type="submit"
-                    className="w-full md:w-1/2 bg-primary text-primary-foreground py-3 rounded-lg font-semibold transition-colors duration-300 border border-primary hover:bg-primary/90 hover:border-secondary focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary disabled:opacity-60 disabled:cursor-not-allowed shadow-sm flex items-center justify-center"
+                    variant="solid"
+                    className="w-full md:w-1/2"
                     disabled={loading}
                   >
                     {loading ? "Sending..." : "Submit Message"}
-                    {!loading && (
-                      <div className="p-2 ml-1">
-                        <FaArrowRightToBracket size={20} />
-                      </div>
-                    )}
-                  </button>
+                    {!loading && <FaArrowRightToBracket size={20} />}
+                  </Button>
                 </div>
               </form>
             </div>

@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { Check, Loader2, Tag } from "lucide-react";
+import { Check, Loader2, Tag, X } from "lucide-react";
 import {
   formatCouponDiscount,
   formatCouponMinBooking,
   type PublicCoupon,
 } from "@/services/couponService";
+import { Button } from "@/components/ui/button";
 
 interface BookingCouponListProps {
   coupons: PublicCoupon[];
@@ -14,6 +15,7 @@ interface BookingCouponListProps {
   cartSubtotal: number;
   error?: string | null;
   onSelectCoupon: (code: string) => void;
+  onRemoveCoupon?: () => void;
 }
 
 function isCouponEligible(coupon: PublicCoupon, cartSubtotal: number): boolean {
@@ -29,6 +31,7 @@ const BookingCouponList = ({
   cartSubtotal,
   error,
   onSelectCoupon,
+  onRemoveCoupon,
 }: BookingCouponListProps) => {
   const listRef = useRef<HTMLDivElement>(null);
   const [ineligibleAttemptCode, setIneligibleAttemptCode] = useState<string | null>(
@@ -87,21 +90,11 @@ const BookingCouponList = ({
 
           return (
             <li key={coupon.id}>
-              <button
-                type="button"
-                onClick={() => {
-                  if (!eligible) {
-                    setIneligibleAttemptCode(coupon.code);
-                    return;
-                  }
-                  setIneligibleAttemptCode(null);
-                  onSelectCoupon(coupon.code);
-                }}
-                disabled={isApplying}
-                className={`w-full rounded-lg border px-3 py-2.5 text-left transition-colors disabled:cursor-not-allowed ${
+              <div
+                className={`w-full rounded-lg border px-3 py-2.5 transition-colors ${
                   isApplied
                     ? "border-green-300 bg-green-50"
-                    : "border-neutral-200 bg-neutral-50 hover:border-[#4b3621] hover:bg-white"
+                    : "border-neutral-200 bg-neutral-50"
                 }`}
               >
                 <div className="flex items-start justify-between gap-2">
@@ -127,13 +120,46 @@ const BookingCouponList = ({
                       </p>
                     ) : null}
                   </div>
-                  {isApplying ? (
-                    <Loader2 className="h-4 w-4 shrink-0 animate-spin text-[#4b3621]" />
-                  ) : isApplied ? (
-                    <Check className="h-4 w-4 shrink-0 text-green-700" />
-                  ) : null}
+
+                  <div className="shrink-0 pt-0.5">
+                    {isApplying ? (
+                      <Loader2 className="h-4 w-4 animate-spin text-[#4b3621]" />
+                    ) : isApplied ? (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon-sm"
+                        onClick={() => onRemoveCoupon?.()}
+                        className="border-green-300 bg-white text-green-700 hover:bg-green-100 hover:text-green-900 h-8 w-8"
+                        aria-label={`Remove ${coupon.code}`}
+                        title="Remove"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    ) : (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          if (!eligible) {
+                            setIneligibleAttemptCode(coupon.code);
+                            return;
+                          }
+                          setIneligibleAttemptCode(null);
+                          onSelectCoupon(coupon.code);
+                        }}
+                        className="h-8 px-2.5 text-[11px] uppercase tracking-wide"
+                        aria-label={`Apply ${coupon.code}`}
+                        title="Apply"
+                      >
+                        <Check className="h-3.5 w-3.5" />
+                        Apply
+                      </Button>
+                    )}
+                  </div>
                 </div>
-              </button>
+              </div>
             </li>
           );
         })}

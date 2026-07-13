@@ -9,6 +9,7 @@ import {
 import { getAmenityIcon, getAmenityLabel } from "@/lib/amenities";
 import { Link } from "react-router-dom";
 import { format, addDays } from "date-fns";
+import { Button } from "@/components/ui/button";
 import {
   Carousel,
   CarouselContent,
@@ -177,12 +178,9 @@ const RoomsSection = () => {
                       })}
                     </div>
 
-                    <Link
-                      to={defaultBookUrl}
-                      className="block w-full bg-gradient-to-r from-gold-600 to-gold-400 text-white py-3 px-4 rounded-lg hover:from-gold-700 hover:to-gold-500 transition-all duration-300 text-sm font-semibold text-center shadow-lg hover:shadow-gold hover:shadow-lg"
-                    >
-                      BOOK NOW
-                    </Link>
+                    <Button asChild variant="solid" className="w-full tracking-wide">
+                      <Link to={defaultBookUrl}>BOOK NOW</Link>
+                    </Button>
                   </div>
                 </div>
               );

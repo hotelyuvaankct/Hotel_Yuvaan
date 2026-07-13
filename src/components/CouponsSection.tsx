@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import CouponCard from "./CouponCard";
 import { fetchPublicCoupons } from "@/services/couponService";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { Button } from "@/components/ui/button";
 
 const PREVIEW_LIMIT = 3;
 
@@ -24,14 +25,14 @@ const CouponsSection = () => {
   return (
     <section id="offers" className="pt-16 md:pt-24 pb-10 md:pb-12 bg-[#faf8f5]">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16 animate-on-scroll">
-          <p className="text-primary text-sm tracking-[0.2em] uppercase mb-4">
-            SPECIAL OFFERS
+        <div className="text-center mb-12 md:mb-16 animate-on-scroll">
+          <p className="text-[#b8892f] text-sm font-semibold tracking-[0.2em] uppercase mb-3">
+            Special offers
           </p>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold font-playfair mb-6">
-            Exclusive <span className="text-gradient">Coupons</span>
+          <h2 className="text-3xl md:text-4xl font-semibold text-[#4b3621] mb-4">
+            Exclusive coupons
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-[#6b5a45] max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
             Save on your stay with our active promo codes. Apply a coupon at checkout
             when you book directly with Hotel Yuvaan.
           </p>
@@ -59,26 +60,12 @@ const CouponsSection = () => {
 
         {!isLoading && coupons.length > PREVIEW_LIMIT && (
           <div className="mt-12 text-center animate-on-scroll">
-            <Link
-              to="/coupons"
-              className="inline-block bg-primary text-primary-foreground py-3 px-8 rounded-full hover:bg-primary/90 transition-all duration-300 font-semibold tracking-wider text-sm shadow-lg hover:shadow-xl"
-            >
-              VIEW ALL OFFERS
-            </Link>
+            <Button asChild variant="solid" className="tracking-[0.12em] uppercase">
+              <Link to="/coupons">View all offers</Link>
+            </Button>
           </div>
         )}
-
-        {!isLoading && coupons.length > 0 && coupons.length <= PREVIEW_LIMIT && (
-          <div className="mt-12 text-center animate-on-scroll">
-            <Link
-              to="/book"
-              className="inline-block border border-primary text-primary py-3 px-8 rounded-full hover:bg-primary hover:text-primary-foreground transition-all duration-300 font-semibold tracking-wider text-sm"
-            >
-              BOOK YOUR STAY
-            </Link>
-          </div>
-        )}
-      </div>
+           </div>
     </section>
   );
 };

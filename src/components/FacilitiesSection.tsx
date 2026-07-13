@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { Car, Wifi, Coffee, Waves, Utensils, MapPin } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const FacilitiesSection = () => {
   const facilities = [
@@ -111,9 +111,9 @@ const FacilitiesSection = () => {
                       Premium amenities not included
                     </li>
                   </ul>
-                  <button className="w-full bg-primary text-primary-foreground py-2 rounded-full hover:bg-primary/90 transition-colors duration-300">
+                  <Button variant="solid" className="w-full">
                     Add Service
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -140,9 +140,9 @@ const FacilitiesSection = () => {
                       Limited premium spirits
                     </li>
                   </ul>
-                  <button className="w-full bg-primary text-primary-foreground py-2 rounded-full hover:bg-primary/90 transition-colors duration-300">
+                  <Button variant="solid" className="w-full">
                     Add Package
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>

@@ -6,6 +6,9 @@ import {
 
 export { apiUrl, env, getBackendBaseUrl } from "@/config/env";
 
+/** Maximum nights between check-in and check-out. */
+export const MAX_STAY_DAYS = 60;
+
 export function getReviewsApiUrl(): string {
   return apiUrl("/reviews");
 }
