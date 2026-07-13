@@ -6,6 +6,7 @@ import GalleryCard from "./GalleryCard";
 import { fetchGalleryPreview } from "@/services/galleryService";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Button } from "@/components/ui/button";
+import SectionHeader from "./SectionHeader";
 
 const GallerySection = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -18,20 +19,14 @@ const GallerySection = () => {
   useScrollAnimation([homeImages.length, isLoading]);
 
   return (
-    <section id="gallery" className="pt-10 md:pt-12 pb-16 md:pb-24 bg-background">
+    <section id="gallery" className="pt-10 md:pt-12 pb-16 md:pb-24">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16 animate-on-scroll">
-          <p className="text-primary text-sm tracking-[0.2em] uppercase mb-4">
-            VISUAL EXPERIENCE
-          </p>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold font-playfair mb-6">
-            Hotel <span className="text-gradient">Gallery</span>
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Take a visual tour of our luxurious facilities, elegant rooms, fine
-            dining spaces, and world-class amenities at Hotel Yuvaan.
-          </p>
-        </div>
+        <SectionHeader
+          eyebrow="VISUAL EXPERIENCE"
+          title="Hotel"
+          highlight="Gallery"
+          description="Take a visual tour of our luxurious facilities, elegant rooms, fine dining spaces, and world-class amenities at Hotel Yuvaan."
+        />
 
         {isLoading && (
           <div className="flex justify-center py-12">

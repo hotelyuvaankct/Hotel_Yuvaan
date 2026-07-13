@@ -10,6 +10,7 @@ import { getAmenityIcon, getAmenityLabel } from "@/lib/amenities";
 import { Link } from "react-router-dom";
 import { format, addDays } from "date-fns";
 import { Button } from "@/components/ui/button";
+import SectionHeader from "./SectionHeader";
 import {
   Carousel,
   CarouselContent,
@@ -37,38 +38,15 @@ const RoomsSection = () => {
   return (
     <section
       id="rooms"
-      className="pt-10 md:pt-12 pb-16 md:pb-24 bg-background relative overflow-hidden"
+      className="pt-10 md:pt-12 pb-16 md:pb-24 relative"
     >
-      <div className="absolute top-0 right-0 w-32 h-32 bg-gold-500/10 rounded-full filter blur-3xl translate-x-1/2 -translate-y-1/2"></div>
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary/10 rounded-full filter blur-3xl -translate-x-1/2 translate-y-1/2"></div>
-
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-16 animate-on-scroll">
-          <div className="relative inline-block mb-6">
-            <p className="text-primary text-sm tracking-[0.2em] uppercase mb-4 relative z-10">
-              HOTEL YUVAAN LUXURY ACCOMMODATION
-            </p>
-            <div className="absolute -bottom-1 left-0 w-full h-1 bg-gradient-to-r from-gold-500 to-gold-300 rounded-full"></div>
-          </div>
-
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-playfair mb-8 text-foreground relative">
-            <span className="relative z-10">
-              Rooms &{" "}
-              <span className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-gold-600 via-gold-500 to-gold-300">
-                Suites
-              </span>
-            </span>
-          </h2>
-
-          <div className="space-y-4 text-muted-foreground max-w-2xl mx-auto relative">
-            <div className="absolute -left-8 top-0 h-full w-1 bg-gradient-to-b from-gold-500 to-transparent rounded-full"></div>
-            <p className="relative pl-4">
-              Experience luxury and comfort in our elegantly designed rooms,
-              each offering premium amenities and exceptional service with modern
-              interiors that create unforgettable memories.
-            </p>
-          </div>
-        </div>
+      <div className="container mx-auto px-4">
+        <SectionHeader
+          eyebrow="HOTEL YUVAAN LUXURY ACCOMMODATION"
+          title="Rooms &"
+          highlight="Suites"
+          description="Experience luxury and comfort in our elegantly designed rooms, each offering premium amenities and exceptional service with modern interiors that create unforgettable memories."
+        />
 
         {isLoading && (
           <div className="flex justify-center py-16">
@@ -101,7 +79,7 @@ const RoomsSection = () => {
               return (
                 <div
                   key={room.id}
-                  className={`bg-gradient-to-br from-background to-muted/50 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 border border-muted hover:border-gold-300 animate-on-scroll-${
+                  className={`rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500 border border-border hover:border-gold-300 animate-on-scroll-${
                     index % 2 === 0 ? "left" : "right"
                   }`}
                   style={{ animationDelay: `${index * 0.2}s` }}
@@ -167,7 +145,7 @@ const RoomsSection = () => {
                         return (
                           <div
                             key={`${feature}-${featureIndex}`}
-                            className="flex items-center space-x-2 text-sm bg-muted/50 p-2 rounded-lg"
+                            className="flex items-center space-x-2 text-sm p-2 rounded-lg border border-border/60"
                           >
                             <Icon className="w-4 h-4 text-gold-500" />
                             <span className="text-muted-foreground font-medium truncate">

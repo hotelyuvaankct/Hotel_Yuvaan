@@ -5,6 +5,7 @@ import { FaArrowRightToBracket, FaArrowRotateRight } from "react-icons/fa6";
 import { submitContact } from "@/services/contactService";
 import { useAppConfig } from "@/hooks/useAppConfig";
 import { Button } from "@/components/ui/button";
+import SectionHeader from "./SectionHeader";
 
 const ContactSection = () => {
   const { data: contact, isLoading } = useAppConfig();
@@ -56,28 +57,18 @@ const ContactSection = () => {
   };
 
   return (
-    <section id="contact" className="pt-10 md:pt-12 pb-16 md:pb-24 bg-background">
+    <section id="contact" className="pt-10 md:pt-12 pb-16 md:pb-24">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16 animate-on-scroll">
-          <p className="text-primary text-sm tracking-[0.2em] uppercase mb-4">
-            GET IN TOUCH
-          </p>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold font-playfair mb-6">
-            Contact <span className="text-gradient">Us</span>
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            We're here to assist you with reservations, inquiries, and to make
-            your stay memorable. Reach out to us anytime.
-          </p>
-        </div>
+        <SectionHeader
+          eyebrow="GET IN TOUCH"
+          title="Contact"
+          highlight="Us"
+          description="We're here to assist you with reservations, inquiries, and to make your stay memorable. Reach out to us anytime."
+        />
 
         <div className="flex flex-col lg:flex-row gap-12 items-stretch">
           <div className="flex-1 animate-on-scroll-left flex flex-col justify-between">
             <div>
-              <h3 className="text-2xl font-bold font-playfair mb-8">
-                Get in Touch
-              </h3>
-
               <div className="space-y-6 mb-8">
                 <div className="flex items-start space-x-4">
                   <div className="bg-primary/10 p-3 rounded-lg">
@@ -159,7 +150,7 @@ const ContactSection = () => {
           <div className="flex-1 animate-on-scroll-right flex items-center">
             <div className="bg-card rounded-2xl p-8 shadow-lg w-full">
               <h3 className="text-2xl font-bold font-playfair mb-6">
-                Send Us a Message
+                Send us a message
               </h3>
 
               <form onSubmit={handleSubmit} className="space-y-6">

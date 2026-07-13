@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import PageBackground from "@/components/PageBackground";
 
 export type SitePageSection = {
   heading: string;
@@ -22,7 +23,7 @@ const SiteContentPage = ({
   sections,
 }: SiteContentPageProps) => {
   return (
-    <div className="min-h-screen bg-[#f5f1eb] flex flex-col">
+    <PageBackground className="flex flex-col">
       <Navigation />
 
       <section className="relative overflow-hidden bg-[#4b3621] pt-40 sm:pt-44 md:pt-48 pb-20 md:pb-24">
@@ -112,7 +113,7 @@ const SiteContentPage = ({
       </main>
 
       <Footer />
-    </div>
+    </PageBackground>
   );
 };
 

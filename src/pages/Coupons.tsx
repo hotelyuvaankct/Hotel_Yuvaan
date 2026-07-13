@@ -1,12 +1,14 @@
 import { Loader2 } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import PageBackground from "@/components/PageBackground";
 import CouponCard from "@/components/CouponCard";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPublicCoupons } from "@/services/couponService";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import SectionHeader from "@/components/SectionHeader";
 
 const Coupons = () => {
   const { data: coupons = [], isLoading, isError } = useQuery({
@@ -17,23 +19,18 @@ const Coupons = () => {
   useScrollAnimation([coupons.length, isLoading]);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <PageBackground className="flex flex-col">
       <Navigation />
 
       <main className="flex-1 pt-32 pb-16">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12 md:mb-16 animate-on-scroll">
-            <p className="text-[#b8892f] text-sm font-semibold tracking-[0.2em] uppercase mb-3">
-              Special offers
-            </p>
-            <h1 className="font-inter text-3xl md:text-4xl lg:text-5xl font-semibold text-[#4b3621] mb-4">
-              Hotel coupons
-            </h1>
-            <p className="text-[#6b5a45] max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
-              Browse all active promo codes for Hotel Yuvaan. Select a coupon and
-              apply it when you complete your booking on our website.
-            </p>
-          </div>
+          <SectionHeader
+            as="h1"
+            eyebrow="Special offers"
+            title="Hotel"
+            highlight="coupons"
+            description="Browse all active promo codes for Hotel Yuvaan. Select a coupon and apply it when you complete your booking on our website."
+          />
 
           {isLoading && (
             <div className="flex justify-center py-16">
@@ -69,7 +66,7 @@ const Coupons = () => {
       </main>
 
       <Footer />
-    </div>
+    </PageBackground>
   );
 };
 

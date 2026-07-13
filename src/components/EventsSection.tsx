@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight, Calendar, Users, Camera, Music } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import SectionHeader from './SectionHeader';
 
 const EventsSection = () => {
   const events = [
@@ -55,21 +56,14 @@ const EventsSection = () => {
   ];
 
   return (
-    <section id="events" className="py-16 md:py-24 bg-muted/30">
+    <section id="events" className="py-16 md:py-24">
       <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-16 animate-on-scroll">
-          <p className="text-primary text-sm tracking-[0.2em] uppercase mb-4">
-            EVENTS & NEWS
-          </p>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold font-playfair mb-6">
-            Recent <span className="text-gradient">Events</span>
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Stay updated with our latest events, celebrations, and special announcements
-            from Hotel Yuvaan.
-          </p>
-        </div>
+        <SectionHeader
+          eyebrow="EVENTS & NEWS"
+          title="Recent"
+          highlight="Events"
+          description="Stay updated with our latest events, celebrations, and special announcements from Hotel Yuvaan."
+        />
 
         {/* Recent Events */}
         <div className="grid lg:grid-cols-3 gap-8 mb-16">

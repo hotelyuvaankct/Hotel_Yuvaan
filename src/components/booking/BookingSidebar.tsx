@@ -1,15 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { format, parseISO } from "date-fns";
-import { ChevronDown, ChevronRight, Loader2, Tag, X } from "lucide-react";
+import { ChevronRight, Loader2, Tag, X } from "lucide-react";
 import { formatRoomPrice } from "@/services/roomService";
 import type { BookingConfig, BookingQuote } from "@/services/bookingService";
 import type { CouponValidation, PublicCoupon } from "@/services/couponService";
 import BookingCouponList from "@/components/booking/BookingCouponList";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 
 export type CartItem = {
@@ -42,6 +37,7 @@ interface BookingSidebarProps {
   couponError?: string | null;
   onSelectCoupon?: (code: string) => void;
   onRemoveCoupon?: () => void;
+  onClearCouponError?: () => void;
   showCoupons?: boolean;
   showContinueButton?: boolean;
   continueLabel?: string;
@@ -70,6 +66,7 @@ const BookingSidebar = ({
   couponError,
   onSelectCoupon,
   onRemoveCoupon,
+  onClearCouponError,
   showCoupons = false,
   showContinueButton = true,
   continueLabel = "Continue",
@@ -79,6 +76,19 @@ const BookingSidebar = ({
   title = "My booking",
 }: BookingSidebarProps) => {
   const [manualCode, setManualCode] = useState("");
+
+  useEffect(() => {
+    if (!couponError || !onClearCouponError) return;
+    const clear = () => onClearCouponError();
+    // Wait a tick so the Apply click that showed the error doesn't clear it
+    const timer = window.setTimeout(() => {
+      document.addEventListener("click", clear);
+    }, 0);
+    return () => {
+      window.clearTimeout(timer);
+      document.removeEventListener("click", clear);
+    };
+  }, [couponError, onClearCouponError]);
 
   const handleApplyManual = () => {
     const code = manualCode.trim().toUpperCase();
@@ -272,7 +282,12 @@ const BookingSidebar = ({
                         }
                       }}
                       placeholder="Enter code"
-                      className="min-w-0 flex-1 rounded border border-neutral-300 px-3 py-2 text-sm uppercase tracking-wider placeholder:normal-case placeholder:tracking-normal focus:border-[#4b3621] focus:outline-none"
+                      aria-invalid={Boolean(couponError)}
+                      className={`min-w-0 flex-1 rounded border px-3 py-2 text-sm uppercase tracking-wider placeholder:normal-case placeholder:tracking-normal focus:outline-none ${
+                        couponError
+                          ? "border-red-400 focus:border-red-500"
+                          : "border-neutral-300 focus:border-[#4b3621]"
+                      }`}
                     />
                     <Button
                       type="button"
@@ -288,6 +303,9 @@ const BookingSidebar = ({
                       )}
                     </Button>
                   </div>
+                  {couponError ? (
+                    <p className="text-xs text-red-600">{couponError}</p>
+                  ) : null}
                 </div>
 
               <BookingCouponList
@@ -296,7 +314,6 @@ const BookingSidebar = ({
                 applyingCode={applyingCouponCode}
                 appliedCode={couponCode}
                 cartSubtotal={subtotalForEligibility}
-                error={couponError}
                 onSelectCoupon={onSelectCoupon ?? (() => undefined)}
                 onRemoveCoupon={onRemoveCoupon}
               />
@@ -336,88 +353,60 @@ const BookingSidebar = ({
                 {(() => {
                   const cgstValue = Number(cgst ?? 0);
                   const sgstValue = Number(sgst ?? 0);
-                  const roomTaxValue =
-                    cgst != null || sgst != null
-                      ? cgstValue + sgstValue
-                      : Number(tax ?? 0);
-                  const processFeeValue =
-                    Number(processingFee ?? 0) + Number(processingFeeGst ?? 0);
-                  const taxTotal = roomTaxValue + processFeeValue;
-                  const hasBreakdown =
-                    cgst != null ||
-                    sgst != null ||
-                    tax != null ||
-                    processFeeValue > 0;
-
-                  if (!hasBreakdown) return null;
+                  const hasCgstSgst = cgst != null || sgst != null;
+                  const processFee = Number(processingFee ?? 0);
+                  const processFeeGst = Number(processingFeeGst ?? 0);
+                  const hasTaxFallback =
+                    !hasCgstSgst && tax != null && Number(tax) > 0;
 
                   return (
-                    <div className="flex justify-between text-neutral-600 items-center gap-2">
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <button
-                            type="button"
-                            className="inline-flex items-center gap-1 text-[#4b3621] font-medium hover:opacity-80 transition-opacity"
-                          >
-                            <span>Taxes</span>
-                            <ChevronDown className="h-3.5 w-3.5" />
-                          </button>
-                        </PopoverTrigger>
-                        <PopoverContent
-                          align="start"
-                          className="w-64 p-3 space-y-2 text-sm"
-                        >
-                          <p className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500">
-                            Tax breakdown
-                          </p>
-                          {(cgst != null || sgst != null) ? (
-                            <>
-                              <div className="flex justify-between text-neutral-600">
-                                <span>
-                                  CGST
-                                  {halfTaxLabel ? ` ${halfTaxLabel}%` : ""}
-                                </span>
-                                <span className="tabular-nums">
-                                  {formatRoomPrice(cgstValue)}
-                                </span>
-                              </div>
-                              <div className="flex justify-between text-neutral-600">
-                                <span>
-                                  SGST
-                                  {halfTaxLabel ? ` ${halfTaxLabel}%` : ""}
-                                </span>
-                                <span className="tabular-nums">
-                                  {formatRoomPrice(sgstValue)}
-                                </span>
-                              </div>
-                            </>
-                          ) : tax != null ? (
-                            <div className="flex justify-between text-neutral-600">
-                              <span>Taxes</span>
-                              <span className="tabular-nums">
-                                {formatRoomPrice(Number(tax))}
-                              </span>
-                            </div>
-                          ) : null}
-                          {processFeeValue > 0 ? (
-                            <div className="flex justify-between text-neutral-600">
-                              <span>Payment Processing fee</span>
-                              <span className="tabular-nums">
-                                {formatRoomPrice(processFeeValue)}
-                              </span>
-                            </div>
-                          ) : null}
-                        </PopoverContent>
-                      </Popover>
-                      <span className="tabular-nums">
-                        {formatRoomPrice(taxTotal)}
-                      </span>
-                    </div>
+                    <>
+                      {hasCgstSgst ? (
+                        <>
+                          <div className="flex justify-between text-neutral-600">
+                            <span>
+                              CGST
+                              {halfTaxLabel ? ` ${halfTaxLabel}%` : ""}
+                            </span>
+                            <span className="tabular-nums">
+                              {formatRoomPrice(cgstValue)}
+                            </span>
+                          </div>
+                          <div className="flex justify-between text-neutral-600">
+                            <span>
+                              SGST
+                              {halfTaxLabel ? ` ${halfTaxLabel}%` : ""}
+                            </span>
+                            <span className="tabular-nums">
+                              {formatRoomPrice(sgstValue)}
+                            </span>
+                          </div>
+                        </>
+                      ) : null}
+                      {hasTaxFallback ? (
+                        <div className="flex justify-between text-neutral-600">
+                          <span>GST / Tax</span>
+                          <span className="tabular-nums">
+                            {formatRoomPrice(Number(tax))}
+                          </span>
+                        </div>
+                      ) : null}
+                      {processFee + processFeeGst > 0 ? (
+                        <div className="flex justify-between text-neutral-600">
+                          <span>Payment processing fee (incl. GST)</span>
+                          <span className="tabular-nums">
+                            {formatRoomPrice(processFee + processFeeGst)}
+                          </span>
+                        </div>
+                      ) : null}
+                    </>
                   );
                 })()}
                 <div className="flex justify-between font-semibold text-[#4b3621] text-base pt-1">
                   <span>Total</span>
-                  <span>{total != null ? formatRoomPrice(total) : "—"}</span>
+                  <span className="font-sans tabular-nums">
+                    {total != null ? formatRoomPrice(total) : "—"}
+                  </span>
                 </div>
                 <p className="text-xs text-neutral-500">Taxes & fees included</p>
               </>
