@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getSitePage } from "@/data/sitePages";
 
 const RATING_LABELS: Record<number, string> = {
   1: "Poor — we can do better",
@@ -25,9 +26,23 @@ function isBookingFlowPath(pathname: string): boolean {
   return pathname === "/book" || pathname.startsWith("/book/");
 }
 
+function isNotFoundPath(pathname: string): boolean {
+  if (
+    pathname === "/" ||
+    pathname === "/gallery" ||
+    pathname === "/coupons" ||
+    pathname.startsWith("/booking/")
+  ) {
+    return false;
+  }
+  if (isBookingFlowPath(pathname)) return false;
+  return !getSitePage(pathname);
+}
+
 const FloatingReviewWidget = () => {
   const { pathname } = useLocation();
   const hideOnBookingFlow = isBookingFlowPath(pathname);
+  const hideOnNotFound = isNotFoundPath(pathname);
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -82,7 +97,7 @@ const FloatingReviewWidget = () => {
     }
   };
 
-  if (hideOnBookingFlow) return null;
+  if (hideOnBookingFlow || hideOnNotFound) return null;
 
   return (
     <>

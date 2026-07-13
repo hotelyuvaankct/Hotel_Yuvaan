@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { X, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import Navigation from "../components/Navigation";
 import Footer from "../components/Footer";
+import PageBackground from "../components/PageBackground";
 import GalleryCard from "../components/GalleryCard";
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
 import { useQuery } from "@tanstack/react-query";
@@ -12,6 +13,7 @@ import {
   type GalleryCategoryFilter,
 } from "@/lib/galleryCategories";
 import { Button } from "@/components/ui/button";
+import SectionHeader from "@/components/SectionHeader";
 
 const PAGE_SIZE = 12;
 
@@ -42,24 +44,18 @@ const Gallery = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <PageBackground className="flex flex-col">
       <Navigation />
 
       <main className="flex-1 pt-32 pb-16">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16 animate-on-scroll">
-            <p className="text-primary text-sm tracking-[0.2em] uppercase mb-4">
-              VISUAL EXPERIENCE
-            </p>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-playfair mb-6">
-              Full <span className="text-gradient">Gallery</span>
-            </h1>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Explore our complete collection of images showcasing the luxurious
-              facilities, elegant rooms, fine dining spaces, and world-class
-              amenities at Hotel Yuvaan.
-            </p>
-          </div>
+          <SectionHeader
+            as="h1"
+            eyebrow="VISUAL EXPERIENCE"
+            title="Full"
+            highlight="Gallery"
+            description="Explore our complete collection of images showcasing the luxurious facilities, elegant rooms, fine dining spaces, and world-class amenities at Hotel Yuvaan."
+          />
 
           <div className="mb-12 animate-on-scroll">
             <div className="flex flex-wrap justify-center gap-4">
@@ -175,7 +171,7 @@ const Gallery = () => {
           </div>
         </div>
       )}
-    </div>
+    </PageBackground>
   );
 };
 

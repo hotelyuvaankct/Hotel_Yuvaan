@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Clock, Users, Utensils, Wine, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import SectionHeader from "./SectionHeader";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -39,7 +40,7 @@ const menuHighlights = [
 const RestaurantSection = () => {
   const navigate = useNavigate();
   return (
-    <section id="restaurant" className="pt-10 md:pt-12 pb-16 md:pb-24 bg-background">
+    <section id="restaurant" className="pt-10 md:pt-12 pb-16 md:pb-24">
       <div className="container mx-auto px-4">
         {/* Main Restaurant Section */}
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -77,16 +78,15 @@ const RestaurantSection = () => {
             variants={fadeIn}
             transition={{ delay: 0.2 }}
           >
-            <p className="text-gold-500 text-sm tracking-widest uppercase mb-4">
-              CULINARY EXPERIENCE
-            </p>
-            <h2 className="text-4xl md:text-5xl font-bold font-playfair mb-6">
-              Our <span className="text-gold-500">Restaurant</span>
-            </h2>
-            <p className="text-muted-foreground mb-6">
-              Experience culinary excellence where our chefs craft extraordinary
-              dishes using the finest seasonal ingredients.
-            </p>
+            <SectionHeader
+              align="left"
+              animate={false}
+              className="mb-6"
+              eyebrow="CULINARY EXPERIENCE"
+              title="Our"
+              highlight="Restaurant"
+              description="Experience culinary excellence where our chefs craft extraordinary dishes using the finest seasonal ingredients."
+            />
 
             {/* Restaurant Features */}
             <div className="grid grid-cols-2 gap-4 mb-8">
@@ -110,7 +110,7 @@ const RestaurantSection = () => {
                 <motion.div
                   key={index}
                   whileHover={{ y: -5 }}
-                  className="p-4 bg-gradient-to-br from-background to-muted/50 rounded-xl border border-muted hover:border-gold-300 transition-all"
+                  className="p-4 rounded-xl border border-border hover:border-gold-300 transition-colors"
                 >
                   <div className="w-10 h-10 mb-2 bg-gold-500/10 rounded-lg flex items-center justify-center text-gold-500">
                     {feature.icon}
@@ -188,21 +188,21 @@ const RestaurantSection = () => {
           variants={fadeIn}
           className="mt-24"
         >
-          <div className="text-center mb-12">
-            <p className="text-gold-500 text-sm tracking-widest mb-2">
-              TASTE THE DIFFERENCE
-            </p>
-            <h3 className="text-3xl font-bold font-playfair mb-4">
-              Menu <span className="text-gold-500">Highlights</span>
-            </h3>
-          </div>
+          <SectionHeader
+            as="h3"
+            animate={false}
+            className="mb-12"
+            eyebrow="TASTE THE DIFFERENCE"
+            title="Menu"
+            highlight="Highlights"
+          />
 
           <div className="grid md:grid-cols-3 gap-6">
             {menuHighlights.map((dish, index) => (
               <motion.div
                 key={index}
                 whileHover={{ y: -10 }}
-                className="bg-card rounded-xl p-6 text-center border border-muted hover:border-gold-300 transition-all hover:shadow-md"
+                className="rounded-xl p-6 text-center border border-border hover:border-gold-300 transition-colors hover:shadow-md"
               >
                 <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-2 border-gold-300 flex items-center justify-center bg-gold-500/10">
                   <img

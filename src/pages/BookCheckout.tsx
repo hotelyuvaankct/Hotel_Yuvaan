@@ -1,10 +1,11 @@
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { format, parseISO } from "date-fns";
 import { ArrowLeft, CalendarDays, Clock3, Loader2, Moon, Undo2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import PageBackground from "@/components/PageBackground";
 import ProcessingOverlay from "@/components/ProcessingOverlay";
 import BookingSidebar, { type CartItem } from "@/components/booking/BookingSidebar";
 import {
@@ -39,9 +40,16 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import {
   sanitizePhoneInput,
+  sanitizeNameInput,
+  MAX_NAME_LENGTH,
   validateGuestFields,
   type GuestFieldErrors,
 } from "@/lib/guestValidation";
+import LeaveGuardDialog from "@/components/LeaveGuardDialog";
+import {
+  isBookingFlowPath,
+  useLeaveGuard,
+} from "@/hooks/useLeaveGuard";
 
 const emptyGuest: GuestDetails = {
   guestFirstName: "",
@@ -65,6 +73,22 @@ const BookCheckout = () => {
   const [formError, setFormError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<GuestFieldErrors>({});
   const [marriedCoupleConfirmed, setMarriedCoupleConfirmed] = useState(false);
+  const [allowLeave, setAllowLeave] = useState(false);
+  const allowLeaveRef = useRef(false);
+
+  const leaveGuard = useLeaveGuard({
+    when: Boolean(draft) && !allowLeave,
+    message:
+      submitting || verifying
+        ? "Payment is in progress. Leaving now may interrupt your booking."
+        : "You have an unfinished booking. Are you sure you want to leave?",
+    shouldBlock: ({ nextLocation }) => {
+      if (allowLeaveRef.current) return false;
+      // Confirmation / back to room selection stay in the booking flow
+      if (isBookingFlowPath(nextLocation.pathname)) return false;
+      return true;
+    },
+  });
 
   useEffect(() => {
     const saved = bookingSession.load();
@@ -188,7 +212,9 @@ const BookCheckout = () => {
           });
           if (cancelled) return;
           setQuote(checkoutSummaryToQuote(summary));
-          setCouponError(null);
+          if (couponCode) {
+            setCouponError(null);
+          }
           if (summary.couponCode) {
             const applied: CouponValidation = {
               valid: true,
@@ -359,6 +385,8 @@ const BookCheckout = () => {
       bookingSession.clear();
       toast.success("Payment successful! Booking confirmed.");
       const booking = verified.booking;
+      allowLeaveRef.current = true;
+      setAllowLeave(true);
       navigate(`/booking/${booking.accessToken ?? booking.bookingCode}`, {
         replace: true,
       });
@@ -381,9 +409,9 @@ const BookCheckout = () => {
 
   if (!draft) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#faf8f5]">
+      <PageBackground className="flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
+      </PageBackground>
     );
   }
 
@@ -399,7 +427,13 @@ const BookCheckout = () => {
     );
 
   return (
-    <div className="min-h-screen bg-[#faf8f5] flex flex-col">
+    <PageBackground className="flex flex-col">
+      <LeaveGuardDialog
+        open={leaveGuard.pendingLeave}
+        message={leaveGuard.message}
+        onStay={leaveGuard.cancelLeave}
+        onLeave={leaveGuard.confirmLeave}
+      />
       <Navigation />
       <ProcessingOverlay
         open={submitting || verifying}
@@ -446,11 +480,14 @@ const BookCheckout = () => {
               <div className="relative p-5 sm:p-7">
                 <div className="flex flex-wrap items-start justify-between gap-3 mb-5">
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#e8d5a3]">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#e8d5a3]">
                       Your stay
                     </p>
-                    <h2 className="text-2xl sm:text-3xl font-semibold mt-1">
-                      {nights} night{nights === 1 ? "" : "s"} at Hotel Yuvaan
+                    <h2 className="mt-1.5 font-playfair text-2xl font-bold leading-tight sm:text-3xl md:text-[2rem]">
+                      <span className="text-white">
+                        {nights} Night{nights === 1 ? "" : "s"} at{" "}
+                      </span>
+                      <span className="text-gradient">Hotel Yuvaan</span>
                     </h2>
                   </div>
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-[#f5e6c8] ring-1 ring-white/15">
@@ -533,11 +570,16 @@ const BookCheckout = () => {
               <form onSubmit={handleContinueToPayment} className="space-y-5" noValidate>
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="firstName">First name</Label>
+                    <Label htmlFor="firstName">
+                      First name <span className="text-destructive">*</span>
+                    </Label>
                     <Input
                       id="firstName"
                       value={guest.guestFirstName}
-                      onChange={(e) => updateGuest({ guestFirstName: e.target.value })}
+                      onChange={(e) =>
+                        updateGuest({ guestFirstName: sanitizeNameInput(e.target.value) })
+                      }
+                      maxLength={MAX_NAME_LENGTH}
                       className="rounded-sm mt-1"
                       autoComplete="given-name"
                       placeholder="Enter first name"
@@ -552,7 +594,10 @@ const BookCheckout = () => {
                     <Input
                       id="lastName"
                       value={guest.guestLastName}
-                      onChange={(e) => updateGuest({ guestLastName: e.target.value })}
+                      onChange={(e) =>
+                        updateGuest({ guestLastName: sanitizeNameInput(e.target.value) })
+                      }
+                      maxLength={MAX_NAME_LENGTH}
                       className="rounded-sm mt-1"
                       autoComplete="family-name"
                       placeholder="Enter last name"
@@ -565,7 +610,9 @@ const BookCheckout = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">
+                    Email <span className="text-destructive">*</span>
+                  </Label>
                   <Input
                     id="email"
                     type="email"
@@ -583,11 +630,14 @@ const BookCheckout = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="phone">Phone</Label>
+                  <Label htmlFor="phone">
+                    Phone <span className="text-destructive">*</span>
+                  </Label>
                   <Input
                     id="phone"
                     type="tel"
-                    inputMode="tel"
+                    inputMode="numeric"
+                    maxLength={10}
                     value={guest.guestPhone}
                     onChange={(e) =>
                       updateGuest({ guestPhone: sanitizePhoneInput(e.target.value) })
@@ -680,6 +730,7 @@ const BookCheckout = () => {
               couponError={couponError}
               onSelectCoupon={handleApplyCoupon}
               onRemoveCoupon={handleRemoveCoupon}
+              onClearCouponError={() => setCouponError(null)}
               showCoupons
               showContinueButton={false}
               showStayDetails={false}
@@ -691,7 +742,7 @@ const BookCheckout = () => {
       </main>
 
       <Footer />
-    </div>
+    </PageBackground>
   );
 };
 

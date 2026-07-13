@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  MAX_NAME_LENGTH,
+  sanitizeNameInput,
   sanitizePhoneInput,
   validateGuestFields,
   type GuestFieldErrors,
@@ -70,11 +72,16 @@ const GuestCheckoutForm = ({
         <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label htmlFor="firstName">First name</Label>
+              <Label htmlFor="firstName">
+                First name <span className="text-destructive">*</span>
+              </Label>
               <Input
                 id="firstName"
                 value={form.guestFirstName}
-                onChange={(e) => updateField("guestFirstName", e.target.value)}
+                onChange={(e) =>
+                  updateField("guestFirstName", sanitizeNameInput(e.target.value))
+                }
+                maxLength={MAX_NAME_LENGTH}
                 className="rounded-none"
                 placeholder="Enter first name"
                 aria-invalid={Boolean(fieldErrors.guestFirstName)}
@@ -88,7 +95,10 @@ const GuestCheckoutForm = ({
               <Input
                 id="lastName"
                 value={form.guestLastName}
-                onChange={(e) => updateField("guestLastName", e.target.value)}
+                onChange={(e) =>
+                  updateField("guestLastName", sanitizeNameInput(e.target.value))
+                }
+                maxLength={MAX_NAME_LENGTH}
                 className="rounded-none"
                 placeholder="Enter last name"
                 aria-invalid={Boolean(fieldErrors.guestLastName)}
@@ -99,7 +109,9 @@ const GuestCheckoutForm = ({
             </div>
           </div>
           <div>
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">
+              Email <span className="text-destructive">*</span>
+            </Label>
             <Input
               id="email"
               type="email"
@@ -115,11 +127,14 @@ const GuestCheckoutForm = ({
             ) : null}
           </div>
           <div>
-            <Label htmlFor="phone">Phone</Label>
+            <Label htmlFor="phone">
+              Phone <span className="text-destructive">*</span>
+            </Label>
             <Input
               id="phone"
               type="tel"
-              inputMode="tel"
+              inputMode="numeric"
+              maxLength={10}
               value={form.guestPhone}
               onChange={(e) => updateField("guestPhone", sanitizePhoneInput(e.target.value))}
               className="rounded-none"

@@ -155,6 +155,14 @@ export interface BookingResult {
   totalAmount: number;
   discountAmount?: number;
   couponCode?: string;
+  couponTitle?: string;
+  cgstAmount?: number;
+  sgstAmount?: number;
+  roomTaxPercent?: number;
+  processingFeePercent?: number;
+  processingFeeAmount?: number;
+  processingFeeGstPercent?: number;
+  processingFeeGstAmount?: number;
   rooms?: BookingRoomLine[];
   cancellationReason?: string;
   receiptDownloadUrl?: string;

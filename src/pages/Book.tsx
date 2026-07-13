@@ -30,6 +30,7 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import PageBackground from "@/components/PageBackground";
 import BookingSearchBar from "@/components/BookingSearchBar";
 import { type CartItem } from "@/components/booking/BookingSidebar";
 import CapacityWarningModal from "@/components/booking/CapacityWarningModal";
@@ -60,6 +61,11 @@ import {
 } from "@/services/roomService";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import LeaveGuardDialog from "@/components/LeaveGuardDialog";
+import {
+  isBookingFlowPath,
+  useLeaveGuard,
+} from "@/hooks/useLeaveGuard";
 
 const Book = () => {
   const [searchParams] = useSearchParams();
@@ -98,6 +104,8 @@ const Book = () => {
   const [couponError, setCouponError] = useState<string | null>(null);
   const [quote, setQuote] = useState<BookingQuote | null>(null);
   const [quoteLoading, setQuoteLoading] = useState(false);
+  const roomsSectionRef = useRef<HTMLDivElement>(null);
+  const lastScrolledSearchRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!checkIn || !checkOut) {
@@ -159,6 +167,27 @@ const Book = () => {
     enabled: hasSearch,
   });
 
+  // After a search finishes, scroll to the first room listing
+  useEffect(() => {
+    if (!hasSearch || !stayQuery.isSuccess || stayQuery.isFetching) return;
+
+    const searchKey = `${checkIn}|${checkOut}|${roomGuestsKey}`;
+    if (lastScrolledSearchRef.current === searchKey) return;
+    lastScrolledSearchRef.current = searchKey;
+
+    const frame = window.requestAnimationFrame(() => {
+      roomsSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [
+    hasSearch,
+    stayQuery.isSuccess,
+    stayQuery.isFetching,
+    stayQuery.dataUpdatedAt,
+    checkIn,
+    checkOut,
+    roomGuestsKey,
+  ]);
 
   const stay = stayQuery.data;
 
@@ -380,8 +409,22 @@ const Book = () => {
 
   const displayCheckIn = checkIn ? format(parseISO(checkIn), "dd MMM yyyy") : "";
   const displayCheckOut = checkOut ? format(parseISO(checkOut), "dd MMM yyyy") : "";
+
+  const leaveGuard = useLeaveGuard({
+    when: cart.length > 0,
+    message:
+      "You have rooms selected. Leaving now may lose your booking progress.",
+    shouldBlock: ({ nextLocation }) => !isBookingFlowPath(nextLocation.pathname),
+  });
+
   return (
-    <div className="min-h-screen bg-[#faf8f5] flex flex-col">
+    <PageBackground className="flex flex-col">
+      <LeaveGuardDialog
+        open={leaveGuard.pendingLeave}
+        message={leaveGuard.message}
+        onStay={leaveGuard.cancelLeave}
+        onLeave={leaveGuard.confirmLeave}
+      />
       <Navigation />
 
       <section className="relative pt-24 md:pt-28 pb-6 md:pb-8 bg-[#4b3621]">
@@ -405,7 +448,10 @@ const Book = () => {
         </div>
       </section>
 
-      <div className="bg-[#fff3e6] border-b border-orange-100">
+      <div
+        ref={roomsSectionRef}
+        className="bg-[#fff3e6] border-b border-orange-100 scroll-mt-24"
+      >
         <div className="container mx-auto px-4 py-3 flex flex-wrap items-center justify-center gap-4 text-xs md:text-sm text-[#4b3621]">
           <span className="font-semibold tracking-wider">BOOK AT BEST PRICE!</span>
           {["Direct reservations", "Price match guarantee", "Your information is secure"].map(
@@ -516,7 +562,7 @@ const Book = () => {
       />
 
       <Footer />
-    </div>
+    </PageBackground>
   );
 };
 
@@ -638,11 +684,7 @@ const RoomCard = ({
         <RoomImageCarousel room={room} />
         {room.soldOut ? (
           <span className="absolute top-2.5 left-2.5 z-10 bg-neutral-800/90 text-white text-[10px] sm:text-xs font-semibold px-2 py-1 rounded tracking-wide uppercase pointer-events-none">
-            Sold out
-          </span>
-        ) : room.availableRooms <= 2 ? (
-          <span className="absolute top-2.5 left-2.5 z-10 bg-orange-500 text-white text-[10px] sm:text-xs font-semibold px-2 py-1 rounded pointer-events-none">
-            {room.availableRooms} room{room.availableRooms === 1 ? "" : "s"} left
+            Not available
           </span>
         ) : null}
       </div>
@@ -654,7 +696,7 @@ const RoomCard = ({
           </h2>
           {room.soldOut && (
             <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wide text-neutral-500 bg-neutral-100 px-2 py-0.5 rounded shrink-0">
-              Unavailable
+              Not available
             </span>
           )}
         </div>
@@ -664,12 +706,12 @@ const RoomCard = ({
             <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
             up to {room.maxGuests} guests
           </span>
-          <span className="inline-flex items-center gap-1">
-            <Bed className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-            {room.soldOut
-              ? "No rooms available"
-              : `${room.availableRooms} of ${room.totalRooms} available`}
-          </span>
+          {room.soldOut ? (
+            <span className="inline-flex items-center gap-1">
+              <Bed className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+              Not available
+            </span>
+          ) : null}
         </div>
 
         {room.description && (
@@ -702,7 +744,7 @@ const RoomCard = ({
       {room.soldOut ? (
         <div className="px-3 sm:px-5 py-3 bg-neutral-50">
           <p className="text-xs sm:text-sm text-neutral-600 leading-snug">
-            Sold out for your selected dates. Try different dates or another room.
+            Not available for your selected dates. Try different dates or another room.
           </p>
         </div>
       ) : (

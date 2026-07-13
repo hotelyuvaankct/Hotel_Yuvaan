@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import SectionHeader from './SectionHeader';
 
 const TestimonialsSection = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -41,7 +42,7 @@ const TestimonialsSection = () => {
   };
 
   return (
-    <section className="pt-10 md:pt-12 pb-16 md:pb-24 bg-background relative overflow-hidden">
+    <section className="pt-10 md:pt-12 pb-16 md:pb-24 relative overflow-hidden">
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10"
@@ -51,15 +52,11 @@ const TestimonialsSection = () => {
       />
 
       <div className="container mx-auto px-4 relative z-10">
-        {/* Header */}
-        <div className="text-center mb-16 animate-on-scroll">
-          <p className="text-primary text-sm tracking-[0.2em] uppercase mb-4">
-            TESTIMONIALS
-          </p>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold font-playfair mb-6">
-            What Client's <span className="text-gradient">Say?</span>
-          </h2>
-        </div>
+        <SectionHeader
+          eyebrow="TESTIMONIALS"
+          title="What Client's"
+          highlight="Say?"
+        />
 
         {/* Testimonial Card */}
         <div className="max-w-4xl mx-auto animate-on-scroll">

@@ -2,6 +2,7 @@ import { Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import CouponCard from "./CouponCard";
+import SectionHeader from "./SectionHeader";
 import { fetchPublicCoupons } from "@/services/couponService";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Button } from "@/components/ui/button";
@@ -23,20 +24,14 @@ const CouponsSection = () => {
   }
 
   return (
-    <section id="offers" className="pt-16 md:pt-24 pb-10 md:pb-12 bg-[#faf8f5]">
+    <section id="offers" className="pt-16 md:pt-24 pb-10 md:pb-12">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12 md:mb-16 animate-on-scroll">
-          <p className="text-[#b8892f] text-sm font-semibold tracking-[0.2em] uppercase mb-3">
-            Special offers
-          </p>
-          <h2 className="text-3xl md:text-4xl font-semibold text-[#4b3621] mb-4">
-            Exclusive coupons
-          </h2>
-          <p className="text-[#6b5a45] max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
-            Save on your stay with our active promo codes. Apply a coupon at checkout
-            when you book directly with Hotel Yuvaan.
-          </p>
-        </div>
+        <SectionHeader
+          eyebrow="Special offers"
+          title="Exclusive"
+          highlight="coupons"
+          description="Save on your stay with our active promo codes. Apply a coupon at checkout when you book directly with Hotel Yuvaan."
+        />
 
         {isLoading && (
           <div className="flex justify-center py-12">
