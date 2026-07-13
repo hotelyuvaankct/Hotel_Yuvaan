@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import bannerData from "../data/banner.json";
 import { Link, useLocation } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const Navigation = () => {
   const location = useLocation();
@@ -180,14 +181,16 @@ const Navigation = () => {
             >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
             </button> */}
-            <a
-              href="https://www.instagram.com/hotelyuvaan/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex justify-center items-center h-10 w-10 p-2 rounded-full border text-white bg-primary hover:bg-primary/10 border-primary hover:text-primary transition-colors duration-300"
-            >
-              <Instagram className="w-5 h-5" />
-            </a>
+            <Button asChild variant="solid" size="icon-sm">
+              <a
+                href="https://www.instagram.com/hotelyuvaan/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+              >
+                <Instagram className="w-5 h-5" />
+              </a>
+            </Button>
           </div>
 
           {/* Mobile Menu Button & Theme Toggle */}

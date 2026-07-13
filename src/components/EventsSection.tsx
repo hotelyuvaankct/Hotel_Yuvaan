@@ -1,6 +1,6 @@
-
 import React from 'react';
-import { Calendar, Users, Camera, Music } from 'lucide-react';
+import { ArrowRight, Calendar, Users, Camera, Music } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const EventsSection = () => {
   const events = [
@@ -99,9 +99,10 @@ const EventsSection = () => {
               <div className="p-6">
                 <h3 className="text-xl font-bold font-playfair mb-3">{event.title}</h3>
                 <p className="text-muted-foreground mb-4">{event.description}</p>
-                <button className="text-primary font-semibold hover:text-primary/80 transition-colors duration-300">
-                  Read More →
-                </button>
+                <Button variant="link" className="h-auto p-0">
+                  Read More
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
               </div>
             </div>
           ))}
@@ -146,12 +147,12 @@ const EventsSection = () => {
               team ensure your special occasion is memorable.
             </p>
             <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-              <button className="bg-primary text-primary-foreground px-8 py-3 rounded-full hover:bg-primary/90 transition-colors duration-300">
+              <Button variant="solid">
                 Book Event Space
-              </button>
-              <button className="border border-primary text-primary px-8 py-3 rounded-full hover:bg-primary hover:text-primary-foreground transition-colors duration-300">
+              </Button>
+              <Button variant="outline">
                 View Packages
-              </button>
+              </Button>
             </div>
           </div>
         </div> */}

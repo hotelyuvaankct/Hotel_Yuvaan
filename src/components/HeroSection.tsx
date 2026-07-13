@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import BookingSearchBar from "./BookingSearchBar";
+import { Button } from "@/components/ui/button";
 
 const getImageUrl = (path: string) => {
   const base = import.meta.env.BASE_URL || "/";
@@ -70,19 +71,17 @@ const HeroSection = () => {
           transition={{ duration: 1, delay: 0.8 }}
           className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto px-4 mb-10"
         >
-          <Link
-            to="/book"
-            className="group flex items-center justify-center gap-3 px-8 py-4 bg-[#4b3621] text-white text-xs sm:text-sm uppercase tracking-[0.2em] font-semibold hover:bg-[#3d2b1a] transition-colors w-full sm:w-auto rounded-sm shadow-lg"
-          >
-            <span>Book Your Stay</span>
-            <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <Link
-            to="/#restaurant"
-            className="group flex items-center justify-center gap-3 px-8 py-4 border border-white/30 text-white hover:border-white hover:bg-white/10 text-xs sm:text-sm uppercase tracking-[0.2em] font-semibold transition-all backdrop-blur-sm w-full sm:w-auto rounded-sm"
-          >
-            <span>Discover Dining</span>
-          </Link>
+          <Button asChild variant="dark" className="w-full sm:w-auto tracking-[0.2em] uppercase text-xs sm:text-sm">
+            <Link to="/book" className="group">
+              <span>Book Your Stay</span>
+              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </Button>
+          <Button asChild variant="ghost" className="w-full sm:w-auto tracking-[0.2em] uppercase text-xs sm:text-sm backdrop-blur-sm">
+            <Link to="/#restaurant">
+              <span>Discover Dining</span>
+            </Link>
+          </Button>
         </motion.div>
       </div>
 

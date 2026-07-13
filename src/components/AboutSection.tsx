@@ -4,10 +4,11 @@ import {
   Users,
   Clock,
   MapPin,
-  PhoneCall,
+  Phone,
   ChevronRight,
 } from "lucide-react";
 import { useAppConfig } from "@/hooks/useAppConfig";
+import { Button } from "@/components/ui/button";
 
 const AboutSection = () => {
   const { data: contact } = useAppConfig();
@@ -88,7 +89,7 @@ const AboutSection = () => {
                 {
                   value: "24/7",
                   label: "Service",
-                  icon: <PhoneCall className="w-5 h-5 text-gold-500" />,
+                  icon: <Phone className="w-5 h-5 text-gold-500" />,
                 },
               ].map((stat, index) => (
                 <div
@@ -110,37 +111,43 @@ const AboutSection = () => {
 
             {/* CTA */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <div className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-gold-600 to-gold-400 rounded-lg w-fit animate-fade-in-up group hover:shadow-gold hover:shadow-lg transition-all">
-                <span className="bg-white/20 text-white p-2 rounded-full flex items-center justify-center">
-                  <PhoneCall size={18} strokeWidth={2} />
-                </span>
-                {contact?.phoneHref ? (
-                  <a
-                    href={contact.phoneHref}
-                    className="text-sm text-white font-semibold"
-                  >
+              {contact?.phoneHref ? (
+                <Button asChild variant="solid" className="group w-fit gap-3 px-5">
+                  <a href={contact.phoneHref}>
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20">
+                      <Phone className="h-4 w-4" />
+                    </span>
                     {contact.contactPhone}
+                    <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </a>
-                ) : (
-                  <span className="text-sm text-white font-semibold">
-                    {contact?.contactPhone}
+                </Button>
+              ) : (
+                <Button variant="solid" className="w-fit gap-3 px-5" disabled>
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20">
+                    <Phone className="h-4 w-4" />
                   </span>
-                )}
-                <ChevronRight className="w-4 h-4 text-white transition-transform group-hover:translate-x-1" />
-              </div>
+                  {contact?.contactPhone ?? "Call us"}
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              )}
 
-              <div
-                className="flex items-center gap-3 px-4 py-3 bg-muted rounded-lg border border-gold-300/30 w-fit animate-fade-in-up group hover:bg-gold-500/10 hover:border-gold-400/50 transition-all cursor-pointer"
-                onClick={() =>
-                  contact?.mapsLinkUrl &&
-                  window.open(contact.mapsLinkUrl, "_blank")
-                }
-              >
-                <MapPin className="w-5 h-5 text-gold-500" />
-                <span className="text-sm text-foreground font-medium">
+              {contact?.mapsLinkUrl ? (
+                <Button asChild variant="outline" className="w-fit gap-3 px-5">
+                  <a
+                    href={contact.mapsLinkUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <MapPin className="h-5 w-5" />
+                    View Location
+                  </a>
+                </Button>
+              ) : (
+                <Button variant="outline" className="w-fit gap-3 px-5" disabled>
+                  <MapPin className="h-5 w-5" />
                   View Location
-                </span>
-              </div>
+                </Button>
+              )}
             </div>
           </div>
 

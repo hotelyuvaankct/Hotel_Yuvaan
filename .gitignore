@@ -40,3 +40,4 @@ graphify-out/
 # Git worktrees
 .worktrees/
 worktrees/
+.superpowers/
