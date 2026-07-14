@@ -1,5 +1,8 @@
+"use client";
+
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams, Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
 import { format, parseISO, addDays, startOfToday } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -46,6 +49,7 @@ import {
   type AvailableRoomType,
   type BookingQuote,
   type RatePlan,
+  type StayResult,
 } from "@/services/bookingService";
 import {
   checkoutSummaryToQuote,
@@ -58,6 +62,7 @@ import {
   fetchPublicRoomTypes,
   formatRoomPrice,
   normalizeStorageUrl,
+  type PublicRoomType,
 } from "@/services/roomService";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -67,9 +72,14 @@ import {
   useLeaveGuard,
 } from "@/hooks/useLeaveGuard";
 
-const Book = () => {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+type BookProps = {
+  initialStay?: StayResult | null;
+  initialRoomTypes?: PublicRoomType[];
+};
+
+const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
   const checkIn = searchParams.get("checkIn") ?? "";
   const checkOut = searchParams.get("checkOut") ?? "";
@@ -110,7 +120,7 @@ const Book = () => {
   useEffect(() => {
     if (!checkIn || !checkOut) {
       const today = startOfToday();
-      navigate(
+      router.replace(
         buildBookUrl({
           checkIn: format(addDays(today, 1), "yyyy-MM-dd"),
           checkOut: format(addDays(today, 2), "yyyy-MM-dd"),
@@ -119,11 +129,10 @@ const Book = () => {
           rooms: 1,
           roomGuests: [{ adults: 2, children: 0 }],
           promo: promoFromUrl || undefined,
-        }),
-        { replace: true }
+        })
       );
     }
-  }, [checkIn, checkOut, navigate, promoFromUrl]);
+  }, [checkIn, checkOut, router, promoFromUrl]);
 
   useEffect(() => {
     if (!hasSearch || cartRestored) return;
@@ -159,12 +168,16 @@ const Book = () => {
     queryKey: ["stay", checkIn, checkOut, roomGuestsKey],
     queryFn: () => fetchStay({ checkIn, checkOut, roomGuests }),
     enabled: hasSearch,
+    initialData: initialStay ?? undefined,
+    staleTime: 30_000,
   });
 
   const roomTypesQuery = useQuery({
     queryKey: ["public-room-types-book"],
     queryFn: () => fetchPublicRoomTypes(),
     enabled: hasSearch,
+    initialData: initialRoomTypes,
+    staleTime: 60_000,
   });
 
   // After a search finishes, scroll to the first room listing
@@ -395,7 +408,7 @@ const Book = () => {
       cart,
       pendingCouponCode,
     });
-    navigate("/book/checkout");
+    router.push("/book/checkout");
   };
 
   const handleContinue = () => {
@@ -414,7 +427,7 @@ const Book = () => {
     when: cart.length > 0,
     message:
       "You have rooms selected. Leaving now may lose your booking progress.",
-    shouldBlock: ({ nextLocation }) => !isBookingFlowPath(nextLocation.pathname),
+    shouldBlock: ({ nextPathname }) => !isBookingFlowPath(nextPathname),
   });
 
   return (
@@ -496,7 +509,7 @@ const Book = () => {
                         Try different dates or reduce the number of guests.
                       </p>
                       <Button asChild variant="solid" className="tracking-wider uppercase">
-                        <Link to="/#rooms">View All Room Types</Link>
+                        <Link href="/#rooms">View All Room Types</Link>
                       </Button>
                     </div>
                   ) : (

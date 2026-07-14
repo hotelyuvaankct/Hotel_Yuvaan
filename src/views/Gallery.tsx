@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { X, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import Navigation from "../components/Navigation";

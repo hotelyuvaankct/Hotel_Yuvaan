@@ -10,7 +10,7 @@ const EventsSection = () => {
       category: 'RESTAURANT',
       title: 'Historic Restaurant Renovated',
       date: 'DEC 02',
-      image: `${import.meta.env.BASE_URL}assets/images/events/event-1.jpg`,
+      image: `/assets/images/events/event-1.jpg`,
       description: 'Grand reopening of our historic restaurant featuring new contemporary design while preserving the classic elegance.',
     },
     {
@@ -18,7 +18,7 @@ const EventsSection = () => {
       category: 'SPA',
       title: 'Benefits of Spa Treatments',
       date: 'DEC 04',
-      image: `${import.meta.env.BASE_URL}assets/images/events/event-2.jpg`,
+      image: `/assets/images/events/event-2.jpg`,
       description: 'Wellness workshop focusing on the therapeutic benefits of our signature spa treatments and relaxation techniques.',
     },
     {
@@ -26,7 +26,7 @@ const EventsSection = () => {
       category: 'ROOMS',
       title: 'Hotel Room Collections',
       date: 'DEC 06',
-      image: `${import.meta.env.BASE_URL}assets/images/events/event-3.jpg`,
+      image: `/assets/images/events/event-3.jpg`,
       description: 'Showcase of our newly designed luxury suite collections featuring premium amenities and modern furnishings.',
     },
   ];

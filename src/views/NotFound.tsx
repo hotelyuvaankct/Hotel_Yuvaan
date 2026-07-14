@@ -1,4 +1,7 @@
-import { Link, useLocation } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Home } from "lucide-react";
@@ -109,19 +112,19 @@ const LostKeyIllustration = () => (
 );
 
 const NotFound = () => {
-  const location = useLocation();
+  const pathname = usePathname();
 
   useEffect(() => {
     console.error(
       "404 Error: User attempted to access non-existent route:",
-      location.pathname
+      pathname
     );
-  }, [location.pathname]);
+  }, [pathname]);
 
   return (
     <PageBackground className="relative min-h-0 h-dvh max-h-dvh overflow-hidden">
       <div className="relative mx-auto flex h-full w-full max-w-lg flex-col items-center justify-center gap-5 px-5 text-center sm:gap-6">
-        <Link to="/" className="font-playfair text-xl font-bold text-foreground">
+        <Link href="/" className="font-playfair text-xl font-bold text-foreground">
           Hotel <span className="text-gradient">Yuvaan</span>
         </Link>
 
@@ -147,7 +150,7 @@ const NotFound = () => {
         </div>
 
         <Button asChild variant="solid">
-          <Link to="/">
+          <Link href="/">
             <Home className="h-4 w-4" />
             Back to the lobby
           </Link>

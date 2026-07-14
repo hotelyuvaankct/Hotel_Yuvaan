@@ -1,14 +1,26 @@
+"use client";
+
 import React, { useState } from "react";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { FaArrowRightToBracket, FaArrowRotateRight } from "react-icons/fa6";
 import { submitContact } from "@/services/contactService";
-import { useAppConfig } from "@/hooks/useAppConfig";
 import { Button } from "@/components/ui/button";
 import SectionHeader from "./SectionHeader";
 
-const ContactSection = () => {
-  const { data: contact, isLoading } = useAppConfig();
+type ContactSectionProps = {
+  contact?: {
+    fullAddress?: string;
+    phoneDisplay?: string;
+    phoneHref?: string;
+    supportEmail?: string;
+    emailHref?: string;
+    mapsEmbedUrl?: string;
+  };
+};
+
+export default function ContactSection({ contact }: ContactSectionProps) {
+  const isLoading = !contact;
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -235,4 +247,3 @@ const ContactSection = () => {
   );
 };
 
-export default ContactSection;

@@ -10,11 +10,14 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+.next
+out
 *.local
 
-# Personal env overrides (committed: .env.dev, .env.prod, .env.localhost)
+# Personal env overrides (committed: .env.dev, .env.prod, .env.localhost, .env.development, .env.production)
 .env
 .env.*.local
+.env.local
 
 # Editor directories and files
 .vscode/*

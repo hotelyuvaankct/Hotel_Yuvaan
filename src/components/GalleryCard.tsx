@@ -1,25 +1,20 @@
-import React from "react";
-
 interface GalleryCardProps {
   imageUrl: string;
   category: string;
   index: number;
-  onClick: () => void;
 }
 
-const GalleryCard: React.FC<GalleryCardProps> = ({
+export default function GalleryCard({
   imageUrl,
   category,
   index,
-  onClick,
-}) => {
+}: GalleryCardProps) {
   return (
     <div
-      className={`relative group overflow-hidden rounded-2xl cursor-pointer animate-on-scroll-${
+      className={`relative group overflow-hidden rounded-2xl animate-on-scroll-${
         index % 2 === 0 ? "left" : "right"
       }`}
       style={{ animationDelay: `${index * 0.1}s` }}
-      onClick={onClick}
     >
       <img
         src={imageUrl}
@@ -33,6 +28,4 @@ const GalleryCard: React.FC<GalleryCardProps> = ({
       <div className="absolute inset-0 ring-2 ring-primary ring-opacity-0 group-hover:ring-opacity-100 transition-all duration-300 rounded-2xl" />
     </div>
   );
-};
-
-export default GalleryCard;
+}

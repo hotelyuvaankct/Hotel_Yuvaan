@@ -1,6 +1,6 @@
 import { format, parseISO, addDays, startOfToday } from "date-fns";
 import { ArrowRight, CalendarDays, Tag } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import {
   formatCouponDiscount,
   formatCouponMinBooking,
@@ -67,7 +67,7 @@ const CouponCard = ({ coupon, index = 0 }: CouponCardProps) => {
         </div>
 
         <Button asChild variant="solid" className="w-full tracking-[0.12em] uppercase">
-          <Link to={bookUrl}>
+          <Link href={bookUrl}>
             Book with code
             <ArrowRight className="h-4 w-4" />
           </Link>

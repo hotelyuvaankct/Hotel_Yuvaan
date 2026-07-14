@@ -1,32 +1,21 @@
-import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import {
-  fetchPublicRoomTypes,
   formatRoomPrice,
   buildBookUrl,
   normalizeStorageUrl,
+  type PublicRoomType,
 } from "@/services/roomService";
 import { getAmenityIcon, getAmenityLabel } from "@/lib/amenities";
-import { Link } from "react-router-dom";
 import { format, addDays } from "date-fns";
 import { Button } from "@/components/ui/button";
 import SectionHeader from "./SectionHeader";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "./ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
-const RoomsSection = () => {
-  const { data: rooms = [], isLoading, isError } = useQuery({
-    queryKey: ["public-room-types"],
-    queryFn: () => fetchPublicRoomTypes(),
-  });
+type RoomsSectionProps = {
+  rooms: PublicRoomType[];
+};
 
-  useScrollAnimation([rooms.length, isLoading]);
-
+export default function RoomsSection({ rooms }: RoomsSectionProps) {
   const defaultBookUrl = buildBookUrl({
     checkIn: format(addDays(new Date(), 1), "yyyy-MM-dd"),
     checkOut: format(addDays(new Date(), 2), "yyyy-MM-dd"),
@@ -36,10 +25,7 @@ const RoomsSection = () => {
   });
 
   return (
-    <section
-      id="rooms"
-      className="pt-10 md:pt-12 pb-16 md:pb-24 relative"
-    >
+    <section id="rooms" className="pt-10 md:pt-12 pb-16 md:pb-24 relative">
       <div className="container mx-auto px-4">
         <SectionHeader
           eyebrow="HOTEL YUVAAN LUXURY ACCOMMODATION"
@@ -48,19 +34,11 @@ const RoomsSection = () => {
           description="Experience luxury and comfort in our elegantly designed rooms, each offering premium amenities and exceptional service with modern interiors that create unforgettable memories."
         />
 
-        {isLoading && (
-          <div className="flex justify-center py-16">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
-        )}
-
-        {isError && (
+        {rooms.length === 0 ? (
           <p className="text-center text-muted-foreground py-8">
             Unable to load room types right now. Please try again later.
           </p>
-        )}
-
-        {!isLoading && !isError && (
+        ) : (
           <div className="grid lg:grid-cols-3 gap-8">
             {rooms.map((room, index) => {
               const images = (room.images ?? [])
@@ -86,33 +64,12 @@ const RoomsSection = () => {
                 >
                   <div className="relative group h-64">
                     {images.length > 0 ? (
-                      <Carousel
-                        className="w-full h-full"
-                        opts={{ loop: images.length > 1 }}
-                        plugins={
-                          images.length > 1
-                            ? [Autoplay({ delay: 3000 })]
-                            : undefined
-                        }
-                      >
-                        <CarouselContent className="ml-0 h-full">
-                          {images.map((imageUrl, imgIndex) => (
-                            <CarouselItem
-                              key={`${room.id}-${imgIndex}`}
-                              className="pl-0 basis-full h-full"
-                            >
-                              <div className="relative h-64 overflow-hidden">
-                                <img
-                                  src={imageUrl}
-                                  alt={`${room.name} - Image ${imgIndex + 1}`}
-                                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                  loading="lazy"
-                                />
-                              </div>
-                            </CarouselItem>
-                          ))}
-                        </CarouselContent>
-                      </Carousel>
+                      <img
+                        src={images[0]}
+                        alt={room.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        loading="lazy"
+                      />
                     ) : (
                       <div className="relative h-full bg-gradient-to-br from-[#4b3621] via-[#6b4f33] to-[#c9a227] flex items-end p-6">
                         <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top_right,_white,_transparent_60%)]" />
@@ -125,7 +82,9 @@ const RoomsSection = () => {
                     </div>
                     <div className="absolute top-4 right-4 bg-black/30 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs font-medium z-10 pointer-events-none">
                       Up to {room.maxAdults} adults
-                      {room.maxChildren > 0 ? ` · ${room.maxChildren} children` : ""}
+                      {room.maxChildren > 0
+                        ? ` · ${room.maxChildren} children`
+                        : ""}
                     </div>
                   </div>
 
@@ -157,7 +116,7 @@ const RoomsSection = () => {
                     </div>
 
                     <Button asChild variant="solid" className="w-full tracking-wide">
-                      <Link to={defaultBookUrl}>BOOK NOW</Link>
+                      <Link href={defaultBookUrl}>BOOK NOW</Link>
                     </Button>
                   </div>
                 </div>
@@ -168,6 +127,4 @@ const RoomsSection = () => {
       </div>
     </section>
   );
-};
-
-export default RoomsSection;
+}

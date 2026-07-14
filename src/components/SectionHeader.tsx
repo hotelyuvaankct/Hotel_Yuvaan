@@ -16,8 +16,8 @@ type SectionHeaderProps = {
 };
 
 /**
- * Shared section header — eyebrow + Playfair title + optional gold highlight + description.
- * Use this on every marketing section for consistent typography.
+ * Shared section header — eyebrow + gold rule + Playfair title +
+ * optional gold highlight + description with left accent (left align).
  */
 const SectionHeader = ({
   eyebrow,
@@ -41,9 +41,21 @@ const SectionHeader = ({
       )}
     >
       {eyebrow ? (
-        <p className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-primary">
-          {eyebrow}
-        </p>
+        <div
+          className={cn(
+            "mb-4 flex flex-col gap-3",
+            align === "center" ? "items-center" : "items-start"
+          )}
+        >
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">
+            {eyebrow}
+          </p>
+          {/* Horizontal gold accent under eyebrow */}
+          <span
+            className="block h-0.5 w-12 rounded-full bg-primary"
+            aria-hidden
+          />
+        </div>
       ) : null}
 
       <Tag
@@ -62,14 +74,21 @@ const SectionHeader = ({
       </Tag>
 
       {description ? (
-        <p
+        <div
           className={cn(
-            "text-sm leading-relaxed text-muted-foreground md:text-base",
+            align === "left" && "border-l-2 border-primary pl-4 md:pl-5",
             align === "center" && "mx-auto max-w-2xl"
           )}
         >
-          {description}
-        </p>
+          <p
+            className={cn(
+              "text-sm leading-relaxed text-muted-foreground md:text-base",
+              align === "center" && "text-center"
+            )}
+          >
+            {description}
+          </p>
+        </div>
       ) : null}
     </div>
   );
