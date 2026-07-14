@@ -83,7 +83,7 @@ const FacilitiesSection = () => {
               <div className="flex flex-col md:flex-row">
                 <div className="md:w-1/2">
                   <img 
-                    src={`${import.meta.env.BASE_URL}/images/room-cleaning.jpg`}
+                    src={`/images/room-cleaning.jpg`}
                     alt="Room Cleaning"
                     className="w-full h-48 md:h-full object-cover"
                   />
@@ -116,7 +116,7 @@ const FacilitiesSection = () => {
               <div className="flex flex-col md:flex-row">
                 <div className="md:w-1/2">
                   <img 
-                    src={`${import.meta.env.BASE_URL}/images/drinks-package.jpg`}
+                    src={`/images/drinks-package.jpg`}
                     alt="Drinks Package"
                     className="w-full h-48 md:h-full object-cover"
                   />

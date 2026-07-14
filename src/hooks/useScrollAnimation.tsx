@@ -1,43 +1,47 @@
+"use client";
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-export const useScrollAnimation = (dependencies: any[] = []) => {
+const SELECTOR =
+  ".animate-on-scroll, .animate-on-scroll-left, .animate-on-scroll-right";
+
+export const useScrollAnimation = (dependencies: unknown[] = []) => {
   useEffect(() => {
-    const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate');
-        }
-      });
-    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("animate");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: "80px 0px",
+        threshold: 0.05,
+      }
+    );
 
-    const observer = new IntersectionObserver(observerCallback, {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.1,
-    });
+    let animatedElements: NodeListOf<Element> | null = null;
 
-    let animatedElements: NodeListOf<Element>;
-
-    // Delay to ensure React has fully committed and painted the DOM elements
-    const timer = setTimeout(() => {
-      animatedElements = document.querySelectorAll(
-        '.animate-on-scroll, .animate-on-scroll-left, .animate-on-scroll-right'
-      );
-
+    const attach = () => {
+      animatedElements = document.querySelectorAll(SELECTOR);
       animatedElements.forEach((element) => {
         observer.observe(element);
       });
-    }, 50);
+    };
+
+    // Wait for RSC/HTML paint, then observe (and catch late mounts)
+    const timer = window.setTimeout(attach, 80);
+    const raf = window.requestAnimationFrame(attach);
 
     return () => {
-      clearTimeout(timer);
-      if (animatedElements) {
-        animatedElements.forEach((element) => {
-          observer.unobserve(element);
-        });
-      }
+      window.clearTimeout(timer);
+      window.cancelAnimationFrame(raf);
+      animatedElements?.forEach((element) => observer.unobserve(element));
       observer.disconnect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies);
 };

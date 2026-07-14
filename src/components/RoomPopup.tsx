@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Dialog } from "../components/ui/dialog";
 import {
@@ -37,7 +39,7 @@ const RoomPopup: React.FC<RoomPopupProps> = ({ open, onClose, room }) => {
             {room.images.map((img, i) => (
               <CarouselItem key={i}>
                 <img
-                  src={import.meta.env.BASE_URL + img}
+                  src={img.startsWith("/") || img.startsWith("http") ? img : `/`}
                   alt={`${room.name} ${i + 1}`}
                   className="rounded-lg w-full h-64 object-cover"
                 />

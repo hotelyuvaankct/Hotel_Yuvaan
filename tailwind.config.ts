@@ -174,8 +174,9 @@ export default {
 				'marquee': 'marquee 25s linear infinite',
 			},
 			fontFamily: {
-				'playfair': ['Playfair Display', 'serif'],
-				'inter': ['Inter', 'sans-serif'],
+				playfair: ['var(--font-playfair)', 'Playfair Display', 'serif'],
+				inter: ['var(--font-inter)', 'Inter', 'sans-serif'],
+				sans: ['var(--font-inter)', 'Inter', 'sans-serif'],
 			}
 		}
 	},

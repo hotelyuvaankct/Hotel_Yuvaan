@@ -1,59 +1,36 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Clock, Users, Utensils, Wine, ChevronRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { Clock, Users, Utensils, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SectionHeader from "./SectionHeader";
 
-const fadeIn = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
-
 const menuHighlights = [
   {
-    img: `${import.meta.env.BASE_URL}image/menu/Hotel_Yuvaan_special_thali.jpeg`,
+    img: `/image/menu/Hotel_Yuvaan_special_thali.jpeg`,
     name: "Hotel Yuvaan Special Thali",
     desc: "A lavish spread of Indian delicacies",
     price: "₹400/-",
   },
-  // {
-  //   img: `${import.meta.env.BASE_URL}image/menu/mint_mojito.png`,
-  //   name: "Mint Mojito",
-  //   desc: "Refreshing mocktail with mint and lime",
-  //   price: "₹115",
-  // },
   {
-    img: `${import.meta.env.BASE_URL}image/menu/paneer_tikka.jpeg`,
+    img: `/image/menu/paneer_tikka.jpeg`,
     name: "Paneer Tikka",
     desc: "Grilled cottage cheese with spices",
     price: "₹250/-",
   },
   {
-    img: `${import.meta.env.BASE_URL}image/menu/aloo_paratha.png`,
+    img: `/image/menu/aloo_paratha.png`,
     name: "Aloo Paratha",
     desc: "Stuffed flatbread served with curd",
     price: "₹115/-",
   },
 ];
 
-const RestaurantSection = () => {
-  const navigate = useNavigate();
+export default function RestaurantSection() {
   return (
     <section id="restaurant" className="pt-10 md:pt-12 pb-16 md:pb-24">
       <div className="container mx-auto px-4">
-        {/* Main Restaurant Section */}
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Restaurant Image */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeIn}
-            className="relative group"
-          >
+          <div className="relative group">
             <img
-              src={`${import.meta.env.BASE_URL}image/Gallery/Interior.png`}
+              src={`/image/Gallery/Interior.png`}
               alt="Restaurant Interior"
               className="w-full h-96 object-cover rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-500 border border-primary"
             />
@@ -68,16 +45,9 @@ const RestaurantSection = () => {
                 <span>Seating for 80 Guests</span>
               </div>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Restaurant Content */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeIn}
-            transition={{ delay: 0.2 }}
-          >
+          <div>
             <SectionHeader
               align="left"
               animate={false}
@@ -88,7 +58,6 @@ const RestaurantSection = () => {
               description="Experience culinary excellence where our chefs craft extraordinary dishes using the finest seasonal ingredients."
             />
 
-            {/* Restaurant Features */}
             <div className="grid grid-cols-2 gap-4 mb-8">
               {[
                 {
@@ -106,33 +75,23 @@ const RestaurantSection = () => {
                   title: "Private Dining",
                   desc: "For special occasions",
                 },
-              ].map((feature, index) => (
-                <motion.div
-                  key={index}
-                  whileHover={{ y: -5 }}
+              ].map((feature) => (
+                <div
+                  key={feature.title}
                   className="p-4 rounded-xl border border-border hover:border-gold-300 transition-colors"
                 >
                   <div className="w-10 h-10 mb-2 bg-gold-500/10 rounded-lg flex items-center justify-center text-gold-500">
                     {feature.icon}
                   </div>
                   <h4 className="font-semibold">{feature.title}</h4>
-                  <p className="text-sm text-muted-foreground">
-                    {feature.desc}
-                  </p>
-                </motion.div>
+                  <p className="text-sm text-muted-foreground">{feature.desc}</p>
+                </div>
               ))}
             </div>
-          </motion.div>
+          </div>
         </div>
 
-        {/* Booth Seating Section */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={fadeIn}
-          className="mt-24"
-        >
+        <div className="mt-24">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <h3 className="text-3xl font-bold font-playfair mb-6">
@@ -148,46 +107,28 @@ const RestaurantSection = () => {
                   "Perfect for intimate conversations",
                   "Elegant table settings",
                   "Dedicated service",
-                ].map((item, index) => (
-                  <motion.div
-                    key={index}
-                    whileHover={{ x: 5 }}
-                    className="flex items-center space-x-3"
-                  >
-                    <div className="w-2 h-2 bg-gold-500 rounded-full flex-shrink-0"></div>
+                ].map((item) => (
+                  <div key={item} className="flex items-center space-x-3">
+                    <div className="w-2 h-2 bg-gold-500 rounded-full flex-shrink-0" />
                     <span>{item}</span>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </div>
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="relative rounded-2xl overflow-hidden shadow-lg"
-            >
+            <div className="relative rounded-2xl overflow-hidden shadow-lg">
               <img
-                src={`${
-                  import.meta.env.BASE_URL
-                }image/Gallery/Restaurant_Booth_Seating.png`}
+                src={`/image/Gallery/Restaurant_Booth_Seating.png`}
                 alt="Booth Seating"
-                className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700"
+                className="w-full h-80 object-cover"
               />
               <div className="absolute bottom-4 left-4 z-20">
-                <p className="text-white font-medium">
-                  Elegant Dining Experience
-                </p>
+                <p className="text-white font-medium">Elegant Dining Experience</p>
               </div>
-            </motion.div>
+            </div>
           </div>
-        </motion.div>
+        </div>
 
-        {/* Menu Highlights with Images */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={fadeIn}
-          className="mt-24"
-        >
+        <div className="mt-24">
           <SectionHeader
             as="h3"
             animate={false}
@@ -198,10 +139,9 @@ const RestaurantSection = () => {
           />
 
           <div className="grid md:grid-cols-3 gap-6">
-            {menuHighlights.map((dish, index) => (
-              <motion.div
-                key={index}
-                whileHover={{ y: -10 }}
+            {menuHighlights.map((dish) => (
+              <div
+                key={dish.name}
                 className="rounded-xl p-6 text-center border border-border hover:border-gold-300 transition-colors hover:shadow-md"
               >
                 <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-2 border-gold-300 flex items-center justify-center bg-gold-500/10">
@@ -212,14 +152,13 @@ const RestaurantSection = () => {
                   />
                 </div>
                 <h4 className="text-lg font-semibold mb-2">{dish.name}</h4>
-                <p className="text-muted-foreground text-sm mb-3">
-                  {dish.desc}
-                </p>
+                <p className="text-muted-foreground text-sm mb-3">{dish.desc}</p>
                 <div className="text-gold-500 font-semibold">{dish.price}</div>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
+
         <div className="flex justify-center mt-12">
           <Button asChild variant="outline">
             <a
@@ -235,6 +174,4 @@ const RestaurantSection = () => {
       </div>
     </section>
   );
-};
-
-export default RestaurantSection;
+}

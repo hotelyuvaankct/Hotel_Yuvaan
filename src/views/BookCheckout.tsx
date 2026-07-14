@@ -1,5 +1,8 @@
+"use client";
+
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { format, parseISO } from "date-fns";
 import { ArrowLeft, CalendarDays, Clock3, Loader2, Moon, Undo2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -59,7 +62,7 @@ const emptyGuest: GuestDetails = {
 };
 
 const BookCheckout = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [draft, setDraft] = useState<BookingSession | null>(null);
   const [guest, setGuest] = useState<GuestDetails>(emptyGuest);
   const [appliedCoupon, setAppliedCoupon] = useState<CouponValidation | null>(null);
@@ -82,10 +85,10 @@ const BookCheckout = () => {
       submitting || verifying
         ? "Payment is in progress. Leaving now may interrupt your booking."
         : "You have an unfinished booking. Are you sure you want to leave?",
-    shouldBlock: ({ nextLocation }) => {
+    shouldBlock: ({ nextPathname }) => {
       if (allowLeaveRef.current) return false;
       // Confirmation / back to room selection stay in the booking flow
-      if (isBookingFlowPath(nextLocation.pathname)) return false;
+      if (isBookingFlowPath(nextPathname)) return false;
       return true;
     },
   });
@@ -93,14 +96,14 @@ const BookCheckout = () => {
   useEffect(() => {
     const saved = bookingSession.load();
     if (!saved || saved.cart.length === 0) {
-      navigate("/book", { replace: true });
+      router.replace("/book");
       return;
     }
     setDraft(saved);
     setGuest(saved.guest ?? emptyGuest);
     setAppliedCoupon(saved.appliedCoupon ?? null);
     setPendingCouponCode(saved.pendingCouponCode?.trim().toUpperCase() ?? "");
-  }, [navigate]);
+  }, [router]);
 
   const configQuery = useQuery({
     queryKey: ["bookingConfig"],
@@ -387,9 +390,7 @@ const BookCheckout = () => {
       const booking = verified.booking;
       allowLeaveRef.current = true;
       setAllowLeave(true);
-      navigate(`/booking/${booking.accessToken ?? booking.bookingCode}`, {
-        replace: true,
-      });
+      router.push(`/booking/${booking.accessToken ?? booking.bookingCode}`);
     } catch (error) {
       const message = (error as Error).message;
       if (message === "Payment cancelled") {
@@ -465,7 +466,7 @@ const BookCheckout = () => {
 
       <main className="flex-1 container mx-auto px-4 py-8 md:py-10">
         <Link
-          to={backToRoomsUrl}
+          href={backToRoomsUrl}
           className="inline-flex items-center gap-2 text-sm font-medium text-[#4b3621] hover:underline mb-5"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -655,7 +656,7 @@ const BookCheckout = () => {
                 {accommodatedGuests < totalGuests ? (
                   <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 px-3 py-2 rounded-sm">
                     Selected rooms fit {accommodatedGuests} of {totalGuests} guests.{" "}
-                    <Link to={backToRoomsUrl} className="font-medium underline">
+                    <Link href={backToRoomsUrl} className="font-medium underline">
                       Add more rooms
                     </Link>
                   </p>
@@ -668,7 +669,7 @@ const BookCheckout = () => {
                     <span className="font-semibold">married couples only</span>.
                     Unmarried couples are not permitted. See our{" "}
                     <Link
-                      to="/terms"
+                      href="/terms"
                       className="font-medium underline underline-offset-2"
                     >
                       Terms &amp; Conditions

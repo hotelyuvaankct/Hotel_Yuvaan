@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useMemo, useState, useEffect } from "react";
 import { Calendar as CalendarIcon, Minus, Plus, Trash2, Users } from "lucide-react";
 import {
@@ -9,7 +11,7 @@ import {
   startOfToday,
   startOfDay,
 } from "date-fns";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useRouter, useSearchParams } from "next/navigation";
 import { buildBookUrl } from "@/services/roomService";
 import {
   decodeRoomGuests,
@@ -191,8 +193,8 @@ const displayDate = (value: string) => {
 };
 
 const BookingSearchBar: React.FC = () => {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const today = startOfToday();
   const defaultCheckIn = toInputDate(addDays(today, 1));
   const defaultCheckOut = toInputDate(addDays(today, 2));
@@ -260,7 +262,7 @@ const BookingSearchBar: React.FC = () => {
 
   const handleSearch = () => {
     const promo = searchParams.get("promo")?.trim() || undefined;
-    navigate(
+    router.push(
       buildBookUrl({
         checkIn,
         checkOut,

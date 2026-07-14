@@ -1,6 +1,5 @@
 {
-  "framework": "vite",
-  "outputDirectory": "dist",
+  "framework": "nextjs",
   "headers": [
     {
       "source": "/.well-known/vercel/(.*)",
@@ -19,12 +18,6 @@
           "value": "s-maxage=0, no-cache, no-store, must-revalidate"
         }
       ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
     }
   ]
 }

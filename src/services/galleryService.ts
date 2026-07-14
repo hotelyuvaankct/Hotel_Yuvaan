@@ -37,7 +37,9 @@ export async function fetchGalleryImages(params?: {
   size?: number;
   category?: GalleryCategoryFilter;
 }): Promise<GalleryPageResult> {
-  const response = await fetch(getPublicGalleryApiUrl(params));
+  const response = await fetch(getPublicGalleryApiUrl(params), {
+    next: { revalidate: 60 },
+  });
   const body: ApiResponse<GalleryPageResult> = await response.json().catch(() => ({
     success: false,
     data: {

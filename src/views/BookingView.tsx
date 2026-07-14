@@ -1,5 +1,8 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { differenceInCalendarDays, format, parseISO } from "date-fns";
 import {
@@ -35,6 +38,7 @@ import {
   cancelPublicBooking,
   fetchPublicBooking,
   requestCancelOtp,
+  type BookingResult,
 } from "@/services/bookingService";
 import { formatRoomPrice } from "@/services/roomService";
 import { toast } from "sonner";
@@ -49,8 +53,13 @@ const BOOKING_STATUS: Record<number, string> = {
   6: "Cancelled",
 };
 
-const BookingView = () => {
-  const { token } = useParams<{ token: string }>();
+const BookingView = ({
+  initialBooking,
+}: {
+  initialBooking?: BookingResult | null;
+}) => {
+  const params = useParams<{ token: string }>();
+  const token = params?.token;
   const [showCancelForm, setShowCancelForm] = useState(false);
   const [cancelEmail, setCancelEmail] = useState("");
   const [otpCode, setOtpCode] = useState("");
@@ -65,6 +74,8 @@ const BookingView = () => {
     queryKey: ["publicBooking", token],
     queryFn: () => fetchPublicBooking(token!),
     enabled: Boolean(token),
+    initialData: initialBooking ?? undefined,
+    staleTime: 30_000,
   });
 
   const otpMutation = useMutation({
@@ -282,7 +293,7 @@ const BookingView = () => {
           {bookingQuery.isError && (
             <div className="rounded-2xl border border-neutral-200/80 bg-white px-6 py-8 shadow-lg text-center">
               <Link
-                to="/book"
+                href="/book"
                 className="inline-flex items-center gap-2 text-[#4b3621] font-semibold hover:underline underline-offset-2"
               >
                 Make a new booking
@@ -505,7 +516,7 @@ const BookingView = () => {
                       <p className="text-sm text-neutral-600">
                         Need to change plans?{" "}
                         <Link
-                          to="/cancellation"
+                          href="/cancellation"
                           className="font-medium text-[#4b3621] underline underline-offset-2"
                         >
                           View policy

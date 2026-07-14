@@ -1,5 +1,7 @@
+"use client";
+
 import { useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { usePathname } from "next/navigation";
 import { Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { submitReview } from "@/services/reviewService";
@@ -40,7 +42,7 @@ function isNotFoundPath(pathname: string): boolean {
 }
 
 const FloatingReviewWidget = () => {
-  const { pathname } = useLocation();
+  const pathname = usePathname();
   const hideOnBookingFlow = isBookingFlowPath(pathname);
   const hideOnNotFound = isNotFoundPath(pathname);
 

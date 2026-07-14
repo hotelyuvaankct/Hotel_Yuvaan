@@ -4,18 +4,23 @@ import {
   Phone,
   ChevronRight,
 } from "lucide-react";
-import { useAppConfig } from "@/hooks/useAppConfig";
 import { Button } from "@/components/ui/button";
 import SectionHeader from "./SectionHeader";
 import StatsRow from "./StatsRow";
 
-const AboutSection = () => {
-  const { data: contact } = useAppConfig();
+type AboutSectionProps = {
+  contact?: {
+    phoneHref?: string;
+    contactPhone?: string;
+    mapsLinkUrl?: string;
+  };
+};
 
+export default function AboutSection({ contact }: AboutSectionProps) {
   return (
     <section
       id="about"
-      className="pt-10 md:pt-12 pb-16 md:pb-24 relative"
+      className="pt-16 md:pt-24 pb-16 md:pb-24 relative"
     >
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -100,16 +105,16 @@ const AboutSection = () => {
           </div>
 
           {/* Images */}
-          <div className="animate-on-scroll-right relative">
-            <div className="absolute -top-8 -right-8 w-32 h-32 border-2 border-gold-400 rounded-lg opacity-30"></div>
-            <div className="absolute -bottom-8 -left-8 w-24 h-24 border-2 border-gold-400 rounded-full opacity-30"></div>
+          <div className="animate-on-scroll-right relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 border-2 border-gold-400 rounded-lg opacity-30 translate-x-4 -translate-y-4"></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 border-2 border-gold-400 rounded-full opacity-30 -translate-x-4 translate-y-4"></div>
 
             <div className="grid grid-cols-2 gap-4 relative z-10">
               <div className="space-y-4">
                 <div className="relative overflow-hidden rounded-xl group">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10"></div>
                   <img
-                    src={`${import.meta.env.BASE_URL}image/About/reception.png`}
+                    src={`/image/About/reception.png`}
                     alt="Hotel reception"
                     className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700"
                   />
@@ -120,9 +125,7 @@ const AboutSection = () => {
                 <div className="relative overflow-hidden rounded-xl group">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10"></div>
                   <img
-                    src={`${
-                      import.meta.env.BASE_URL
-                    }image/About/restaurant.png`}
+                    src={`/image/About/restaurant.png`}
                     alt="Hotel restaurant"
                     className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
                   />
@@ -135,9 +138,7 @@ const AboutSection = () => {
                 <div className="relative overflow-hidden rounded-xl group">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10"></div>
                   <img
-                    src={`${
-                      import.meta.env.BASE_URL
-                    }image/About/family_table.png`}
+                    src={`/image/About/family_table.png`}
                     alt="Hotel family table"
                     className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
                   />
@@ -148,7 +149,7 @@ const AboutSection = () => {
                 <div className="relative overflow-hidden rounded-xl group">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10"></div>
                   <img
-                    src={`${import.meta.env.BASE_URL}image/About/room.png`}
+                    src={`/image/About/room.png`}
                     alt="Hotel room"
                     className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700"
                   />
@@ -218,6 +219,4 @@ const AboutSection = () => {
       </div>
     </section>
   );
-};
-
-export default AboutSection;
+}
