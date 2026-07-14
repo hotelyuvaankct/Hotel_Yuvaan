@@ -7,10 +7,19 @@ export const metadata = {
     "Explore photos of rooms, restaurant, and amenities at Hotel Yuvaan, Kuchaman City.",
 };
 
-export default function GalleryPage() {
+type GalleryPageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function GalleryPage({ searchParams }: GalleryPageProps) {
+  const params = await searchParams;
+  const category =
+    typeof params.category === "string" ? params.category : undefined;
+  const page = typeof params.page === "string" ? params.page : undefined;
+
   return (
     <Suspense fallback={null}>
-      <Gallery />
+      <Gallery category={category} page={page} />
     </Suspense>
   );
 }
