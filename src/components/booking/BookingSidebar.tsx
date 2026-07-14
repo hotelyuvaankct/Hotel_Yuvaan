@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { format, parseISO } from "date-fns";
 import { ChevronRight, Loader2, Tag, X } from "lucide-react";

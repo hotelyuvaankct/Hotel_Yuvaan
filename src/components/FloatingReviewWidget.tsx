@@ -1,5 +1,3 @@
-"use client";
-
 import { useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Star } from "lucide-react";
