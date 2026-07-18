@@ -31,6 +31,7 @@ import {
   type CouponValidation,
 } from "@/services/couponService";
 import { buildBookUrl, formatRoomPrice } from "@/services/roomService";
+import { formatTime12h } from "@/lib/formatTime";
 import {
   bookingSession,
   type BookingSession,
@@ -530,7 +531,7 @@ const BookCheckout = () => {
                     {config ? (
                       <p className="text-xs min-[380px]:text-sm text-white/70 mt-1 inline-flex items-center gap-1.5">
                         <Clock3 className="h-3.5 w-3.5 shrink-0" />
-                        From {config.checkInTime}
+                        From {formatTime12h(config.checkInTime)}
                       </p>
                     ) : null}
                   </div>
@@ -545,7 +546,7 @@ const BookCheckout = () => {
                     {config ? (
                       <p className="text-xs min-[380px]:text-sm text-white/70 mt-1 inline-flex items-center gap-1.5">
                         <Clock3 className="h-3.5 w-3.5 shrink-0" />
-                        Till {config.checkOutTime}
+                        Till {formatTime12h(config.checkOutTime)}
                       </p>
                     ) : null}
                   </div>

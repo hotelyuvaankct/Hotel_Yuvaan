@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Clock, Users, Utensils, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { formatTimeRange } from "@/lib/formatTime";
 import SectionHeader from "./SectionHeader";
 
 const menuHighlights = [
@@ -30,7 +31,7 @@ const diningFeatures = [
   {
     icon: <Clock className="w-5 h-5" />,
     title: "All Day Dining",
-    desc: "7AM - 11PM",
+    desc: formatTimeRange("07:00", "23:00"),
   },
   {
     icon: <Users className="w-5 h-5" />,
