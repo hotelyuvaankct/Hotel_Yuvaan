@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { usePathname } from "next/navigation";
 
 function scrollToHash(hash: string): boolean {
   const id = hash.replace("#", "");
@@ -14,9 +14,10 @@ function scrollToHash(hash: string): boolean {
 }
 
 export default function ScrollToTop() {
-  const { pathname, hash } = useLocation();
+  const pathname = usePathname();
 
   useEffect(() => {
+    const hash = typeof window !== "undefined" ? window.location.hash : "";
     if (hash) {
       if (scrollToHash(hash)) return;
 
@@ -25,7 +26,7 @@ export default function ScrollToTop() {
     }
 
     window.scrollTo(0, 0);
-  }, [pathname, hash]);
+  }, [pathname]);
 
   return null;
 }

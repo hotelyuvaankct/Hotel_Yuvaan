@@ -1,43 +1,46 @@
+import { useEffect } from "react";
 
-import { useEffect } from 'react';
+const SELECTOR =
+  ".animate-on-scroll, .animate-on-scroll-left, .animate-on-scroll-right, .animate-on-scroll-eyebrow, .animate-on-scroll-rule";
 
-export const useScrollAnimation = (dependencies: any[] = []) => {
+export const useScrollAnimation = (dependencies: unknown[] = []) => {
   useEffect(() => {
-    const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate');
-        }
-      });
-    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("animate");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: "0px 0px -8% 0px",
+        threshold: 0.12,
+      }
+    );
 
-    const observer = new IntersectionObserver(observerCallback, {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.1,
-    });
-
-    let animatedElements: NodeListOf<Element>;
-
-    // Delay to ensure React has fully committed and painted the DOM elements
-    const timer = setTimeout(() => {
-      animatedElements = document.querySelectorAll(
-        '.animate-on-scroll, .animate-on-scroll-left, .animate-on-scroll-right'
-      );
-
-      animatedElements.forEach((element) => {
+    const attach = () => {
+      document.querySelectorAll(SELECTOR).forEach((element) => {
+        if (element.classList.contains("animate")) return;
         observer.observe(element);
       });
-    }, 50);
+    };
+
+    attach();
+    const timer = window.setTimeout(attach, 100);
+    const raf = window.requestAnimationFrame(attach);
+
+    const mutation = new MutationObserver(() => attach());
+    mutation.observe(document.body, { childList: true, subtree: true });
 
     return () => {
-      clearTimeout(timer);
-      if (animatedElements) {
-        animatedElements.forEach((element) => {
-          observer.unobserve(element);
-        });
-      }
+      window.clearTimeout(timer);
+      window.cancelAnimationFrame(raf);
+      mutation.disconnect();
       observer.disconnect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies);
 };

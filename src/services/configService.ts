@@ -22,7 +22,9 @@ interface ApiResponse<T> {
 const MAX_FETCH_ATTEMPTS = 2;
 
 async function fetchAppConfigOnce(): Promise<AppConfig> {
-  const response = await fetch(getConfigApiUrl());
+  const response = await fetch(getConfigApiUrl(), {
+    next: { revalidate: 120 },
+  });
 
   const body: ApiResponse<AppConfig> = await response.json().catch(() => ({
     success: false,

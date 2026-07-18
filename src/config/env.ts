@@ -7,19 +7,27 @@ function required(value: string | undefined, key: string): string {
   return value.trim();
 }
 
-const backendApiUrl = required(
-  import.meta.env.VITE_BACKEND_API_URL,
-  "VITE_BACKEND_API_URL"
-);
+/** Prefer server-only BACKEND_API_URL, fall back to public URL for browser. */
+function resolveBackendApiUrl(): string {
+  const serverUrl = process.env.BACKEND_API_URL;
+  const publicUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
+  return required(serverUrl || publicUrl, "BACKEND_API_URL / NEXT_PUBLIC_BACKEND_API_URL");
+}
+
+function resolveApiVersionPath(): string {
+  const serverPath = process.env.API_VERSION_PATH;
+  const publicPath = process.env.NEXT_PUBLIC_API_VERSION_PATH;
+  return required(
+    serverPath || publicPath,
+    "API_VERSION_PATH / NEXT_PUBLIC_API_VERSION_PATH"
+  );
+}
 
 export const env = {
-  appEnv: (import.meta.env.VITE_APP_ENV ?? "dev") as AppEnv,
-  siteUrl: import.meta.env.VITE_SITE_URL ?? "",
-  backendApiUrl,
-  apiVersionPath: required(
-    import.meta.env.VITE_API_VERSION_PATH,
-    "VITE_API_VERSION_PATH"
-  ),
+  appEnv: (process.env.NEXT_PUBLIC_APP_ENV ?? "dev") as AppEnv,
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "",
+  backendApiUrl: resolveBackendApiUrl(),
+  apiVersionPath: resolveApiVersionPath(),
 } as const;
 
 export function getBackendBaseUrl(): string {

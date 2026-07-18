@@ -14,3 +14,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://hotelyuvaan.com/sitemap.xml
+LLMs: https://hotelyuvaan.com/llms.txt

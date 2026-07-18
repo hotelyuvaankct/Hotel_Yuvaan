@@ -15,7 +15,7 @@ Hotel Yuvaan is a modern and user-friendly website designed to provide seamless 
 
 ## Technologies Used
 
-- HTML5, CSS3, JavaScript
+- Next.js 15 (App Router, SSR/RSC), React 18, TypeScript, Tailwind CSS
 - Backend: [Specify your backend technology, e.g., Node.js, Django]
 - Database: [Specify your database, e.g., MySQL, MongoDB]
 
@@ -32,7 +32,7 @@ Push to `develop` for dev deployments. Merge `develop` → `main` when ready for
 
 | Environment | Env file     | Dev server        | Build              |
 |-------------|--------------|-------------------|--------------------|
-| Dev (remote)| `.env.dev`   | `npm run dev`     | `npm run build:dev`|
+| Dev (remote)| `.env.development` (from `.env.dev`) | `npm run dev`     | `npm run build:dev`|
 | Local       | `.env.localhost` | `npm run dev:local`| `npm run build:local`|
 | Production  | `.env.prod`  | `npm run dev:prod`| `npm run build:prod`|
 

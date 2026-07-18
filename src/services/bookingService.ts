@@ -199,6 +199,7 @@ export async function fetchStay(params: {
   const response = await fetch(apiUrl("/bookings/stay"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    cache: "no-store",
     body: JSON.stringify({
       ...(params.hotelId != null ? { hotelId: params.hotelId } : {}),
       checkIn: params.checkIn,
@@ -243,7 +244,9 @@ export async function checkoutBooking(payload: CheckoutPayload): Promise<Booking
 }
 
 export async function fetchPublicBooking(accessToken: string): Promise<BookingResult> {
-  const response = await fetch(apiUrl(`/public/bookings/${accessToken}`));
+  const response = await fetch(apiUrl(`/public/bookings/${accessToken}`), {
+    cache: "no-store",
+  });
   return parseResponse<BookingResult>(response);
 }
 

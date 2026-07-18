@@ -152,8 +152,8 @@ const BookingSidebar = ({
       Boolean(selectedCouponCode));
 
   return (
-    <aside className="w-full bg-white border border-neutral-200 rounded-xl shadow-sm p-5 sm:p-7">
-      <h2 className="text-lg sm:text-xl font-semibold text-[#4b3621] tracking-tight leading-tight mb-4">
+    <aside className="w-full min-w-0 bg-white border border-neutral-200 rounded-xl shadow-sm p-3.5 min-[380px]:p-5 sm:p-7">
+      <h2 className="text-base min-[380px]:text-lg sm:text-xl font-semibold text-[#4b3621] tracking-tight leading-tight mb-3 min-[380px]:mb-4">
         {title}
       </h2>
 
@@ -270,7 +270,7 @@ const BookingSidebar = ({
                   <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
                     Have a coupon code?
                   </p>
-                  <div className="flex gap-2">
+                  <div className="flex gap-1.5 min-[380px]:gap-2">
                     <input
                       type="text"
                       value={manualCode}
@@ -283,7 +283,7 @@ const BookingSidebar = ({
                       }}
                       placeholder="Enter code"
                       aria-invalid={Boolean(couponError)}
-                      className={`min-w-0 flex-1 rounded border px-3 py-2 text-sm uppercase tracking-wider placeholder:normal-case placeholder:tracking-normal focus:outline-none ${
+                      className={`min-w-0 flex-1 rounded border px-2.5 py-1.5 min-[380px]:px-3 min-[380px]:py-2 text-xs min-[380px]:text-sm uppercase tracking-wider placeholder:normal-case placeholder:tracking-normal focus:outline-none ${
                         couponError
                           ? "border-red-400 focus:border-red-500"
                           : "border-neutral-300 focus:border-[#4b3621]"
@@ -295,6 +295,7 @@ const BookingSidebar = ({
                       size="sm"
                       onClick={handleApplyManual}
                       disabled={!manualCode.trim() || isApplyingManual}
+                      className="h-8 min-[380px]:h-9 shrink-0 px-2.5 min-[380px]:px-3 text-xs"
                     >
                       {isApplyingManual ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -320,7 +321,7 @@ const BookingSidebar = ({
             </div>
           ) : null}
 
-          <div className="space-y-1 text-sm border-t border-neutral-100 pt-3">
+          <div className="space-y-1 text-xs min-[380px]:text-sm border-t border-neutral-100 pt-3">
             {quoteLoading && !quote ? (
               <div className="flex items-center gap-2 text-neutral-500 py-1">
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -328,9 +329,9 @@ const BookingSidebar = ({
               </div>
             ) : quote ? (
               <>
-                <div className="flex justify-between text-neutral-700">
+                <div className="flex justify-between gap-3 text-neutral-700">
                   <span>Room total</span>
-                  <span>
+                  <span className="tabular-nums shrink-0">
                     {formatRoomPrice(
                       Number(
                         quote.subtotalAmount ??
@@ -392,9 +393,14 @@ const BookingSidebar = ({
                         </div>
                       ) : null}
                       {processFee + processFeeGst > 0 ? (
-                        <div className="flex justify-between text-neutral-600">
-                          <span>Payment processing fee (incl. GST)</span>
-                          <span className="tabular-nums">
+                        <div className="flex items-start justify-between gap-2 min-[380px]:gap-3 text-neutral-600">
+                          <span className="min-w-0 leading-snug">
+                            <span className="min-[380px]:hidden">Processing fee</span>
+                            <span className="hidden min-[380px]:inline">
+                              Payment processing fee (incl. GST)
+                            </span>
+                          </span>
+                          <span className="tabular-nums shrink-0">
                             {formatRoomPrice(processFee + processFeeGst)}
                           </span>
                         </div>
@@ -402,9 +408,9 @@ const BookingSidebar = ({
                     </>
                   );
                 })()}
-                <div className="flex justify-between font-semibold text-[#4b3621] text-base pt-1">
+                <div className="flex justify-between gap-3 font-semibold text-[#4b3621] text-sm min-[380px]:text-base pt-1">
                   <span>Total</span>
-                  <span className="font-sans tabular-nums">
+                  <span className="font-sans tabular-nums shrink-0">
                     {total != null ? formatRoomPrice(total) : "—"}
                   </span>
                 </div>
@@ -423,7 +429,7 @@ const BookingSidebar = ({
           variant="solid"
           onClick={onContinue}
           disabled={continueDisabled || cart.length === 0 || loading || quoteLoading}
-          className="mt-4 w-full tracking-wider uppercase"
+          className="mt-4 h-9 min-[380px]:h-10 w-full px-3 text-[11px] min-[380px]:text-xs tracking-wide uppercase"
         >
           {loading ? (
             "Processing…"

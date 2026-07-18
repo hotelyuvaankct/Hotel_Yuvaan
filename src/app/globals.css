@@ -1,0 +1,334 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Premium Hotel Color Scheme */
+@layer base {
+  :root {
+    /* ── Page canvas (change this one value for the whole site) ── */
+    --page-bg: 40 33% 97%;
+
+    --background: var(--page-bg);
+    --foreground: 30 15% 15%;
+
+    --card: 40 33% 99%;
+    --card-foreground: 30 15% 15%;
+
+    --popover: 40 33% 99%;
+    --popover-foreground: 30 15% 15%;
+
+    /* Darker gold so white/cream text meets WCAG AA contrast */
+    --primary: 35 72% 30%;
+    --primary-foreground: 40 33% 98%;
+
+    --secondary: 35 20% 90%;
+    --secondary-foreground: 30 15% 15%;
+
+    --muted: 40 20% 94%;
+    --muted-foreground: 30 10% 45%;
+
+    --accent: 35 50% 85%;
+    --accent-foreground: 30 15% 15%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 35 20% 85%;
+    --input: 35 20% 85%;
+    --ring: 35 65% 45%;
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 20 14% 4%;
+    --foreground: 45 25% 95%;
+
+    --card: 20 14% 6%;
+    --card-foreground: 45 25% 95%;
+
+    --popover: 20 14% 6%;
+    --popover-foreground: 45 25% 95%;
+
+    --primary: 35 65% 55%;
+    --primary-foreground: 20 14% 4%;
+
+    --secondary: 20 10% 10%;
+    --secondary-foreground: 45 25% 95%;
+
+    --muted: 20 10% 10%;
+    --muted-foreground: 35 15% 65%;
+
+    --accent: 20 15% 15%;
+    --accent-foreground: 45 25% 95%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 20 10% 15%;
+    --input: 20 10% 15%;
+    --ring: 35 65% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-playfair;
+  }
+}
+
+/* Owned by <PageBackground /> — single site canvas */
+html,
+body,
+#root {
+  background-color: hsl(var(--page-bg));
+}
+
+.page-background {
+  background-color: hsl(var(--page-bg));
+  color: hsl(var(--foreground));
+  min-height: 100dvh;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-muted;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary/80;
+}
+
+/* Smooth scrolling — clip horizontal overflow from marquee / slide-ins */
+html {
+  scroll-behavior: smooth;
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+#home,
+#about,
+#rooms,
+#restaurant,
+#facilities,
+#gallery,
+#offers,
+#contact {
+  scroll-margin-top: 6.5rem;
+}
+
+@media (min-width: 768px) {
+  #home,
+  #about,
+  #rooms,
+  #restaurant,
+  #facilities,
+  #gallery,
+  #offers,
+  #contact {
+    scroll-margin-top: 7.5rem;
+  }
+}
+
+body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+/* Scroll-triggered section animations (server markup + IO / view() timeline) */
+@keyframes scroll-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(36px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scroll-fade-left {
+  from {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scroll-fade-right {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scroll-eyebrow {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    letter-spacing: 0.35em;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    letter-spacing: 0.2em;
+  }
+}
+
+@keyframes scroll-rule {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+.animate-on-scroll,
+.animate-on-scroll-left,
+.animate-on-scroll-right,
+.animate-on-scroll-eyebrow,
+.animate-on-scroll-rule {
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.animate-on-scroll {
+  transform: translateY(36px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-on-scroll-left {
+  transform: translateX(-28px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-on-scroll-right {
+  transform: translateX(28px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-on-scroll-eyebrow {
+  transform: translateY(14px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    letter-spacing 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-on-scroll-rule {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.15s,
+    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+}
+
+.animate-on-scroll.animate,
+.animate-on-scroll-left.animate,
+.animate-on-scroll-right.animate,
+.animate-on-scroll-eyebrow.animate,
+.animate-on-scroll-rule.animate {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger delays (used with IntersectionObserver .animate) */
+.scroll-delay-1 {
+  transition-delay: 0.12s;
+}
+.scroll-delay-2 {
+  transition-delay: 0.24s;
+}
+.scroll-delay-3 {
+  transition-delay: 0.36s;
+}
+.scroll-delay-4 {
+  transition-delay: 0.48s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-on-scroll,
+  .animate-on-scroll-left,
+  .animate-on-scroll-right,
+  .animate-on-scroll-eyebrow,
+  .animate-on-scroll-rule {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    animation: none;
+  }
+
+  .scroll-delay-1,
+  .scroll-delay-2,
+  .scroll-delay-3,
+  .scroll-delay-4 {
+    transition-delay: 0s;
+  }
+}
+
+/* Premium gradient overlays */
+.gradient-overlay {
+  background: linear-gradient(135deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 100%);
+}
+
+.gold-gradient {
+  background: linear-gradient(135deg, #f2a944 0%, #bc7b1f 100%);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #f2a944 0%, #bc7b1f 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Premium hover effects */
+.premium-hover {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.premium-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .glass {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}

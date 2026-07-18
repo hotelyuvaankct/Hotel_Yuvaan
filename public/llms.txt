@@ -1,0 +1,23 @@
+# Hotel Yuvaan
+
+> Luxury hotel and pure veg restaurant in Kuchaman City, Rajasthan. AC rooms, banquet facilities, and online booking.
+
+Hotel Yuvaan offers comfortable stays and dining in Kuchaman City. Guests can browse rooms, check offers, view the gallery, and book directly on this site.
+
+## Site
+
+- [Home](https://hotelyuvaan.com/): Overview of the hotel, rooms, restaurant, and facilities
+- [Book a room](https://hotelyuvaan.com/book): Check availability and reserve a stay
+- [Rooms](https://hotelyuvaan.com/rooms): Room types and amenities
+- [Restaurant](https://hotelyuvaan.com/restaurant): Pure veg dining experience
+- [Facilities](https://hotelyuvaan.com/facilities): Hotel amenities and services
+- [Offers](https://hotelyuvaan.com/offers): Current deals and coupons
+- [Gallery](https://hotelyuvaan.com/gallery): Photos of the property
+- [Contact](https://hotelyuvaan.com/contact): Address, phone, and enquiry form
+- [About](https://hotelyuvaan.com/about): About Hotel Yuvaan
+- [Cancellation policy](https://hotelyuvaan.com/cancellation): Booking cancellation terms
+
+## Optional
+
+- [Sitemap](https://hotelyuvaan.com/sitemap.xml): Machine-readable site map
+- [Robots](https://hotelyuvaan.com/robots.txt): Crawler rules

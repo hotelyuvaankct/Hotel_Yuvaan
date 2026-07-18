@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { usePathname } from "next/navigation";
 import { Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { submitReview } from "@/services/reviewService";
@@ -31,6 +31,12 @@ function isNotFoundPath(pathname: string): boolean {
     pathname === "/" ||
     pathname === "/gallery" ||
     pathname === "/coupons" ||
+    pathname === "/offers" ||
+    pathname === "/about" ||
+    pathname === "/rooms" ||
+    pathname === "/restaurant" ||
+    pathname === "/facilities" ||
+    pathname === "/contact" ||
     pathname.startsWith("/booking/")
   ) {
     return false;
@@ -40,7 +46,7 @@ function isNotFoundPath(pathname: string): boolean {
 }
 
 const FloatingReviewWidget = () => {
-  const { pathname } = useLocation();
+  const pathname = usePathname();
   const hideOnBookingFlow = isBookingFlowPath(pathname);
   const hideOnNotFound = isNotFoundPath(pathname);
 
@@ -101,7 +107,7 @@ const FloatingReviewWidget = () => {
 
   return (
     <>
-      <Button
+      {/* <Button
         type="button"
         variant="solid"
         size="sm"
@@ -111,7 +117,7 @@ const FloatingReviewWidget = () => {
       >
         <Star className="h-5 w-5 fill-current" />
         <span className="hidden sm:inline">Leave a Review</span>
-      </Button>
+      </Button> */}
 
       <Dialog open={open} onOpenChange={(next) => !next && handleClose()}>
         <DialogContent className="max-w-xl gap-0 p-0 overflow-hidden">

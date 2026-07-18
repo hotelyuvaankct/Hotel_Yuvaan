@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
+import { Suspense } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import PageBackground from "@/components/PageBackground";
@@ -16,15 +17,17 @@ type SiteContentPageProps = {
   sections: SitePageSection[];
 };
 
-const SiteContentPage = ({
+export default function SiteContentPage({
   title,
   subtitle,
   lastUpdated = "12 July 2026",
   sections,
-}: SiteContentPageProps) => {
+}: SiteContentPageProps) {
   return (
     <PageBackground className="flex flex-col">
-      <Navigation />
+      <Suspense fallback={null}>
+        <Navigation />
+      </Suspense>
 
       <section className="relative overflow-hidden bg-[#4b3621] pt-40 sm:pt-44 md:pt-48 pb-20 md:pb-24">
         <div
@@ -93,7 +96,7 @@ const SiteContentPage = ({
               <p className="text-sm text-neutral-600 leading-relaxed">
                 Questions?{" "}
                 <Link
-                  to="/#contact"
+                  href="/contact"
                   className="text-[#4b3621] font-medium underline underline-offset-2 hover:text-[#3a2918]"
                 >
                   Contact us
@@ -115,6 +118,4 @@ const SiteContentPage = ({
       <Footer />
     </PageBackground>
   );
-};
-
-export default SiteContentPage;
+}

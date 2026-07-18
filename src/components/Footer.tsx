@@ -1,15 +1,25 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Instagram, MapPin, Phone, Mail } from "lucide-react";
-import { useAppConfig } from "@/hooks/useAppConfig";
+import {
+  buildContactDisplay,
+  type ContactDisplay,
+} from "@/services/configService";
+import { DEFAULT_APP_CONFIG } from "@/data/defaultAppConfig";
 import { footerLinksByGroup } from "@/data/sitePages";
 
-const Footer = () => {
-  const { data: contact } = useAppConfig();
+type FooterProps = {
+  contact?: ContactDisplay;
+};
+
+export default function Footer({ contact: contactProp }: FooterProps) {
+  const contact =
+    contactProp ?? buildContactDisplay(DEFAULT_APP_CONFIG);
+
   const legalLinks = footerLinksByGroup("legal");
   const businessLinks = footerLinksByGroup("business");
 
   return (
-    <footer className="bg-primary/95 text-primary-foreground py-8 sm:py-12">
+    <footer className="bg-[#3d2b1a] text-[#faf6f0] py-8 sm:py-12">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           <div className="space-y-4">
@@ -17,7 +27,7 @@ const Footer = () => {
             <p className="text-primary-foreground/80 text-sm sm:text-base">
               Luxury hotel offering comfort, elegance and personal service.
             </p>
-            {contact?.instagramUrl && (
+            {contact.instagramUrl && (
               <a
                 href={contact.instagramUrl}
                 className="inline-block bg-primary-foreground/10 p-2 rounded-full hover:bg-primary-foreground/20 transition-colors"
@@ -36,7 +46,7 @@ const Footer = () => {
               {businessLinks.map((link) => (
                 <li key={link.to}>
                   <Link
-                    to={link.to}
+                    href={link.to}
                     className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
                   >
                     {link.label}
@@ -52,7 +62,7 @@ const Footer = () => {
               {legalLinks.map((link) => (
                 <li key={link.to}>
                   <Link
-                    to={link.to}
+                    href={link.to}
                     className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
                   >
                     {link.label}
@@ -68,12 +78,12 @@ const Footer = () => {
               <div className="flex items-start space-x-2">
                 <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
                 <span className="text-primary-foreground/80">
-                  {contact?.fullAddress}
+                  {contact.fullAddress}
                 </span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="w-4 h-4" />
-                {contact?.emailHref ? (
+                {contact.emailHref ? (
                   <a
                     href={contact.emailHref}
                     className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
@@ -82,13 +92,13 @@ const Footer = () => {
                   </a>
                 ) : (
                   <span className="text-primary-foreground/80">
-                    {contact?.supportEmail}
+                    {contact.supportEmail}
                   </span>
                 )}
               </div>
               <div className="flex items-center space-x-2">
                 <Phone className="w-4 h-4" />
-                {contact?.phoneHref ? (
+                {contact.phoneHref ? (
                   <a
                     href={contact.phoneHref}
                     className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
@@ -97,7 +107,7 @@ const Footer = () => {
                   </a>
                 ) : (
                   <span className="text-primary-foreground/80">
-                    {contact?.contactPhone}
+                    {contact.contactPhone}
                   </span>
                 )}
               </div>
@@ -109,11 +119,17 @@ const Footer = () => {
           <p>© {new Date().getFullYear()} Hotel Yuvaan. All rights reserved.</p>
           <p className="text-primary-foreground/60">
             Payments secured by Razorpay · By booking you agree to our{" "}
-            <Link to="/terms" className="underline underline-offset-2 hover:text-primary-foreground">
+            <Link
+              href="/terms"
+              className="underline underline-offset-2 hover:text-primary-foreground"
+            >
               Terms
             </Link>{" "}
             and{" "}
-            <Link to="/privacy" className="underline underline-offset-2 hover:text-primary-foreground">
+            <Link
+              href="/privacy"
+              className="underline underline-offset-2 hover:text-primary-foreground"
+            >
               Privacy Policy
             </Link>
             .
@@ -122,6 +138,4 @@ const Footer = () => {
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}

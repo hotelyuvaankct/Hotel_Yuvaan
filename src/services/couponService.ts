@@ -42,7 +42,9 @@ async function parseResponse<T>(response: Response): Promise<T> {
 }
 
 export async function fetchPublicCoupons(): Promise<PublicCoupon[]> {
-  const response = await fetch(apiUrl("/public/coupons"));
+  const response = await fetch(apiUrl("/public/coupons"), {
+    next: { revalidate: 60 },
+  });
   return parseResponse<PublicCoupon[]>(response);
 }
 

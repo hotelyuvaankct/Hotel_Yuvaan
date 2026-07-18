@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { ArrowRight, Calendar, Users, Camera, Music } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SectionHeader from './SectionHeader';
@@ -10,7 +11,7 @@ const EventsSection = () => {
       category: 'RESTAURANT',
       title: 'Historic Restaurant Renovated',
       date: 'DEC 02',
-      image: `${import.meta.env.BASE_URL}assets/images/events/event-1.jpg`,
+      image: `/assets/images/events/event-1.jpg`,
       description: 'Grand reopening of our historic restaurant featuring new contemporary design while preserving the classic elegance.',
     },
     {
@@ -18,7 +19,7 @@ const EventsSection = () => {
       category: 'SPA',
       title: 'Benefits of Spa Treatments',
       date: 'DEC 04',
-      image: `${import.meta.env.BASE_URL}assets/images/events/event-2.jpg`,
+      image: `/assets/images/events/event-2.jpg`,
       description: 'Wellness workshop focusing on the therapeutic benefits of our signature spa treatments and relaxation techniques.',
     },
     {
@@ -26,7 +27,7 @@ const EventsSection = () => {
       category: 'ROOMS',
       title: 'Hotel Room Collections',
       date: 'DEC 06',
-      image: `${import.meta.env.BASE_URL}assets/images/events/event-3.jpg`,
+      image: `/assets/images/events/event-3.jpg`,
       description: 'Showcase of our newly designed luxury suite collections featuring premium amenities and modern furnishings.',
     },
   ];
@@ -74,11 +75,13 @@ const EventsSection = () => {
               style={{ animationDelay: `${index * 0.2}s` }}
             >
               {/* Event Image */}
-              <div className="relative overflow-hidden">
-                <img
+              <div className="relative overflow-hidden h-64">
+                <Image
                   src={event.image}
                   alt={event.title}
-                  className="w-full h-64 object-cover hover:scale-110 transition-transform duration-700"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover hover:scale-110 transition-transform duration-700"
                 />
                 <div className="absolute top-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
                   {event.date}

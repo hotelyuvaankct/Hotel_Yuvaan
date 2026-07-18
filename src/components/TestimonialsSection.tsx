@@ -12,7 +12,7 @@ const TestimonialsSection = () => {
       name: 'Emily Brown',
       role: 'Guest Review',
       rating: 5,
-      image: `${import.meta.env.BASE_URL}images/testimonials/emily-brown.jpg`,
+      image: `/images/testimonials/emily-brown.jpg`,
       review: "Hotel Yuvaan exceeded all expectations. The service was impeccable, rooms were luxurious, and the restaurant served the most delicious food. The staff went above and beyond to make our anniversary celebration memorable. Highly recommended for anyone seeking a premium hotel experience."
     },
     {
@@ -20,7 +20,7 @@ const TestimonialsSection = () => {
       name: 'Rajesh Sharma',
       role: 'Business Traveler',
       rating: 5,
-      image: `${import.meta.env.BASE_URL}images/testimonials/rajesh-sharma.jpg`,
+      image: `/images/testimonials/rajesh-sharma.jpg`,
       review: "Perfect for business stays. The hotel offers excellent conference facilities, high-speed internet, and professional service. The location is convenient and the rooms are well-appointed. I've stayed here multiple times and it never disappoints."
     },
     {
@@ -28,7 +28,7 @@ const TestimonialsSection = () => {
       name: 'Priya Patel',
       role: 'Family Vacation',
       rating: 5,
-      image: `${import.meta.env.BASE_URL}images/testimonials/priya-patel.jpg`,
+      image: `/images/testimonials/priya-patel.jpg`,
       review: "Amazing experience with family! The kids loved the swimming pool, and we enjoyed the spacious family rooms. The staff was incredibly helpful and accommodating. The breakfast buffet was excellent with great variety. Will definitely return!"
     }
   ];

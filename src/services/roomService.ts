@@ -22,7 +22,9 @@ interface ApiResponse<T> {
 export async function fetchPublicRoomTypes(
   hotelId?: number
 ): Promise<PublicRoomType[]> {
-  const response = await fetch(getPublicRoomTypesApiUrl(hotelId));
+  const response = await fetch(getPublicRoomTypesApiUrl(hotelId), {
+    next: { revalidate: 60 },
+  });
   const body: ApiResponse<PublicRoomType[]> = await response.json().catch(() => ({
     success: false,
     data: [],
