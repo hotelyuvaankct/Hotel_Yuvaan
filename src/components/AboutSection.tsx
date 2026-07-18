@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import {
   MapPin,
   Phone,
@@ -160,13 +161,15 @@ export default function AboutSection({ contact }: AboutSectionProps) {
                 {aboutImages.slice(0, 2).map((image) => (
                   <div
                     key={image.src}
-                    className={`relative overflow-hidden rounded-lg min-[380px]:rounded-xl group animate-on-scroll-right ${image.delay}`}
+                    className={`relative overflow-hidden rounded-lg min-[380px]:rounded-xl group animate-on-scroll-right ${image.delay} ${image.height}`}
                   >
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent z-10 pointer-events-none" />
-                    <img
+                    <Image
                       src={image.src}
                       alt={image.alt}
-                      className={`block w-full ${image.height} object-cover transition-transform duration-700 group-hover:scale-105`}
+                      fill
+                      sizes="(max-width: 768px) 50vw, 280px"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute bottom-2 left-2 right-2 sm:bottom-3 sm:left-3 sm:right-3 z-20">
                       <p className="text-white font-medium text-[11px] min-[380px]:text-sm sm:text-base leading-tight drop-shadow">
@@ -180,13 +183,15 @@ export default function AboutSection({ contact }: AboutSectionProps) {
                 {aboutImages.slice(2).map((image) => (
                   <div
                     key={image.src}
-                    className={`relative overflow-hidden rounded-lg min-[380px]:rounded-xl group animate-on-scroll-right ${image.delay}`}
+                    className={`relative overflow-hidden rounded-lg min-[380px]:rounded-xl group animate-on-scroll-right ${image.delay} ${image.height}`}
                   >
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent z-10 pointer-events-none" />
-                    <img
+                    <Image
                       src={image.src}
                       alt={image.alt}
-                      className={`block w-full ${image.height} object-cover transition-transform duration-700 group-hover:scale-105`}
+                      fill
+                      sizes="(max-width: 768px) 50vw, 280px"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute bottom-2 left-2 right-2 sm:bottom-3 sm:left-3 sm:right-3 z-20">
                       <p className="text-white font-medium text-[11px] min-[380px]:text-sm sm:text-base leading-tight drop-shadow">

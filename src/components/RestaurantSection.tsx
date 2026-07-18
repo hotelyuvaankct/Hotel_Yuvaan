@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Clock, Users, Utensils, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SectionHeader from "./SectionHeader";
@@ -58,11 +59,13 @@ export default function RestaurantSection() {
       <div className="container mx-auto px-4">
         {/* Our Restaurant */}
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="relative group overflow-hidden rounded-2xl animate-on-scroll-left">
-            <img
+          <div className="relative group overflow-hidden rounded-2xl animate-on-scroll-left h-64 min-[380px]:h-80 sm:h-96">
+            <Image
               src={`/image/Gallery/Interior.png`}
               alt="Restaurant Interior"
-              className="block w-full h-64 min-[380px]:h-80 sm:h-96 object-cover shadow-lg group-hover:shadow-xl transition-shadow duration-500 border border-primary rounded-2xl"
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover shadow-lg group-hover:shadow-xl transition-shadow duration-500 border border-primary rounded-2xl"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent rounded-2xl pointer-events-none" />
             <div className="absolute bottom-3 left-3 right-3 sm:bottom-6 sm:left-6 sm:right-auto text-white space-y-2">
@@ -137,11 +140,13 @@ export default function RestaurantSection() {
                 ))}
               </div>
             </div>
-            <div className="relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg animate-on-scroll-right scroll-delay-1">
-              <img
+            <div className="relative rounded-xl sm:rounded-2xl overflow-hidden shadow-lg animate-on-scroll-right scroll-delay-1 h-48 min-[360px]:h-56 min-[380px]:h-72 sm:h-80">
+              <Image
                 src={`/image/Gallery/Restaurant_Booth_Seating.png`}
                 alt="Booth Seating"
-                className="block w-full h-48 min-[360px]:h-56 min-[380px]:h-72 sm:h-80 object-cover"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
               />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 to-transparent pt-10 pb-3 px-3 sm:pt-12 sm:pb-4 sm:px-4 z-20">
                 <p className="text-white font-medium text-xs min-[360px]:text-sm sm:text-base drop-shadow">
@@ -168,11 +173,13 @@ export default function RestaurantSection() {
                 key={dish.name}
                 className={`rounded-xl p-6 text-center border border-border hover:border-gold-300 transition-colors hover:shadow-md animate-on-scroll ${scrollDelays[index % 4]}`}
               >
-                <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-2 border-gold-300 flex items-center justify-center bg-gold-500/10">
-                  <img
+                <div className="relative w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-2 border-gold-300 bg-gold-500/10">
+                  <Image
                     src={dish.img}
                     alt={dish.name}
-                    className="object-cover w-full h-full"
+                    fill
+                    sizes="96px"
+                    className="object-cover"
                   />
                 </div>
                 <h4 className="text-lg font-semibold mb-2">{dish.name}</h4>

@@ -19,7 +19,7 @@ export default function Footer({ contact: contactProp }: FooterProps) {
   const businessLinks = footerLinksByGroup("business");
 
   return (
-    <footer className="bg-primary/95 text-primary-foreground py-8 sm:py-12">
+    <footer className="bg-[#3d2b1a] text-[#faf6f0] py-8 sm:py-12">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           <div className="space-y-4">

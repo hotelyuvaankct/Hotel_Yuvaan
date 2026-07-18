@@ -147,7 +147,7 @@ const Navigation = () => {
       }`}
       style={{ minHeight: "64px" }}
     >
-      <div className="bg-primary text-primary-foreground text-[9px] sm:text-[10px] md:text-xs font-semibold py-1.5 w-full max-w-full overflow-hidden flex whitespace-nowrap tracking-wider">
+      <div className="bg-[#3d2b1a] text-[#faf6f0] text-[10px] sm:text-[11px] md:text-xs font-semibold py-1.5 w-full max-w-full overflow-hidden flex whitespace-nowrap tracking-wider">
         <div className="animate-marquee flex shrink-0 will-change-transform">
           {[...bannerData, ...bannerData].map((text, index) => (
             <React.Fragment key={`marquee-1-${index}`}>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import Autoplay from "embla-carousel-autoplay";
 import {
   Carousel,
@@ -33,11 +34,12 @@ export default function RoomImageCarousel({
 
   if (images.length === 1) {
     return (
-      <img
+      <Image
         src={images[0]}
         alt={alt}
-        className="block h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-        loading="lazy"
+        fill
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
+        className="object-cover transition-transform duration-700 group-hover:scale-105"
       />
     );
   }
@@ -55,11 +57,13 @@ export default function RoomImageCarousel({
             className="basis-full pl-0"
           >
             <div className="relative h-48 min-[360px]:h-56 sm:h-64 overflow-hidden">
-              <img
+              <Image
                 src={src}
                 alt={`${alt} - Image ${index + 1}`}
-                className="block h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                loading={index === 0 ? "eager" : "lazy"}
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                priority={index === 0}
               />
             </div>
           </CarouselItem>
