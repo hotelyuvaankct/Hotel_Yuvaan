@@ -22,7 +22,8 @@ import { DEFAULT_APP_CONFIG } from "@/data/defaultAppConfig";
 
 export const revalidate = 60;
 
-export default async function HomePage() {
+/** Below-the-fold content — streamed after hero so APIs don't block FCP/LCP. */
+async function HomeSections() {
   const [rooms, gallery, coupons, config] = await Promise.all([
     fetchPublicRoomTypes().catch(() => []),
     fetchGalleryPreview(6).catch(() => []),
@@ -33,12 +34,8 @@ export default async function HomePage() {
   const contact = buildContactDisplay(config);
 
   return (
-    <PageBackground>
-      <Suspense fallback={null}>
-        <Navigation overlayHero />
-      </Suspense>
+    <>
       <HomeScrollSpy />
-      <HeroSection />
       <AboutSection contact={contact} />
       <RoomsSection rooms={rooms} />
       <RestaurantSection />
@@ -47,6 +44,31 @@ export default async function HomePage() {
       <CouponsSection coupons={coupons} />
       <ContactSection contact={contact} />
       <Footer contact={contact} />
+    </>
+  );
+}
+
+function HomeSectionsFallback() {
+  return (
+    <div
+      className="min-h-[40vh] bg-[hsl(var(--page-bg))]"
+      aria-hidden
+    />
+  );
+}
+
+export default function HomePage() {
+  return (
+    <PageBackground className="bg-black">
+      <Suspense fallback={null}>
+        <Navigation overlayHero />
+      </Suspense>
+      <HeroSection />
+      <div className="bg-[hsl(var(--page-bg))] text-foreground">
+        <Suspense fallback={<HomeSectionsFallback />}>
+          <HomeSections />
+        </Suspense>
+      </div>
     </PageBackground>
   );
 }

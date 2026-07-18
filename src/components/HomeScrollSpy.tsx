@@ -20,6 +20,7 @@ export type HomeSectionId = (typeof HOME_SECTION_IDS)[number];
 /**
  * Updates the URL hash as the user scrolls the homepage
  * (e.g. `/#facilities`) without adding history entries.
+ * Uses IntersectionObserver to avoid forced layout thrashing.
  */
 export default function HomeScrollSpy() {
   const pathname = usePathname();
@@ -34,15 +35,14 @@ export default function HomeScrollSpy() {
     if (elements.length === 0) return;
 
     let currentId: string | null = null;
-    let ticking = false;
+    const ratios = new Map<string, number>();
 
     const applyHash = (id: string) => {
       if (id === currentId) return;
       currentId = id;
 
       const nextUrl = id === "home" ? "/" : `/#${id}`;
-      const current =
-        window.location.pathname + window.location.hash;
+      const current = window.location.pathname + window.location.hash;
       if (current === nextUrl || (id === "home" && current === "/")) {
         window.dispatchEvent(
           new CustomEvent("section-hash", { detail: id })
@@ -54,48 +54,37 @@ export default function HomeScrollSpy() {
       window.dispatchEvent(new CustomEvent("section-hash", { detail: id }));
     };
 
-    const pickActiveSection = () => {
-      const marker = window.innerHeight * 0.28;
-      let active: HTMLElement | null = null;
-
-      for (const el of elements) {
-        const rect = el.getBoundingClientRect();
-        if (rect.top <= marker && rect.bottom > marker) {
-          active = el;
-          break;
+    const pickFromRatios = () => {
+      let bestId = "home";
+      let bestRatio = -1;
+      for (const id of HOME_SECTION_IDS) {
+        const ratio = ratios.get(id) ?? 0;
+        if (ratio > bestRatio) {
+          bestRatio = ratio;
+          bestId = id;
         }
       }
+      if (bestRatio > 0 || bestId === "home") applyHash(bestId);
+    };
 
-      if (!active) {
-        // Fallback: last section whose top is above the marker
-        for (let i = elements.length - 1; i >= 0; i--) {
-          if (elements[i].getBoundingClientRect().top <= marker) {
-            active = elements[i];
-            break;
-          }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          ratios.set(entry.target.id, entry.isIntersecting ? entry.intersectionRatio : 0);
         }
+        pickFromRatios();
+      },
+      {
+        // Active band near upper third of the viewport
+        root: null,
+        rootMargin: "-20% 0px -55% 0px",
+        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
       }
+    );
 
-      if (active?.id) applyHash(active.id);
-    };
+    for (const el of elements) observer.observe(el);
 
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      window.requestAnimationFrame(() => {
-        pickActiveSection();
-        ticking = false;
-      });
-    };
-
-    pickActiveSection();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
+    return () => observer.disconnect();
   }, [pathname]);
 
   return null;

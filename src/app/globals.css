@@ -87,17 +87,22 @@
   }
 }
 
-/* Owned by <PageBackground /> — single site canvas */
+/* Owned by <PageBackground /> — single site canvas.
+   Default canvas is dark so the home hero doesn't flash cream/white before paint. */
 html,
 body,
 #root {
-  background-color: hsl(var(--page-bg));
+  background-color: #000;
 }
 
 .page-background {
   background-color: hsl(var(--page-bg));
   color: hsl(var(--foreground));
   min-height: 100dvh;
+}
+
+.page-background.bg-black {
+  background-color: #000;
 }
 
 /* Custom Scrollbar */

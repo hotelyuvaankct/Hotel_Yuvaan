@@ -30,6 +30,14 @@ out
 *.sln
 *.sw?
 
+# TypeScript incremental build cache
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# Accidental pnpm artifacts (this repo uses npm / package-lock.json)
+pnpm-lock.yaml
+pnpm-workspace.yaml
+
 # Graphify output
 graphify-out/
 
