@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Loader2 } from "lucide-react";
 import {
   formatRoomPrice,
   buildBookUrl,
@@ -10,6 +9,7 @@ import { getAmenityIcon, getAmenityLabel } from "@/lib/amenities";
 import { format, addDays } from "date-fns";
 import { Button } from "@/components/ui/button";
 import SectionHeader from "./SectionHeader";
+import RoomImageCarousel from "./RoomImageCarousel";
 
 type RoomsSectionProps = {
   rooms: PublicRoomType[];
@@ -26,7 +26,7 @@ export default function RoomsSection({ rooms }: RoomsSectionProps) {
 
   return (
     <section id="rooms" className="pt-10 md:pt-12 pb-16 md:pb-24 relative">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-3 min-[380px]:px-4">
         <SectionHeader
           eyebrow="HOTEL YUVAAN LUXURY ACCOMMODATION"
           title="Rooms &"
@@ -39,7 +39,7 @@ export default function RoomsSection({ rooms }: RoomsSectionProps) {
             Unable to load room types right now. Please try again later.
           </p>
         ) : (
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid gap-5 min-[380px]:gap-6 lg:grid-cols-3 lg:gap-8">
             {rooms.map((room, index) => {
               const images = (room.images ?? [])
                 .map(normalizeStorageUrl)
@@ -57,57 +57,48 @@ export default function RoomsSection({ rooms }: RoomsSectionProps) {
               return (
                 <div
                   key={room.id}
-                  className={`rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500 border border-border hover:border-gold-300 animate-on-scroll-${
+                  className={`rounded-xl min-[380px]:rounded-2xl overflow-hidden bg-card shadow-lg hover:shadow-xl transition-shadow duration-500 border border-border hover:border-gold-300 animate-on-scroll-${
                     index % 2 === 0 ? "left" : "right"
                   }`}
                   style={{ animationDelay: `${index * 0.2}s` }}
                 >
-                  <div className="relative group h-64">
-                    {images.length > 0 ? (
-                      <img
-                        src={images[0]}
-                        alt={room.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="relative h-full bg-gradient-to-br from-[#4b3621] via-[#6b4f33] to-[#c9a227] flex items-end p-6">
-                        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top_right,_white,_transparent_60%)]" />
-                      </div>
-                    )}
+                  <div className="relative group h-48 min-[360px]:h-56 sm:h-64 overflow-hidden bg-muted">
+                    <RoomImageCarousel images={images} alt={room.name} />
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                    <div className="absolute top-4 left-4 bg-gradient-to-r from-gold-600 to-gold-400 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg z-10 pointer-events-none">
-                      {formatRoomPrice(room.basePrice)} / Night
-                    </div>
-                    <div className="absolute top-4 right-4 bg-black/30 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs font-medium z-10 pointer-events-none">
-                      Up to {room.maxAdults} adults
-                      {room.maxChildren > 0
-                        ? ` · ${room.maxChildren} children`
-                        : ""}
+                    <div className="absolute top-2.5 left-2.5 right-2.5 z-10 flex flex-col gap-1 min-[380px]:top-3 min-[380px]:left-3 min-[380px]:right-3 min-[380px]:flex-row min-[380px]:items-start min-[380px]:justify-between min-[380px]:gap-1.5 pointer-events-none">
+                      <div className="w-fit max-w-full shrink-0 bg-gradient-to-r from-gold-600 to-gold-400 text-white px-2 py-0.5 min-[380px]:px-2.5 min-[380px]:py-1 rounded-full text-[10px] min-[380px]:text-sm font-semibold shadow-lg">
+                        {formatRoomPrice(room.basePrice)}
+                        <span className="hidden min-[360px]:inline"> / Night</span>
+                      </div>
+                      <div className="w-fit max-w-full min-[380px]:max-w-[55%] bg-black/40 backdrop-blur-sm text-white px-2 py-0.5 min-[380px]:py-1 rounded-full text-[10px] min-[380px]:text-xs font-medium leading-snug">
+                        Up to {room.maxAdults} adults
+                        {room.maxChildren > 0
+                          ? ` · ${room.maxChildren} ${room.maxChildren === 1 ? "child" : "children"}`
+                          : ""}
+                      </div>
                     </div>
                   </div>
 
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold font-playfair mb-3 text-foreground">
+                  <div className="p-3.5 min-[380px]:p-5 sm:p-6">
+                    <h3 className="text-lg min-[380px]:text-xl font-bold font-playfair mb-2 min-[380px]:mb-3 text-foreground leading-snug">
                       {room.name}
                     </h3>
                     {room.description && (
-                      <p className="text-muted-foreground mb-4 leading-relaxed line-clamp-3">
+                      <p className="text-xs min-[380px]:text-sm text-muted-foreground mb-3 min-[380px]:mb-4 leading-relaxed line-clamp-2 min-[380px]:line-clamp-3">
                         {room.description}
                       </p>
                     )}
 
-                    <div className="grid grid-cols-2 gap-3 mb-6">
+                    <div className="grid grid-cols-2 gap-1.5 min-[380px]:gap-3 mb-4 min-[380px]:mb-6">
                       {displayFeatures.map((feature, featureIndex) => {
                         const Icon = getAmenityIcon(feature);
                         return (
                           <div
                             key={`${feature}-${featureIndex}`}
-                            className="flex items-center space-x-2 text-sm p-2 rounded-lg border border-border/60"
+                            className="flex min-w-0 items-center gap-1.5 min-[380px]:gap-2 text-[11px] min-[380px]:text-sm p-1.5 min-[380px]:p-2 rounded-lg border border-border/60"
                           >
-                            <Icon className="w-4 h-4 text-gold-500" />
-                            <span className="text-muted-foreground font-medium truncate">
+                            <Icon className="h-3.5 w-3.5 min-[380px]:h-4 min-[380px]:w-4 shrink-0 text-gold-500" />
+                            <span className="min-w-0 text-muted-foreground font-medium leading-snug break-words">
                               {getAmenityLabel(feature)}
                             </span>
                           </div>
@@ -115,7 +106,11 @@ export default function RoomsSection({ rooms }: RoomsSectionProps) {
                       })}
                     </div>
 
-                    <Button asChild variant="solid" className="w-full tracking-wide">
+                    <Button
+                      asChild
+                      variant="solid"
+                      className="h-9 w-full px-3 text-[11px] tracking-wide min-[380px]:h-10 min-[380px]:text-sm"
+                    >
                       <Link href={defaultBookUrl}>BOOK NOW</Link>
                     </Button>
                   </div>

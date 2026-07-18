@@ -95,10 +95,31 @@ const BookCheckout = () => {
 
   useEffect(() => {
     const saved = bookingSession.load();
-    if (!saved || saved.cart.length === 0) {
-      router.replace("/book");
+    const hasCart = Boolean(saved?.cart?.length);
+    const hasStay =
+      Boolean(saved?.hotelId) &&
+      Boolean(saved?.checkIn) &&
+      Boolean(saved?.checkOut);
+
+    if (!saved || !hasCart || !hasStay) {
+      if (saved && saved.checkIn && saved.checkOut) {
+        router.replace(
+          buildBookUrl({
+            checkIn: saved.checkIn,
+            checkOut: saved.checkOut,
+            adults: saved.adults ?? 2,
+            children: saved.children ?? 0,
+            rooms: saved.roomGuests?.length || 1,
+            roomGuests: saved.roomGuests,
+            promo: saved.pendingCouponCode || saved.appliedCoupon?.code,
+          })
+        );
+      } else {
+        router.replace("/book");
+      }
       return;
     }
+
     setDraft(saved);
     setGuest(saved.guest ?? emptyGuest);
     setAppliedCoupon(saved.appliedCoupon ?? null);
@@ -410,8 +431,8 @@ const BookCheckout = () => {
 
   if (!draft) {
     return (
-      <PageBackground className="flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <PageBackground className="flex min-h-dvh items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" aria-label="Loading" />
       </PageBackground>
     );
   }
@@ -448,12 +469,12 @@ const BookCheckout = () => {
         }
       />
 
-      <section className="relative pt-28 pb-8 bg-[#4b3621]">
-        <div className="container mx-auto px-4">
-          <h1 className="text-3xl md:text-4xl font-semibold text-white mt-6 mb-2">
+      <section className="relative pt-24 min-[380px]:pt-28 pb-6 min-[380px]:pb-8 bg-[#4b3621]">
+        <div className="container mx-auto px-3 min-[380px]:px-4">
+          <h1 className="text-xl min-[380px]:text-2xl sm:text-3xl md:text-4xl font-semibold text-white mt-4 min-[380px]:mt-6 mb-1.5 min-[380px]:mb-2 leading-snug">
             Complete your booking
           </h1>
-          <p className="text-white/80 text-sm">
+          <p className="text-white/80 text-xs min-[380px]:text-sm leading-relaxed">
             {format(parseISO(draft.checkIn), "dd MMM yyyy")} →{" "}
             {format(parseISO(draft.checkOut), "dd MMM yyyy")} · {draft.adults} adult
             {draft.adults === 1 ? "" : "s"}
@@ -464,90 +485,92 @@ const BookCheckout = () => {
         </div>
       </section>
 
-      <main className="flex-1 container mx-auto px-4 py-8 md:py-10">
+      <main className="flex-1 container mx-auto px-3 min-[380px]:px-4 py-5 min-[380px]:py-8 md:py-10">
         <Link
           href={backToRoomsUrl}
-          className="inline-flex items-center gap-2 text-sm font-medium text-[#4b3621] hover:underline mb-5"
+          className="inline-flex items-center gap-1.5 min-[380px]:gap-2 text-xs min-[380px]:text-sm font-medium text-[#4b3621] hover:underline mb-4 min-[380px]:mb-5"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-3.5 w-3.5 min-[380px]:h-4 min-[380px]:w-4" />
           Edit room selection
         </Link>
 
-        <div className="grid lg:grid-cols-[1fr_340px] gap-6 lg:gap-8 items-start">
-          <div className="space-y-5">
+        <div className="grid lg:grid-cols-[1fr_340px] gap-4 min-[380px]:gap-6 lg:gap-8 items-start">
+          <div className="space-y-4 min-[380px]:space-y-5 min-w-0">
             {/* Stay summary — single source of truth */}
             <section className="relative overflow-hidden rounded-xl border border-[#4b3621]/15 bg-gradient-to-br from-[#4b3621] via-[#5c4330] to-[#3d2b1a] text-white shadow-lg">
               <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top_right,_#c9a227,_transparent_55%)]" />
-              <div className="relative p-5 sm:p-7">
-                <div className="flex flex-wrap items-start justify-between gap-3 mb-5">
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#e8d5a3]">
+              <div className="relative p-3.5 min-[380px]:p-5 sm:p-7">
+                <div className="flex flex-wrap items-start justify-between gap-2 min-[380px]:gap-3 mb-4 min-[380px]:mb-5">
+                  <div className="min-w-0">
+                    <p className="text-[10px] min-[380px]:text-[11px] font-semibold uppercase tracking-[0.18em] min-[380px]:tracking-[0.22em] text-[#e8d5a3]">
                       Your stay
                     </p>
-                    <h2 className="mt-1.5 font-playfair text-2xl font-bold leading-tight sm:text-3xl md:text-[2rem]">
+                    <h2 className="mt-1 font-playfair text-xl min-[380px]:text-2xl font-bold leading-tight sm:text-3xl md:text-[2rem]">
                       <span className="text-white">
                         {nights} Night{nights === 1 ? "" : "s"} at{" "}
                       </span>
                       <span className="text-gradient">Hotel Yuvaan</span>
                     </h2>
                   </div>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-[#f5e6c8] ring-1 ring-white/15">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[10px] min-[380px]:text-xs font-medium text-[#f5e6c8] ring-1 ring-white/15">
                     <Moon className="h-3.5 w-3.5" />
                     {nights} night{nights === 1 ? "" : "s"}
                   </span>
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 mb-5">
-                  <div className="rounded-lg bg-white/10 backdrop-blur-sm px-4 py-3 ring-1 ring-white/10">
-                    <div className="flex items-center gap-2 text-[#e8d5a3] text-[11px] uppercase tracking-wider font-semibold mb-1">
-                      <CalendarDays className="h-3.5 w-3.5" />
+                <div className="grid grid-cols-1 min-[360px]:grid-cols-2 gap-2.5 min-[380px]:gap-3 sm:gap-4 mb-4 min-[380px]:mb-5">
+                  <div className="rounded-lg bg-white/10 backdrop-blur-sm px-3 py-2.5 min-[380px]:px-4 min-[380px]:py-3 ring-1 ring-white/10">
+                    <div className="flex items-center gap-2 text-[#e8d5a3] text-[10px] min-[380px]:text-[11px] uppercase tracking-wider font-semibold mb-1">
+                      <CalendarDays className="h-3.5 w-3.5 shrink-0" />
                       Check-in
                     </div>
-                    <p className="text-xl font-semibold leading-tight">
+                    <p className="text-base min-[380px]:text-xl font-semibold leading-tight">
                       {format(parseISO(draft.checkIn), "d MMMM yyyy")}
                     </p>
                     {config ? (
-                      <p className="text-sm text-white/70 mt-1 inline-flex items-center gap-1.5">
-                        <Clock3 className="h-3.5 w-3.5" />
+                      <p className="text-xs min-[380px]:text-sm text-white/70 mt-1 inline-flex items-center gap-1.5">
+                        <Clock3 className="h-3.5 w-3.5 shrink-0" />
                         From {config.checkInTime}
                       </p>
                     ) : null}
                   </div>
-                  <div className="rounded-lg bg-white/10 backdrop-blur-sm px-4 py-3 ring-1 ring-white/10">
-                    <div className="flex items-center gap-2 text-[#e8d5a3] text-[11px] uppercase tracking-wider font-semibold mb-1">
-                      <CalendarDays className="h-3.5 w-3.5" />
+                  <div className="rounded-lg bg-white/10 backdrop-blur-sm px-3 py-2.5 min-[380px]:px-4 min-[380px]:py-3 ring-1 ring-white/10">
+                    <div className="flex items-center gap-2 text-[#e8d5a3] text-[10px] min-[380px]:text-[11px] uppercase tracking-wider font-semibold mb-1">
+                      <CalendarDays className="h-3.5 w-3.5 shrink-0" />
                       Check-out
                     </div>
-                    <p className="text-xl font-semibold leading-tight">
+                    <p className="text-base min-[380px]:text-xl font-semibold leading-tight">
                       {format(parseISO(draft.checkOut), "d MMMM yyyy")}
                     </p>
                     {config ? (
-                      <p className="text-sm text-white/70 mt-1 inline-flex items-center gap-1.5">
-                        <Clock3 className="h-3.5 w-3.5" />
+                      <p className="text-xs min-[380px]:text-sm text-white/70 mt-1 inline-flex items-center gap-1.5">
+                        <Clock3 className="h-3.5 w-3.5 shrink-0" />
                         Till {config.checkOutTime}
                       </p>
                     ) : null}
                   </div>
                 </div>
 
-                <div className="border-t border-white/15 pt-4 space-y-2.5">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#e8d5a3]">
+                <div className="border-t border-white/15 pt-3 min-[380px]:pt-4 space-y-2 min-[380px]:space-y-2.5">
+                  <p className="text-[10px] min-[380px]:text-[11px] font-semibold uppercase tracking-[0.18em] text-[#e8d5a3]">
                     Selected rooms
                   </p>
                   <ul className="space-y-2">
                     {cart.map((item, index) => (
                       <li
                         key={item.key}
-                        className="flex items-start justify-between gap-3 text-sm"
+                        className="flex items-start justify-between gap-2 min-[380px]:gap-3 text-xs min-[380px]:text-sm"
                       >
                         <div className="min-w-0">
-                          <p className="font-medium text-white leading-snug">
+                          <p className="font-medium text-white leading-snug break-words">
                             Room {index + 1}: {item.roomTypeName}
                             {item.quantity > 1 ? ` × ${item.quantity}` : ""}
                           </p>
-                          <p className="text-white/65 text-xs mt-0.5">{item.ratePlanLabel}</p>
+                          <p className="text-white/65 text-[11px] min-[380px]:text-xs mt-0.5 break-words">
+                            {item.ratePlanLabel}
+                          </p>
                         </div>
-                        <p className="tabular-nums text-[#f5e6c8] font-medium shrink-0">
+                        <p className="tabular-nums text-[#f5e6c8] font-medium shrink-0 text-right">
                           {formatRoomPrice(
                             item.pricePerNight * item.quantity * item.totalNights
                           )}
@@ -560,18 +583,25 @@ const BookCheckout = () => {
             </section>
 
             {/* Guest details */}
-            <section className="bg-white border border-neutral-200 rounded-xl shadow-sm p-5 sm:p-7">
-              <div className="mb-5">
-                <h2 className="text-2xl font-semibold text-[#4b3621]">Guest details</h2>
-                <p className="text-sm text-neutral-600 mt-1">
+            <section className="bg-white border border-neutral-200 rounded-xl shadow-sm p-3.5 min-[380px]:p-5 sm:p-7">
+              <div className="mb-4 min-[380px]:mb-5">
+                <h2 className="text-xl min-[380px]:text-2xl font-semibold text-[#4b3621]">
+                  Guest details
+                </h2>
+                <p className="text-xs min-[380px]:text-sm text-neutral-600 mt-1">
                   You can update your information anytime before confirming.
                 </p>
               </div>
 
-              <form onSubmit={handleContinueToPayment} className="space-y-5" noValidate>
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="firstName">
+              <form
+                id="checkout-guest-form"
+                onSubmit={handleContinueToPayment}
+                className="space-y-4 min-[380px]:space-y-5"
+                noValidate
+              >
+                <div className="grid grid-cols-1 min-[400px]:grid-cols-2 gap-3 min-[380px]:gap-4">
+                  <div className="min-w-0">
+                    <Label htmlFor="firstName" className="text-xs min-[380px]:text-sm">
                       First name <span className="text-destructive">*</span>
                     </Label>
                     <Input
@@ -581,17 +611,21 @@ const BookCheckout = () => {
                         updateGuest({ guestFirstName: sanitizeNameInput(e.target.value) })
                       }
                       maxLength={MAX_NAME_LENGTH}
-                      className="rounded-sm mt-1"
+                      className="rounded-sm mt-1 h-9 min-[380px]:h-10 text-sm"
                       autoComplete="given-name"
                       placeholder="Enter first name"
                       aria-invalid={Boolean(fieldErrors.guestFirstName)}
                     />
                     {fieldErrors.guestFirstName ? (
-                      <p className="text-sm text-destructive mt-1">{fieldErrors.guestFirstName}</p>
+                      <p className="text-xs min-[380px]:text-sm text-destructive mt-1">
+                        {fieldErrors.guestFirstName}
+                      </p>
                     ) : null}
                   </div>
-                  <div>
-                    <Label htmlFor="lastName">Last name</Label>
+                  <div className="min-w-0">
+                    <Label htmlFor="lastName" className="text-xs min-[380px]:text-sm">
+                      Last name
+                    </Label>
                     <Input
                       id="lastName"
                       value={guest.guestLastName}
@@ -599,19 +633,21 @@ const BookCheckout = () => {
                         updateGuest({ guestLastName: sanitizeNameInput(e.target.value) })
                       }
                       maxLength={MAX_NAME_LENGTH}
-                      className="rounded-sm mt-1"
+                      className="rounded-sm mt-1 h-9 min-[380px]:h-10 text-sm"
                       autoComplete="family-name"
                       placeholder="Enter last name"
                       aria-invalid={Boolean(fieldErrors.guestLastName)}
                     />
                     {fieldErrors.guestLastName ? (
-                      <p className="text-sm text-destructive mt-1">{fieldErrors.guestLastName}</p>
+                      <p className="text-xs min-[380px]:text-sm text-destructive mt-1">
+                        {fieldErrors.guestLastName}
+                      </p>
                     ) : null}
                   </div>
                 </div>
 
-                <div>
-                  <Label htmlFor="email">
+                <div className="min-w-0">
+                  <Label htmlFor="email" className="text-xs min-[380px]:text-sm">
                     Email <span className="text-destructive">*</span>
                   </Label>
                   <Input
@@ -620,18 +656,20 @@ const BookCheckout = () => {
                     inputMode="email"
                     value={guest.guestEmail}
                     onChange={(e) => updateGuest({ guestEmail: e.target.value })}
-                    className="rounded-sm mt-1"
+                    className="rounded-sm mt-1 h-9 min-[380px]:h-10 text-sm"
                     autoComplete="email"
                     placeholder="name@example.com"
                     aria-invalid={Boolean(fieldErrors.guestEmail)}
                   />
                   {fieldErrors.guestEmail ? (
-                    <p className="text-sm text-destructive mt-1">{fieldErrors.guestEmail}</p>
+                    <p className="text-xs min-[380px]:text-sm text-destructive mt-1">
+                      {fieldErrors.guestEmail}
+                    </p>
                   ) : null}
                 </div>
 
-                <div>
-                  <Label htmlFor="phone">
+                <div className="min-w-0">
+                  <Label htmlFor="phone" className="text-xs min-[380px]:text-sm">
                     Phone <span className="text-destructive">*</span>
                   </Label>
                   <Input
@@ -643,18 +681,20 @@ const BookCheckout = () => {
                     onChange={(e) =>
                       updateGuest({ guestPhone: sanitizePhoneInput(e.target.value) })
                     }
-                    className="rounded-sm mt-1"
+                    className="rounded-sm mt-1 h-9 min-[380px]:h-10 text-sm"
                     autoComplete="tel"
                     placeholder="e.g. 9876543210"
                     aria-invalid={Boolean(fieldErrors.guestPhone)}
                   />
                   {fieldErrors.guestPhone ? (
-                    <p className="text-sm text-destructive mt-1">{fieldErrors.guestPhone}</p>
+                    <p className="text-xs min-[380px]:text-sm text-destructive mt-1">
+                      {fieldErrors.guestPhone}
+                    </p>
                   ) : null}
                 </div>
 
                 {accommodatedGuests < totalGuests ? (
-                  <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 px-3 py-2 rounded-sm">
+                  <p className="text-xs min-[380px]:text-sm text-amber-700 bg-amber-50 border border-amber-200 px-3 py-2 rounded-sm leading-relaxed">
                     Selected rooms fit {accommodatedGuests} of {totalGuests} guests.{" "}
                     <Link href={backToRoomsUrl} className="font-medium underline">
                       Add more rooms
@@ -662,56 +702,37 @@ const BookCheckout = () => {
                   </p>
                 ) : null}
 
-                <div className="rounded-sm border border-[#4b3621]/20 bg-[#faf7f2] px-4 py-3.5 space-y-3">
-                  <p className="text-sm text-[#4b3621] leading-relaxed">
-                    Hotel Yuvaan has a couple stay policy: couple bookings are
-                    for{" "}
-                    <span className="font-semibold">married couples only</span>.
-                    Unmarried couples are not permitted. See our{" "}
-                    <Link
-                      href="/terms"
-                      className="font-medium underline underline-offset-2"
-                    >
-                      Terms &amp; Conditions
-                    </Link>
-                    .
+                {formError ? (
+                  <p className="hidden text-xs min-[380px]:text-sm text-destructive lg:block">
+                    {formError}
                   </p>
-                  <div className="flex items-start gap-3">
-                    <Checkbox
-                      id="coupleStayPolicyConfirmed"
-                      checked={marriedCoupleConfirmed}
-                      onCheckedChange={(checked) => {
-                        setMarriedCoupleConfirmed(checked === true);
-                        if (checked === true) setFormError(null);
-                      }}
-                      className="mt-0.5 border-[#4b3621] data-[state=checked]:bg-[#4b3621] data-[state=checked]:border-[#4b3621]"
-                    />
-                    <Label
-                      htmlFor="coupleStayPolicyConfirmed"
-                      className="text-sm text-neutral-700 font-normal leading-snug cursor-pointer"
-                    >
-                      I confirm that I have read and understood the property's
-                      couple stay policy. If this booking is for a couple, all
-                      guests comply with the hotel's eligibility requirements.
-                    </Label>
-                  </div>
+                ) : null}
+
+                {/* Desktop: policy + pay button under guest form */}
+                <div className="hidden space-y-4 min-[380px]:space-y-5 lg:block">
+                  <CoupleStayPolicyConfirm
+                    id="coupleStayPolicyConfirmedDesktop"
+                    checked={marriedCoupleConfirmed}
+                    onCheckedChange={(checked) => {
+                      setMarriedCoupleConfirmed(checked);
+                      if (checked) setFormError(null);
+                    }}
+                  />
+
+                  <Button
+                    type="submit"
+                    variant="dark"
+                    disabled={submitting || verifying || quoteLoading}
+                    className="h-9 min-[380px]:h-10 w-full px-3 text-[11px] min-[380px]:text-xs tracking-wide uppercase"
+                  >
+                    {submitting ? "Opening payment…" : "Continue to payment"}
+                  </Button>
                 </div>
-
-                {formError ? <p className="text-sm text-destructive">{formError}</p> : null}
-
-                <Button
-                  type="submit"
-                  variant="dark"
-                  disabled={submitting || verifying || quoteLoading}
-                  className="w-full tracking-wider uppercase"
-                >
-                  {submitting ? "Opening payment…" : "Continue to payment"}
-                </Button>
               </form>
             </section>
           </div>
 
-          <div className="lg:sticky lg:top-24 self-start">
+          <div className="lg:sticky lg:top-24 self-start min-w-0 space-y-4">
             <BookingSidebar
               checkIn={draft.checkIn}
               checkOut={draft.checkOut}
@@ -738,6 +759,32 @@ const BookCheckout = () => {
               showCartItems={false}
               title="Payment summary"
             />
+
+            {/* Mobile: policy + pay button under payment summary */}
+            <div className="space-y-4 lg:hidden">
+              <CoupleStayPolicyConfirm
+                id="coupleStayPolicyConfirmedMobile"
+                checked={marriedCoupleConfirmed}
+                onCheckedChange={(checked) => {
+                  setMarriedCoupleConfirmed(checked);
+                  if (checked) setFormError(null);
+                }}
+              />
+
+              {formError ? (
+                <p className="text-xs min-[380px]:text-sm text-destructive">{formError}</p>
+              ) : null}
+
+              <Button
+                type="submit"
+                form="checkout-guest-form"
+                variant="dark"
+                disabled={submitting || verifying || quoteLoading}
+                className="h-9 min-[380px]:h-10 w-full px-3 text-[11px] min-[380px]:text-xs tracking-wide uppercase"
+              >
+                {submitting ? "Opening payment…" : "Continue to payment"}
+              </Button>
+            </div>
           </div>
         </div>
       </main>
@@ -748,3 +795,48 @@ const BookCheckout = () => {
 };
 
 export default BookCheckout;
+
+type CoupleStayPolicyConfirmProps = {
+  id: string;
+  checked: boolean;
+  onCheckedChange: (checked: boolean) => void;
+};
+
+function CoupleStayPolicyConfirm({
+  id,
+  checked,
+  onCheckedChange,
+}: CoupleStayPolicyConfirmProps) {
+  return (
+    <div className="rounded-sm border border-[#4b3621]/20 bg-[#faf7f2] px-3 py-3 min-[380px]:px-4 min-[380px]:py-3.5 space-y-2.5 min-[380px]:space-y-3">
+      <p className="text-xs min-[380px]:text-sm text-[#4b3621] leading-relaxed">
+        Hotel Yuvaan has a couple stay policy: couple bookings are for{" "}
+        <span className="font-semibold">married couples only</span>. Unmarried
+        couples are not permitted. See our{" "}
+        <Link
+          href="/terms"
+          className="font-medium underline underline-offset-2"
+        >
+          Terms &amp; Conditions
+        </Link>
+        .
+      </p>
+      <div className="flex items-start gap-2.5 min-[380px]:gap-3">
+        <Checkbox
+          id={id}
+          checked={checked}
+          onCheckedChange={(value) => onCheckedChange(value === true)}
+          className="mt-0.5 border-[#4b3621] data-[state=checked]:bg-[#4b3621] data-[state=checked]:border-[#4b3621]"
+        />
+        <Label
+          htmlFor={id}
+          className="text-xs min-[380px]:text-sm text-neutral-700 font-normal leading-snug cursor-pointer"
+        >
+          I confirm that I have read and understood the property&apos;s couple
+          stay policy. If this booking is for a couple, all guests comply with
+          the hotel&apos;s eligibility requirements.
+        </Label>
+      </div>
+    </div>
+  );
+}

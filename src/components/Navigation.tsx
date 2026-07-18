@@ -14,6 +14,7 @@ const Navigation = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
   const solidNav = isScrolled || !isHomePage;
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -50,6 +51,24 @@ const Navigation = () => {
   }, []);
 
   useEffect(() => {
+    if (!isHomePage) {
+      setActiveSection(pathname.replace(/^\//, ""));
+      return;
+    }
+
+    const fromHash = window.location.hash.replace(/^#/, "") || "home";
+    setActiveSection(fromHash);
+
+    const onSectionHash = (event: Event) => {
+      const detail = (event as CustomEvent<string>).detail;
+      if (detail) setActiveSection(detail);
+    };
+
+    window.addEventListener("section-hash", onSectionHash);
+    return () => window.removeEventListener("section-hash", onSectionHash);
+  }, [isHomePage, pathname]);
+
+  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
       if (
@@ -70,21 +89,54 @@ const Navigation = () => {
   }, [isMenuOpen]);
 
   const navItems = [
-    { name: "About", to: "/#about", icon: <User className="w-5 h-5" /> },
-    { name: "Rooms", to: "/#rooms", icon: <Bed className="w-5 h-5" /> },
+    {
+      name: "About",
+      hash: "about",
+      path: "/about",
+      icon: <User className="w-5 h-5" />,
+    },
+    {
+      name: "Rooms",
+      hash: "rooms",
+      path: "/rooms",
+      icon: <Bed className="w-5 h-5" />,
+    },
     {
       name: "Restaurant",
-      to: "/#restaurant",
+      hash: "restaurant",
+      path: "/restaurant",
       icon: <Utensils className="w-5 h-5" />,
     },
     {
       name: "Facilities",
-      to: "/#facilities",
+      hash: "facilities",
+      path: "/facilities",
       icon: <Wifi className="w-5 h-5" />,
     },
-    { name: "Gallery", to: "/gallery", icon: <Image className="w-5 h-5" /> },
-    { name: "Offers", to: "/coupons", icon: <Tag className="w-5 h-5" /> },
+    {
+      name: "Gallery",
+      hash: "gallery",
+      path: "/gallery",
+      icon: <Image className="w-5 h-5" />,
+    },
+    {
+      name: "Offers",
+      hash: "offers",
+      path: "/offers",
+      icon: <Tag className="w-5 h-5" />,
+    },
   ];
+
+  const hrefFor = (item: (typeof navItems)[number]) =>
+    isHomePage ? `/#${item.hash}` : item.path;
+
+  const isActive = (item: (typeof navItems)[number]) => {
+    if (isHomePage) return activeSection === item.hash;
+    if (item.path === "/offers") {
+      return pathname === "/offers" || pathname === "/coupons";
+    }
+    return pathname === item.path;
+  };
 
   return (
     <nav
@@ -139,9 +191,13 @@ const Navigation = () => {
             {navItems.map((item) => (
               <Link
                 key={item.name}
-                href={item.to}
+                href={hrefFor(item)}
                 className={`font-medium transition-all duration-300 hover:text-primary hover:scale-105 ${
-                  solidNav ? "text-foreground" : "text-white"
+                  isActive(item)
+                    ? "text-primary"
+                    : solidNav
+                      ? "text-foreground"
+                      : "text-white"
                 }`}
               >
                 {item.name}
@@ -152,8 +208,13 @@ const Navigation = () => {
             </Button>
           </div>
 
-          <div className="lg:hidden flex items-center gap-1 xs:gap-2">
-            <Button asChild variant="solid" size="sm" className="px-4">
+          <div className="lg:hidden flex items-center gap-1.5">
+            <Button
+              asChild
+              variant="solid"
+              size="sm"
+              className="h-7 px-2.5 text-[11px] tracking-wide min-[380px]:h-8 min-[380px]:px-3.5 min-[380px]:text-xs"
+            >
               <Link href="/book">Book</Link>
             </Button>
             <button
@@ -200,8 +261,10 @@ const Navigation = () => {
                 {navItems.map((item) => (
                   <Link
                     key={item.name}
-                    href={item.to}
-                    className="flex flex-col items-center justify-center p-3 text-primary hover:text-white transition-colors duration-300 rounded-lg hover:bg-primary/20"
+                    href={hrefFor(item)}
+                    className={`flex flex-col items-center justify-center p-3 transition-colors duration-300 rounded-lg hover:bg-primary/20 hover:text-white ${
+                      isActive(item) ? "bg-primary/15 text-primary" : "text-primary"
+                    }`}
                     onClick={() => setIsMenuOpen(false)}
                     title={item.name}
                   >

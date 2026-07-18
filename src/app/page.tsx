@@ -10,6 +10,7 @@ import CouponsSection from "@/components/CouponsSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import PageBackground from "@/components/PageBackground";
+import HomeScrollSpy from "@/components/HomeScrollSpy";
 import { fetchPublicRoomTypes } from "@/services/roomService";
 import { fetchGalleryPreview } from "@/services/galleryService";
 import { fetchPublicCoupons } from "@/services/couponService";
@@ -36,6 +37,7 @@ export default async function HomePage() {
       <Suspense fallback={null}>
         <Navigation />
       </Suspense>
+      <HomeScrollSpy />
       <HeroSection />
       <AboutSection contact={contact} />
       <RoomsSection rooms={rooms} />

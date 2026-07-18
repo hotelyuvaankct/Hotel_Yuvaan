@@ -282,7 +282,7 @@ export const SITE_PAGES: SitePageDef[] = [
     ],
   },
   {
-    path: "/about",
+    path: "/our-story",
     title: "About Hotel Yuvaan",
     subtitle:
       "A welcoming stay in Kuchaman City — comfort, hospitality, and thoughtful service.",

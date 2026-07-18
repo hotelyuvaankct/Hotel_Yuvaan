@@ -16,8 +16,8 @@ export default function CouponsSection({ coupons }: CouponsSectionProps) {
   const previewCoupons = coupons.slice(0, PREVIEW_LIMIT);
 
   return (
-    <section id="offers" className="pt-16 md:pt-24 pb-10 md:pb-12">
-      <div className="container mx-auto px-4">
+    <section id="offers" className="pt-12 sm:pt-16 md:pt-24 pb-8 sm:pb-10 md:pb-12">
+      <div className="container mx-auto px-3 min-[380px]:px-4">
         <SectionHeader
           eyebrow="Special offers"
           title="Exclusive"
@@ -25,15 +25,19 @@ export default function CouponsSection({ coupons }: CouponsSectionProps) {
           description="Save on your stay with our active promo codes. Apply a coupon at checkout when you book directly with Hotel Yuvaan."
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {previewCoupons.map((coupon, index) => (
             <CouponCard key={coupon.id} coupon={coupon} index={index} />
           ))}
         </div>
 
         {coupons.length > PREVIEW_LIMIT && (
-          <div className="mt-12 text-center animate-on-scroll">
-            <Button asChild variant="solid" className="tracking-[0.12em] uppercase">
+          <div className="mt-8 sm:mt-12 text-center animate-on-scroll">
+            <Button
+              asChild
+              variant="solid"
+              className="h-9 px-3 text-[11px] tracking-[0.1em] uppercase sm:h-10 sm:px-4 sm:text-xs sm:tracking-[0.12em]"
+            >
               <Link href="/coupons">View all offers</Link>
             </Button>
           </div>
