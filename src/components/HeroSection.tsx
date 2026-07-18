@@ -1,14 +1,14 @@
 "use client";
 
 import { Suspense } from "react";
+import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import BookingSearchBar from "./BookingSearchBar";
 import { Button } from "@/components/ui/button";
 
-const getImageUrl = (path: string) =>
-  path.startsWith("/") ? path : `/${path}`;
+const HERO_IMAGE = "/image/Gallery/Deluxe_Room_Suite.png";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -37,15 +37,20 @@ export default function HeroSection() {
       className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-black"
     >
       <motion.div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: `url('${getImageUrl("image/Gallery/Deluxe_Room_Suite.png")}')`,
-        }}
+        className="absolute inset-0"
         initial={reduceMotion ? false : { scale: 1.08, opacity: 0.85 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: reduceMotion ? 0 : 2.2, ease }}
-      />
-
+      >
+        <Image
+          src={HERO_IMAGE}
+          alt="Hotel Yuvaan deluxe room suite"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+      </motion.div>
       <div className="absolute inset-0 bg-black/40" />
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none" />
 

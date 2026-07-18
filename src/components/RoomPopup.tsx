@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { Dialog } from "../components/ui/dialog";
 import {
   Carousel,
@@ -36,11 +37,15 @@ const RoomPopup: React.FC<RoomPopupProps> = ({ open, onClose, room }) => {
           <CarouselContent>
             {room.images.map((img, i) => (
               <CarouselItem key={i}>
-                <img
-                  src={img.startsWith("/") || img.startsWith("http") ? img : `/`}
-                  alt={`${room.name} ${i + 1}`}
-                  className="rounded-lg w-full h-64 object-cover"
-                />
+                <div className="relative h-64 w-full overflow-hidden rounded-lg">
+                  <Image
+                    src={img.startsWith("/") || img.startsWith("http") ? img : `/`}
+                    alt={`${room.name} ${i + 1}`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 672px"
+                    className="object-cover"
+                  />
+                </div>
               </CarouselItem>
             ))}
           </CarouselContent>

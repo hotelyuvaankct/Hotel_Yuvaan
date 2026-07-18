@@ -172,32 +172,32 @@ const BookingView = ({
             <div className="pt-3 min-[380px]:pt-4 pb-2">
               {isCancelled ? (
                 <>
-                  <div className="flex flex-wrap items-center gap-2 min-[380px]:gap-3 mb-4 min-[380px]:mb-5">
-                    <p className="text-[10px] min-[380px]:text-[11px] font-semibold uppercase tracking-[0.18em] min-[380px]:tracking-[0.22em] text-[#e8d5a3]">
+                  <div className="flex flex-wrap items-center gap-1.5 min-[380px]:gap-3 mb-3 min-[380px]:mb-5">
+                    <p className="text-[10px] min-[380px]:text-[11px] font-semibold uppercase tracking-[0.16em] min-[380px]:tracking-[0.22em] text-[#e8d5a3]">
                       Booking cancellation
                     </p>
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-red-500/20 px-2.5 py-1 text-[10px] min-[380px]:text-xs font-semibold text-red-100 ring-1 ring-red-300/35">
-                      <XCircle className="h-3.5 w-3.5" />
+                    <span className="inline-flex items-center gap-1 rounded-full bg-red-500/20 px-2 py-0.5 min-[380px]:gap-1.5 min-[380px]:px-2.5 min-[380px]:py-1 text-[10px] min-[380px]:text-xs font-semibold text-red-100 ring-1 ring-red-300/35">
+                      <XCircle className="h-3 w-3 min-[380px]:h-3.5 min-[380px]:w-3.5" />
                       Cancelled
                     </span>
                   </div>
 
-                  <h1 className="font-playfair text-2xl min-[380px]:text-3xl sm:text-4xl md:text-[2.75rem] text-white tracking-wide leading-tight">
+                  <h1 className="font-playfair text-[1.65rem] min-[380px]:text-3xl sm:text-4xl md:text-[2.75rem] text-white tracking-wide leading-tight">
                     {justCancelled
                       ? "Cancelled successfully"
                       : "Booking cancelled"}
                   </h1>
 
-                  <p className="mt-2 min-[380px]:mt-3 text-white/80 text-xs min-[380px]:text-sm sm:text-base max-w-xl leading-relaxed">
+                  <p className="mt-2 min-[380px]:mt-3 text-white/80 text-[11px] min-[380px]:text-sm sm:text-base max-w-xl leading-relaxed">
                     {justCancelled
                       ? "Your reservation has been cancelled successfully. A confirmation email will be sent shortly."
                       : "This reservation has already been cancelled."}
                   </p>
 
-                  <div className="mt-4 min-[380px]:mt-5 flex flex-wrap items-center gap-2 min-[380px]:gap-3">
-                    <p className="text-xs min-[380px]:text-sm text-white/70">
+                  <div className="mt-3.5 min-[380px]:mt-5 flex flex-wrap items-center gap-2 min-[380px]:gap-3">
+                    <p className="text-[11px] min-[380px]:text-sm text-white/70 min-w-0">
                       Booking ID{" "}
-                      <span className="font-playfair text-base min-[380px]:text-lg text-white tracking-wide select-all">
+                      <span className="font-playfair text-sm min-[380px]:text-lg text-white tracking-wide select-all break-all">
                         {booking.bookingCode}
                       </span>
                     </p>
@@ -205,7 +205,7 @@ const BookingView = ({
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="h-8 border border-white/30 px-2.5 text-xs text-white hover:bg-white/10 hover:text-white"
+                      className="h-7 min-[380px]:h-8 border border-white/30 px-2 min-[380px]:px-2.5 text-[11px] min-[380px]:text-xs text-white hover:bg-white/10 hover:text-white"
                       onClick={async () => {
                         try {
                           await navigator.clipboard.writeText(
@@ -547,9 +547,9 @@ const BookingView = ({
                       </Button>
                     </div>
                   ) : (
-                    <div>
-                      <div className="flex items-start justify-between gap-3 mb-3">
-                        <h2 className="font-playfair text-lg min-[380px]:text-xl text-[#4b3621]">
+                    <div className="min-w-0">
+                      <div className="flex items-start justify-between gap-2 min-[380px]:gap-3 mb-2.5 min-[380px]:mb-3">
+                        <h2 className="font-playfair text-base min-[380px]:text-xl text-[#4b3621] leading-snug">
                           Cancel booking
                         </h2>
                         <Button
@@ -561,28 +561,33 @@ const BookingView = ({
                             setOtpCode("");
                             setEmailError(null);
                           }}
-                          className="h-auto p-0 text-xs min-[380px]:text-sm text-neutral-500 hover:text-[#4b3621]"
+                          className="h-auto shrink-0 p-0 text-[11px] min-[380px]:text-sm text-neutral-500 hover:text-[#4b3621]"
                         >
                           Close
                         </Button>
                       </div>
-                      <p className="text-xs min-[380px]:text-sm text-neutral-600 mb-4 leading-relaxed">
+                      <p className="text-[11px] min-[380px]:text-sm text-neutral-600 mb-3 min-[380px]:mb-4 leading-relaxed">
                         We will send a one-time code to the email you used when
                         booking. Enter it below to confirm cancellation.
                         {booking.guestEmail ? (
-                          <span className="block mt-1 text-neutral-500 break-all">
+                          <span className="block mt-1 text-neutral-500 break-all text-[10px] min-[380px]:text-sm">
                             Booking email on file: {booking.guestEmail}
                           </span>
                         ) : null}
                       </p>
-                      <div className="space-y-3 min-[380px]:space-y-4">
-                        <div>
-                          <Label htmlFor="cancelEmail" className="text-xs min-[380px]:text-sm">
+                      <div className="space-y-2.5 min-[380px]:space-y-4">
+                        <div className="min-w-0">
+                          <Label
+                            htmlFor="cancelEmail"
+                            className="text-[11px] min-[380px]:text-sm"
+                          >
                             Booking email
                           </Label>
                           <Input
                             id="cancelEmail"
                             type="email"
+                            autoComplete="email"
+                            inputMode="email"
                             value={cancelEmail}
                             onChange={(e) => {
                               setCancelEmail(e.target.value);
@@ -590,10 +595,10 @@ const BookingView = ({
                               setOtpSent(false);
                               setOtpCode("");
                             }}
-                            className="rounded-sm mt-1 h-9 min-[380px]:h-10 bg-white text-sm"
+                            className="rounded-sm mt-1 h-9 min-[380px]:h-10 w-full min-w-0 bg-white text-sm"
                           />
                           {emailError ? (
-                            <p className="text-xs min-[380px]:text-sm text-destructive mt-1">
+                            <p className="text-[11px] min-[380px]:text-sm text-destructive mt-1 leading-snug">
                               {emailError}
                             </p>
                           ) : null}
@@ -602,7 +607,7 @@ const BookingView = ({
                           <Button
                             type="button"
                             variant="outline"
-                            className="h-9 min-[380px]:h-10 w-full min-[400px]:w-auto text-xs min-[380px]:text-sm"
+                            className="h-9 min-[380px]:h-10 w-full text-xs min-[380px]:text-sm"
                             onClick={() => {
                               if (
                                 !cancelEmail.trim() ||
@@ -623,8 +628,11 @@ const BookingView = ({
                           </Button>
                         ) : (
                           <>
-                            <div>
-                              <Label htmlFor="otp" className="text-xs min-[380px]:text-sm">
+                            <div className="min-w-0">
+                              <Label
+                                htmlFor="otp"
+                                className="text-[11px] min-[380px]:text-sm"
+                              >
                                 Verification code
                               </Label>
                               <Input
@@ -632,11 +640,16 @@ const BookingView = ({
                                 value={otpCode}
                                 onChange={(e) => setOtpCode(e.target.value)}
                                 placeholder="6-digit code"
-                                className="rounded-sm mt-1 h-9 min-[380px]:h-10 bg-white text-sm"
+                                inputMode="numeric"
+                                autoComplete="one-time-code"
+                                className="rounded-sm mt-1 h-9 min-[380px]:h-10 w-full min-w-0 bg-white text-sm tracking-widest"
                               />
                             </div>
-                            <div>
-                              <Label htmlFor="reason" className="text-xs min-[380px]:text-sm">
+                            <div className="min-w-0">
+                              <Label
+                                htmlFor="reason"
+                                className="text-[11px] min-[380px]:text-sm"
+                              >
                                 Reason (optional)
                               </Label>
                               <Input
@@ -645,17 +658,22 @@ const BookingView = ({
                                 onChange={(e) =>
                                   setCancelReason(e.target.value)
                                 }
-                                className="rounded-sm mt-1 h-9 min-[380px]:h-10 bg-white text-sm"
+                                className="rounded-sm mt-1 h-9 min-[380px]:h-10 w-full min-w-0 bg-white text-sm"
                               />
                             </div>
                             <Button
                               type="button"
                               variant="destructive"
-                              className="h-9 min-[380px]:h-10 w-full min-[400px]:w-auto text-xs min-[380px]:text-sm"
+                              className="h-9 min-[380px]:h-10 w-full text-xs min-[380px]:text-sm"
                               onClick={() => setShowCancelConfirm(true)}
                               disabled={!otpCode || cancelMutation.isPending}
                             >
-                              Confirm cancellation
+                              <span className="min-[360px]:hidden">
+                                Confirm cancel
+                              </span>
+                              <span className="hidden min-[360px]:inline">
+                                Confirm cancellation
+                              </span>
                             </Button>
                           </>
                         )}
@@ -670,15 +688,15 @@ const BookingView = ({
       </main>
 
       <AlertDialog open={showCancelConfirm} onOpenChange={setShowCancelConfirm}>
-        <AlertDialogContent className="mx-3 max-w-[calc(100%-1.5rem)] border-red-300 bg-red-50 sm:mx-auto sm:max-w-lg sm:rounded-xl">
-          <AlertDialogHeader>
-            <div className="mb-1 flex h-10 w-10 min-[380px]:h-11 min-[380px]:w-11 items-center justify-center rounded-full bg-red-100 ring-1 ring-red-300">
+        <AlertDialogContent className="max-w-[min(100%,20.5rem)] min-[380px]:max-w-md border-red-300 bg-red-50 gap-3 p-3.5 min-[380px]:gap-4 min-[380px]:p-5 sm:p-6 sm:rounded-xl">
+          <AlertDialogHeader className="space-y-2 text-left">
+            <div className="mb-0.5 flex h-9 w-9 min-[380px]:h-11 min-[380px]:w-11 items-center justify-center rounded-full bg-red-100 ring-1 ring-red-300">
               <XCircle className="h-5 w-5 min-[380px]:h-6 min-[380px]:w-6 text-red-600" />
             </div>
-            <AlertDialogTitle className="text-base min-[380px]:text-lg text-red-900">
+            <AlertDialogTitle className="font-playfair text-base min-[380px]:text-lg text-red-900 leading-snug pr-1">
               Cancel this booking?
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-xs min-[380px]:text-sm text-red-800/80 leading-relaxed">
+            <AlertDialogDescription className="text-[11px] min-[380px]:text-sm text-red-800/80 leading-relaxed">
               This action cannot be undone. Your reservation
               {booking ? (
                 <>
@@ -691,14 +709,14 @@ const BookingView = ({
               will be cancelled permanently.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="flex-col-reverse gap-2 sm:flex-row">
-            <AlertDialogCancel className="mt-0 border-red-200 bg-white text-red-900 hover:bg-red-50 hover:text-red-900">
+          <AlertDialogFooter className="flex flex-col-reverse gap-2 sm:flex-col-reverse sm:justify-stretch">
+            <AlertDialogCancel className="mt-0 h-9 min-[380px]:h-10 w-full border-red-200 bg-white text-xs min-[380px]:text-sm text-red-900 hover:bg-red-50 hover:text-red-900">
               Keep booking
             </AlertDialogCancel>
             <AlertDialogAction
               className={cn(
                 buttonVariants({ variant: "destructive" }),
-                "bg-red-600 hover:bg-red-700"
+                "h-9 min-[380px]:h-10 w-full bg-red-600 text-xs min-[380px]:text-sm hover:bg-red-700"
               )}
               disabled={cancelMutation.isPending}
               onClick={(e) => {
@@ -706,9 +724,16 @@ const BookingView = ({
                 cancelMutation.mutate();
               }}
             >
-              {cancelMutation.isPending
-                ? "Cancelling…"
-                : "Yes, cancel booking"}
+              {cancelMutation.isPending ? (
+                "Cancelling…"
+              ) : (
+                <>
+                  <span className="min-[360px]:hidden">Yes, cancel</span>
+                  <span className="hidden min-[360px]:inline">
+                    Yes, cancel booking
+                  </span>
+                </>
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

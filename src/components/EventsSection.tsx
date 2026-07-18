@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { ArrowRight, Calendar, Users, Camera, Music } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import SectionHeader from './SectionHeader';
@@ -74,11 +75,13 @@ const EventsSection = () => {
               style={{ animationDelay: `${index * 0.2}s` }}
             >
               {/* Event Image */}
-              <div className="relative overflow-hidden">
-                <img
+              <div className="relative overflow-hidden h-64">
+                <Image
                   src={event.image}
                   alt={event.title}
-                  className="w-full h-64 object-cover hover:scale-110 transition-transform duration-700"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover hover:scale-110 transition-transform duration-700"
                 />
                 <div className="absolute top-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
                   {event.date}

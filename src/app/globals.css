@@ -18,8 +18,9 @@
     --popover: 40 33% 99%;
     --popover-foreground: 30 15% 15%;
 
-    --primary: 35 65% 45%;
-    --primary-foreground: 45 25% 98%;
+    /* Darker gold so white/cream text meets WCAG AA contrast */
+    --primary: 35 72% 30%;
+    --primary-foreground: 40 33% 98%;
 
     --secondary: 35 20% 90%;
     --secondary-foreground: 30 15% 15%;

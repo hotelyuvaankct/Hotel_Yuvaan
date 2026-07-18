@@ -331,7 +331,7 @@ const BookingSearchBar: React.FC = () => {
           >
             <Users className="h-5 w-5 shrink-0 text-[#b8892f] stroke-[1.5]" />
             <div className="min-w-0">
-              <p className="mb-0.5 text-[11px] font-medium uppercase tracking-[0.14em] text-[#a89070]">
+              <p className="mb-0.5 text-[11px] font-medium uppercase tracking-[0.14em] text-[#6b5538]">
                 Guests
               </p>
               <p className="truncate text-[15px] font-semibold leading-snug text-[#4b3621]">
@@ -344,7 +344,7 @@ const BookingSearchBar: React.FC = () => {
             type="button"
             variant="solid"
             onClick={handleSearch}
-            className="h-14 shrink-0 !rounded-none bg-[#c1862d] px-10 text-[13px] font-semibold uppercase tracking-[0.16em] text-white shadow-none hover:bg-[#b07828] hover:brightness-100 lg:h-auto lg:min-h-full lg:self-stretch"
+            className="h-14 shrink-0 !rounded-none bg-[#7a5514] px-10 text-[13px] font-semibold uppercase tracking-[0.16em] text-white shadow-none hover:bg-[#6a4a12] hover:brightness-100 lg:h-auto lg:min-h-full lg:self-stretch"
           >
             Find Room
           </Button>
@@ -394,7 +394,7 @@ const DatePickerField: React.FC<DatePickerFieldProps> = ({
       >
         <CalendarIcon className="h-5 w-5 shrink-0 text-[#b8892f] stroke-[1.5]" />
         <div className="min-w-0">
-          <p className="mb-0.5 text-[11px] font-medium uppercase tracking-[0.14em] text-[#a89070]">
+          <p className="mb-0.5 text-[11px] font-medium uppercase tracking-[0.14em] text-[#6b5538]">
             {label}
           </p>
           <p className="truncate text-[15px] font-semibold leading-snug text-[#4b3621]">

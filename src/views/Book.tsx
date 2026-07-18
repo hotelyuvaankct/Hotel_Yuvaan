@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 import { format, parseISO, addDays, startOfToday } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
@@ -638,10 +639,12 @@ function RoomImageCarousel({
 
   if (images.length === 1) {
     return (
-      <img
+      <Image
         src={images[0]}
         alt={room.name}
-        className={`w-full h-full object-cover ${room.soldOut ? "opacity-60" : ""}`}
+        fill
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
+        className={`object-cover ${room.soldOut ? "opacity-60" : ""}`}
       />
     );
   }
@@ -656,11 +659,13 @@ function RoomImageCarousel({
         {images.map((imageUrl, index) => (
           <CarouselItem key={`${room.roomTypeId}-${index}`} className="pl-0 basis-full h-full">
             <div className="relative h-40 sm:h-44 md:h-[200px]">
-              <img
+              <Image
                 src={imageUrl}
                 alt={`${room.name} - Image ${index + 1}`}
-                className={`w-full h-full object-cover ${room.soldOut ? "opacity-60" : ""}`}
-                loading={index === 0 ? "eager" : "lazy"}
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
+                className={`object-cover ${room.soldOut ? "opacity-60" : ""}`}
+                priority={index === 0}
               />
             </div>
           </CarouselItem>
