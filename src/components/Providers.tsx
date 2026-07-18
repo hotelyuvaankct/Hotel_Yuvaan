@@ -8,7 +8,6 @@ import { Analytics } from "@vercel/analytics/react";
 import { Suspense, useState, type ReactNode } from "react";
 import ScrollToTop from "@/components/ScrollToTop";
 import ScrollReveal from "@/components/ScrollReveal";
-import FloatingReviewWidget from "@/components/FloatingReviewWidget";
 
 export default function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
@@ -22,7 +21,6 @@ export default function Providers({ children }: { children: ReactNode }) {
         <Suspense fallback={null}>
           <ScrollToTop />
           <ScrollReveal />
-          <FloatingReviewWidget />
         </Suspense>
         {children}
       </TooltipProvider>
