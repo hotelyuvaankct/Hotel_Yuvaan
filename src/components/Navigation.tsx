@@ -8,9 +8,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
-const Navigation = () => {
+type NavigationProps = {
+  /** Homepage hero overlay — keeps nav transparent until the user scrolls */
+  overlayHero?: boolean;
+};
+
+const Navigation = ({ overlayHero = false }: NavigationProps) => {
   const pathname = usePathname();
-  const isHomePage = pathname === "/";
+  // Treat missing/empty path as home so first paint never flashes solid white
+  const isHomePage =
+    overlayHero || pathname === "/" || pathname === "" || pathname == null;
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -43,12 +50,19 @@ const Navigation = () => {
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
+    if (!isHomePage) {
+      setIsScrolled(false);
+      return;
+    }
+
+    const updateScrolled = () => {
       setIsScrolled(window.scrollY > 50);
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+
+    updateScrolled();
+    window.addEventListener("scroll", updateScrolled, { passive: true });
+    return () => window.removeEventListener("scroll", updateScrolled);
+  }, [isHomePage]);
 
   useEffect(() => {
     if (!isHomePage) {
