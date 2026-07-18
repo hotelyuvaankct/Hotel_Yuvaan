@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { format, parseISO } from "date-fns";
 import { ChevronRight, Loader2, Tag, X } from "lucide-react";
 import { formatRoomPrice } from "@/services/roomService";
+import { formatTime12h } from "@/lib/formatTime";
 import type { BookingConfig, BookingQuote } from "@/services/bookingService";
 import type { CouponValidation, PublicCoupon } from "@/services/couponService";
 import BookingCouponList from "@/components/booking/BookingCouponList";
@@ -169,8 +170,8 @@ const BookingSidebar = ({
           )}
           {config && (
             <div className="text-xs text-neutral-500 space-y-0.5">
-              <p>Check-in from {config.checkInTime}</p>
-              <p>Check-out till {config.checkOutTime}</p>
+              <p>Check-in from {formatTime12h(config.checkInTime)}</p>
+              <p>Check-out till {formatTime12h(config.checkOutTime)}</p>
             </div>
           )}
         </>
