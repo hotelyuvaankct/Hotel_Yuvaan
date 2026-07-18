@@ -70,7 +70,10 @@ export default function HomeScrollSpy() {
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          ratios.set(entry.target.id, entry.isIntersecting ? entry.intersectionRatio : 0);
+          ratios.set(
+            entry.target.id,
+            entry.isIntersecting ? entry.intersectionRatio : 0
+          );
         }
         pickFromRatios();
       },
