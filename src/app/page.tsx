@@ -35,7 +35,7 @@ export default async function HomePage() {
   return (
     <PageBackground>
       <Suspense fallback={null}>
-        <Navigation />
+        <Navigation overlayHero />
       </Suspense>
       <HomeScrollSpy />
       <HeroSection />

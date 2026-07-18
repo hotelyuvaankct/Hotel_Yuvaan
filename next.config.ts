@@ -4,6 +4,9 @@ import path from "path";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   outputFileTracingRoot: path.resolve(__dirname),
+  experimental: {
+    optimizePackageImports: ["lucide-react", "date-fns"],
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [320, 420, 640, 750, 828, 1080, 1200],
