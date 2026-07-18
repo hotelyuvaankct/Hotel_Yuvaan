@@ -509,7 +509,7 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
                         Try different dates or reduce the number of guests.
                       </p>
                       <Button asChild variant="solid" className="tracking-wider uppercase">
-                        <Link href="/#rooms">View All Room Types</Link>
+                        <Link href="/rooms">View All Room Types</Link>
                       </Button>
                     </div>
                   ) : (
@@ -533,9 +533,9 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
       </main>
 
       {cart.length > 0 ? (
-        <div className="sticky bottom-0 z-40 border-t border-neutral-200 bg-white/95 backdrop-blur-sm shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
-          <div className="container mx-auto px-3 sm:px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-            <div className="text-sm text-neutral-700">
+        <div className="sticky bottom-0 z-40 border-t border-neutral-200 bg-white/95 backdrop-blur-sm shadow-[0_-4px_20px_rgba(0,0,0,0.06)] pb-[env(safe-area-inset-bottom)]">
+          <div className="container mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex flex-col min-[400px]:flex-row min-[400px]:items-center min-[400px]:justify-between gap-2 sm:gap-3">
+            <div className="text-[11px] min-[380px]:text-sm text-neutral-700 leading-snug min-w-0">
               <span className="font-medium text-[#4b3621]">
                 {cart.reduce((sum, item) => sum + item.quantity, 0)} room
                 {cart.reduce((sum, item) => sum + item.quantity, 0) === 1 ? "" : "s"} selected
@@ -552,10 +552,11 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
               variant="solid"
               size="sm"
               onClick={handleContinue}
-              className="tracking-wider uppercase"
+              className="h-9 w-full min-[400px]:w-auto shrink-0 px-3 text-[11px] tracking-wide uppercase min-[380px]:text-xs sm:h-9 sm:px-4 sm:tracking-wider"
             >
-              Continue to checkout
-              <ChevronRight className="h-4 w-4" />
+              <span className="min-[360px]:hidden">Checkout</span>
+              <span className="hidden min-[360px]:inline">Continue to checkout</span>
+              <ChevronRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </Button>
           </div>
         </div>
@@ -801,12 +802,12 @@ const RoomCard = ({
                       )}
                     </div>
 
-                    <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4 shrink-0 w-full sm:w-auto">
-                      <div className="sm:text-right min-w-[5.5rem]">
-                        <p className="text-base sm:text-lg font-semibold text-orange-600 leading-none tabular-nums">
+                    <div className="flex items-end justify-between gap-2 min-[360px]:items-center min-[360px]:gap-3 sm:justify-end sm:gap-4 shrink-0 w-full sm:w-auto">
+                      <div className="min-w-0 sm:text-right sm:min-w-[5.5rem]">
+                        <p className="text-sm min-[360px]:text-base sm:text-lg font-semibold text-orange-600 leading-none tabular-nums">
                           {formatRoomPrice(plan.pricePerNight)}
                         </p>
-                        <p className="text-[10px] sm:text-[11px] text-neutral-500 mt-0.5 leading-tight whitespace-nowrap">
+                        <p className="text-[10px] sm:text-[11px] text-neutral-500 mt-0.5 leading-tight">
                           per night + taxes
                         </p>
                       </div>
@@ -815,7 +816,7 @@ const RoomCard = ({
                           type="button"
                           variant="outline"
                           size="sm"
-                          className="h-8 sm:h-9 px-3 sm:px-4 text-xs sm:text-sm uppercase tracking-wide"
+                          className="h-8 sm:h-9 px-2.5 min-[360px]:px-3 sm:px-4 text-[11px] sm:text-sm uppercase tracking-wide shrink-0"
                           onClick={() => onQuantityChange(plan, 1)}
                           disabled={roomTypeSelectedTotal >= room.availableRooms}
                           aria-label={`Add room — ${plan.label}`}
@@ -823,34 +824,34 @@ const RoomCard = ({
                           Add room
                         </Button>
                       ) : (
-                        <div className="flex flex-col items-end gap-1">
-                          <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400 leading-none">
+                        <div className="flex flex-col items-end gap-0.5 min-[360px]:gap-1 shrink-0">
+                          <p className="text-[9px] min-[360px]:text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-neutral-400 leading-none">
                             Rooms
                           </p>
-                          <div className="inline-flex items-center border border-neutral-300 rounded-full shrink-0 overflow-hidden">
+                          <div className="inline-flex items-center border border-neutral-300 rounded-full overflow-hidden">
                             <Button
                               type="button"
                               variant="subtle"
                               size="icon-sm"
-                              className="h-8 w-8 sm:h-9 sm:w-9 rounded-none"
+                              className="h-7 w-7 min-[360px]:h-8 min-[360px]:w-8 sm:h-9 sm:w-9 rounded-none"
                               onClick={() => onQuantityChange(plan, -1)}
                               aria-label={`Remove room — ${plan.label}`}
                             >
-                              <Minus className="h-3.5 w-3.5" />
+                              <Minus className="h-3 w-3 min-[360px]:h-3.5 min-[360px]:w-3.5" />
                             </Button>
-                            <span className="h-8 sm:h-9 min-w-[3.25rem] px-1.5 flex items-center justify-center border-x border-neutral-300 text-sm tabular-nums text-[#4b3621]">
+                            <span className="h-7 min-[360px]:h-8 sm:h-9 min-w-[2.25rem] min-[360px]:min-w-[3.25rem] px-1 flex items-center justify-center border-x border-neutral-300 text-xs min-[360px]:text-sm tabular-nums text-[#4b3621]">
                               {qty}
                             </span>
                             <Button
                               type="button"
                               variant="subtle"
                               size="icon-sm"
-                              className="h-8 w-8 sm:h-9 sm:w-9 rounded-none"
+                              className="h-7 w-7 min-[360px]:h-8 min-[360px]:w-8 sm:h-9 sm:w-9 rounded-none"
                               onClick={() => onQuantityChange(plan, 1)}
                               disabled={roomTypeSelectedTotal >= room.availableRooms}
                               aria-label={`Add room — ${plan.label}`}
                             >
-                              <Plus className="h-3.5 w-3.5" />
+                              <Plus className="h-3 w-3 min-[360px]:h-3.5 min-[360px]:w-3.5" />
                             </Button>
                           </div>
                         </div>

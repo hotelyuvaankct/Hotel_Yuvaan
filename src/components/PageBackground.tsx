@@ -15,7 +15,7 @@ const PageBackground = ({ children, className }: PageBackgroundProps) => {
   return (
     <div
       className={cn(
-        "page-background relative min-h-screen w-full max-w-[100%] overflow-x-clip",
+        "page-background relative min-h-dvh w-full max-w-[100%] overflow-x-clip",
         className
       )}
     >

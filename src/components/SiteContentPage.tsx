@@ -96,7 +96,7 @@ export default function SiteContentPage({
               <p className="text-sm text-neutral-600 leading-relaxed">
                 Questions?{" "}
                 <Link
-                  href="/#contact"
+                  href="/contact"
                   className="text-[#4b3621] font-medium underline underline-offset-2 hover:text-[#3a2918]"
                 >
                   Contact us

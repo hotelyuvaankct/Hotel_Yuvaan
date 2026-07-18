@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 const SELECTOR =
-  ".animate-on-scroll, .animate-on-scroll-left, .animate-on-scroll-right";
+  ".animate-on-scroll, .animate-on-scroll-left, .animate-on-scroll-right, .animate-on-scroll-eyebrow, .animate-on-scroll-rule";
 
 export const useScrollAnimation = (dependencies: unknown[] = []) => {
   useEffect(() => {
@@ -16,28 +16,29 @@ export const useScrollAnimation = (dependencies: unknown[] = []) => {
       },
       {
         root: null,
-        rootMargin: "80px 0px",
-        threshold: 0.05,
+        rootMargin: "0px 0px -8% 0px",
+        threshold: 0.12,
       }
     );
 
-    let animatedElements: NodeListOf<Element> | null = null;
-
     const attach = () => {
-      animatedElements = document.querySelectorAll(SELECTOR);
-      animatedElements.forEach((element) => {
+      document.querySelectorAll(SELECTOR).forEach((element) => {
+        if (element.classList.contains("animate")) return;
         observer.observe(element);
       });
     };
 
-    // Wait for RSC/HTML paint, then observe (and catch late mounts)
-    const timer = window.setTimeout(attach, 80);
+    attach();
+    const timer = window.setTimeout(attach, 100);
     const raf = window.requestAnimationFrame(attach);
+
+    const mutation = new MutationObserver(() => attach());
+    mutation.observe(document.body, { childList: true, subtree: true });
 
     return () => {
       window.clearTimeout(timer);
       window.cancelAnimationFrame(raf);
-      animatedElements?.forEach((element) => observer.unobserve(element));
+      mutation.disconnect();
       observer.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

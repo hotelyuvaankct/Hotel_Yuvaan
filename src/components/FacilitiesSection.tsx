@@ -1,6 +1,4 @@
-import React from 'react';
-import { Car, Wifi, Coffee, Waves, Utensils, MapPin } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Wifi, Coffee, Waves, Utensils, MapPin } from 'lucide-react';
 import SectionHeader from './SectionHeader';
 
 const FacilitiesSection = () => {
@@ -38,8 +36,8 @@ const FacilitiesSection = () => {
   ];
 
   return (
-    <section id="facilities" className="py-16 md:py-24">
-      <div className="container mx-auto px-4">
+    <section id="facilities" className="py-12 sm:py-16 md:py-24">
+      <div className="container mx-auto px-3 min-[380px]:px-4">
         <SectionHeader
           eyebrow="OUR SERVICES"
           title="Hotel"
@@ -48,101 +46,25 @@ const FacilitiesSection = () => {
         />
 
         {/* Facilities Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-3 gap-3.5 min-[380px]:gap-5 md:gap-8">
           {facilities.map((facility, index) => (
             <div
               key={index}
-              className={`bg-card rounded-2xl p-8 text-center hover:shadow-lg transition-all duration-500 transform hover:-translate-y-2 animate-on-scroll-${index % 2 === 0 ? 'left' : 'right'}`}
+              className={`bg-card rounded-xl min-[380px]:rounded-2xl p-4 min-[380px]:p-6 sm:p-8 text-center hover:shadow-lg transition-all duration-500 transform hover:-translate-y-2 animate-on-scroll-${index % 2 === 0 ? 'left' : 'right'}`}
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="w-16 h-16 mx-auto mb-6 bg-primary/10 rounded-full flex items-center justify-center">
-                <facility.icon className="w-8 h-8 text-primary" />
+              <div className="mx-auto mb-3 flex h-12 w-12 min-[380px]:mb-5 min-[380px]:h-14 min-[380px]:w-14 sm:mb-6 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-primary/10">
+                <facility.icon className="h-6 w-6 min-[380px]:h-7 min-[380px]:w-7 sm:h-8 sm:w-8 text-primary" />
               </div>
-              <h3 className="text-xl font-bold font-playfair mb-4">{facility.title}</h3>
-              <p className="text-muted-foreground">{facility.description}</p>
+              <h3 className="mb-2 text-lg font-bold font-playfair min-[380px]:mb-3 min-[380px]:text-xl sm:mb-4">
+                {facility.title}
+              </h3>
+              <p className="text-xs leading-relaxed text-muted-foreground min-[380px]:text-sm sm:text-base">
+                {facility.description}
+              </p>
             </div>
           ))}
         </div>
-
-        {/* Extra Services */}
-        {/* <div className="mt-20 animate-on-scroll">
-          <div className="text-center mb-12">
-            <p className="text-primary text-sm tracking-[0.2em] uppercase mb-4">
-              BEST PRICES
-            </p>
-            <h3 className="text-3xl md:text-4xl font-bold font-playfair mb-6">
-              Extra <span className="text-gradient">Services</span>
-            </h3>
-            <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
-              Enhance your stay with our premium services designed for the ultimate luxury experience.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-card rounded-2xl overflow-hidden shadow-lg">
-              <div className="flex flex-col md:flex-row">
-                <div className="md:w-1/2">
-                  <img 
-                    src={`/images/room-cleaning.jpg`}
-                    alt="Room Cleaning"
-                    className="w-full h-48 md:h-full object-cover"
-                  />
-                </div>
-                <div className="md:w-1/2 p-6">
-                  <h4 className="text-xl font-bold font-playfair mb-3">Room Cleaning</h4>
-                  <div className="text-2xl font-bold text-primary mb-3">₹500 <span className="text-sm text-muted-foreground">/ month</span></div>
-                  <ul className="space-y-2 text-sm text-muted-foreground mb-4">
-                    <li className="flex items-center">
-                      <span className="text-green-500 mr-2">✓</span>
-                      Daily housekeeping service
-                    </li>
-                    <li className="flex items-center">
-                      <span className="text-green-500 mr-2">✓</span>
-                      Fresh linen and towels
-                    </li>
-                    <li className="flex items-center">
-                      <span className="text-red-500 mr-2">✗</span>
-                      Premium amenities not included
-                    </li>
-                  </ul>
-                  <Button variant="solid" className="w-full">
-                    Add Service
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-card rounded-2xl overflow-hidden shadow-lg">
-              <div className="flex flex-col md:flex-row">
-                <div className="md:w-1/2">
-                  <img 
-                    src={`/images/drinks-package.jpg`}
-                    alt="Drinks Package"
-                    className="w-full h-48 md:h-full object-cover"
-                  />
-                </div>
-                <div className="md:w-1/2 p-6">
-                  <h4 className="text-xl font-bold font-playfair mb-3">Drinks Included</h4>
-                  <div className="text-2xl font-bold text-primary mb-3">₹800 <span className="text-sm text-muted-foreground">/ daily</span></div>
-                  <ul className="space-y-2 text-sm text-muted-foreground mb-4">
-                    <li className="flex items-center">
-                      <span className="text-green-500 mr-2">✓</span>
-                      Premium beverages included
-                    </li>
-                    <li className="flex items-center">
-                      <span className="text-red-500 mr-2">✗</span>
-                      Limited premium spirits
-                    </li>
-                  </ul>
-                  <Button variant="solid" className="w-full">
-                    Add Package
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div> */}
       </div>
     </section>
   );
