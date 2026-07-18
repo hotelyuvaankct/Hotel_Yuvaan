@@ -4,8 +4,11 @@ import path from "path";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   outputFileTracingRoot: path.resolve(__dirname),
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production",
+  },
   experimental: {
-    optimizePackageImports: ["lucide-react", "date-fns"],
+    optimizePackageImports: ["lucide-react", "date-fns", "react-icons"],
   },
   images: {
     formats: ["image/avif", "image/webp"],

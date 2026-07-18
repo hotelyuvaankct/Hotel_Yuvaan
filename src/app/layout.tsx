@@ -118,7 +118,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="font-sans antialiased overflow-x-clip max-w-full">
+      <body className="bg-black font-sans antialiased overflow-x-clip max-w-full">
         <Providers>{children}</Providers>
       </body>
     </html>
