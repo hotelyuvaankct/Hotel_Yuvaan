@@ -117,6 +117,50 @@ export interface CheckoutRoomSelection {
   roomTypeId: number;
   ratePlanCode: string;
   quantity: number;
+  guestCount: number;
+}
+
+export function buildOccupancySelections(
+  cart: Array<{ roomTypeId: number; ratePlanCode: string; quantity: number }>,
+  roomGuests: RoomGuestConfig[]
+): CheckoutRoomSelection[] {
+  const totalRooms = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const requestedOccupancies = roomGuests.map((room) =>
+    Math.min(Math.max(room.adults + room.children, 1), 2)
+  );
+  const totalGuests = requestedOccupancies.reduce((sum, count) => sum + count, 0);
+  const occupancies =
+    requestedOccupancies.length === totalRooms
+      ? requestedOccupancies
+      : Array.from({ length: totalRooms }, (_, index) => {
+          const remainingRooms = totalRooms - index;
+          const assigned = requestedOccupancies
+            .slice(0, index)
+            .reduce((sum, count) => sum + count, 0);
+          const remainingGuests = Math.max(totalGuests - assigned, remainingRooms);
+          return Math.min(Math.max(remainingGuests - (remainingRooms - 1), 1), 2);
+        });
+
+  const grouped = new Map<string, CheckoutRoomSelection>();
+  let occupancyIndex = 0;
+  for (const item of cart) {
+    for (let room = 0; room < item.quantity; room += 1) {
+      const guestCount = occupancies[occupancyIndex++] ?? 1;
+      const key = `${item.roomTypeId}:${item.ratePlanCode}:${guestCount}`;
+      const current = grouped.get(key);
+      if (current) {
+        current.quantity += 1;
+      } else {
+        grouped.set(key, {
+          roomTypeId: item.roomTypeId,
+          ratePlanCode: item.ratePlanCode,
+          quantity: 1,
+          guestCount,
+        });
+      }
+    }
+  }
+  return Array.from(grouped.values());
 }
 
 export interface CheckoutPayload {

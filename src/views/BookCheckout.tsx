@@ -12,6 +12,7 @@ import PageBackground from "@/components/PageBackground";
 import ProcessingOverlay from "@/components/ProcessingOverlay";
 import BookingSidebar, { type CartItem } from "@/components/booking/BookingSidebar";
 import {
+  buildOccupancySelections,
   computeGuestCapacity,
   fetchBookingConfig,
   type BookingConfig,
@@ -227,11 +228,7 @@ const BookCheckout = () => {
             adults: draft.adults,
             children: draft.children,
             rooms: cart.reduce((sum, item) => sum + item.quantity, 0),
-            selections: cart.map((item) => ({
-              roomTypeId: item.roomTypeId,
-              ratePlanCode: item.ratePlanCode,
-              quantity: item.quantity,
-            })),
+            selections: buildOccupancySelections(cart, draft.roomGuests),
             ...(couponCode ? { couponCode } : {}),
             ...(guestEmail ? { guestEmail } : {}),
           });
@@ -270,11 +267,7 @@ const BookCheckout = () => {
                 adults: draft.adults,
                 children: draft.children,
                 rooms: cart.reduce((sum, item) => sum + item.quantity, 0),
-                selections: cart.map((item) => ({
-                  roomTypeId: item.roomTypeId,
-                  ratePlanCode: item.ratePlanCode,
-                  quantity: item.quantity,
-                })),
+                selections: buildOccupancySelections(cart, draft.roomGuests),
                 ...(guestEmail ? { guestEmail } : {}),
               });
               if (!cancelled) setQuote(checkoutSummaryToQuote(summary));
@@ -303,6 +296,7 @@ const BookCheckout = () => {
     draft?.checkOut,
     draft?.adults,
     draft?.children,
+    draft?.roomGuests,
     cart,
     pendingCouponCode,
     guest.guestEmail,
@@ -317,11 +311,7 @@ const BookCheckout = () => {
       adults: draft.adults,
       children: draft.children,
       rooms: cart.reduce((sum, item) => sum + item.quantity, 0),
-      selections: cart.map((item) => ({
-        roomTypeId: item.roomTypeId,
-        ratePlanCode: item.ratePlanCode,
-        quantity: item.quantity,
-      })),
+      selections: buildOccupancySelections(cart, draft.roomGuests),
       guestFirstName: guest.guestFirstName.trim(),
       guestLastName: guest.guestLastName.trim(),
       guestEmail: guest.guestEmail.trim(),

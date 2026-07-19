@@ -15,6 +15,7 @@ export type CartItem = {
   ratePlanCode: string;
   ratePlanLabel: string;
   quantity: number;
+  guestCount: number;
   pricePerNight: number;
   maxGuests: number;
   imageUrl?: string;
