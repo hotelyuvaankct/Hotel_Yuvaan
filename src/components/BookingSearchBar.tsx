@@ -55,8 +55,8 @@ export const GuestSelectorModal: React.FC<GuestSelectorModalProps> = ({
   config,
 }) => {
   const minAdults = config?.minAdultsPerRoom ?? 1;
-  const maxAdults = config?.maxAdultsPerRoom ?? 4;
-  const maxChildren = config?.maxChildrenPerRoom ?? 2;
+  const maxAdults = config?.maxAdultsPerRoom ?? 2;
+  const maxChildren = config?.maxChildrenPerRoom ?? 1;
 
   const updateRoom = (index: number, patch: Partial<RoomGuests>) => {
     onChange(

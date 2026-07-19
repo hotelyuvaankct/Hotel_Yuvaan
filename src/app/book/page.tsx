@@ -6,6 +6,7 @@ import {
   type StayResult,
 } from "@/services/bookingService";
 import { fetchPublicRoomTypes, type PublicRoomType } from "@/services/roomService";
+import { shouldPrefetchBookingData } from "@/lib/bookingPrefetch";
 
 export const metadata = {
   title: "Book Rooms | Hotel Yuvaan",
@@ -38,7 +39,11 @@ export default async function BookPage({ searchParams }: BookPageProps) {
   let initialStay: StayResult | null = null;
   let initialRoomTypes: PublicRoomType[] | undefined;
 
-  if (checkIn && checkOut) {
+  if (
+    checkIn &&
+    checkOut &&
+    shouldPrefetchBookingData(process.env.NODE_ENV)
+  ) {
     const [stay, roomTypes] = await Promise.all([
       fetchStay({ checkIn, checkOut, roomGuests }).catch(() => null),
       fetchPublicRoomTypes().catch(() => []),

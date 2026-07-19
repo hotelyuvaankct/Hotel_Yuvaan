@@ -44,6 +44,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import {
+  buildOccupancySelections,
   computeGuestCapacity,
   decodeRoomGuests,
   fetchStay,
@@ -93,6 +94,10 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
       children: 0,
     }));
   const totalGuests = adults + children;
+  const pricingGuestCount = Math.min(
+    Math.max(...roomGuests.map((room) => room.adults + room.children), 1),
+    2
+  );
   const hasSearch = Boolean(checkIn && checkOut);
   const roomGuestsKey = JSON.stringify(roomGuests);
 
@@ -264,11 +269,7 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
             adults,
             children,
             rooms: cart.reduce((sum, item) => sum + item.quantity, 0),
-            selections: cart.map((item) => ({
-              roomTypeId: item.roomTypeId,
-              ratePlanCode: item.ratePlanCode,
-              quantity: item.quantity,
-            })),
+            selections: buildOccupancySelections(cart, roomGuests),
             ...(couponCode ? { couponCode } : {}),
           });
           if (cancelled) return;
@@ -310,11 +311,7 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
                 adults,
                 children,
                 rooms: cart.reduce((sum, item) => sum + item.quantity, 0),
-                selections: cart.map((item) => ({
-                  roomTypeId: item.roomTypeId,
-                  ratePlanCode: item.ratePlanCode,
-                  quantity: item.quantity,
-                })),
+                selections: buildOccupancySelections(cart, roomGuests),
               });
               if (!cancelled) setQuote(checkoutSummaryToQuote(summary));
             } catch {
@@ -344,6 +341,7 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
     checkOut,
     adults,
     children,
+    pricingGuestCount,
     cart,
     pendingCouponCode,
   ]);
@@ -376,6 +374,7 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
                 ratePlanCode: plan.code,
                 ratePlanLabel: plan.label,
                 quantity: nextQty,
+                guestCount: pricingGuestCount,
                 pricePerNight: plan.pricePerNight,
                 maxGuests: room.maxGuests,
                 imageUrl: room.primaryImageUrl
