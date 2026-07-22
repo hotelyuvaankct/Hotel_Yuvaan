@@ -210,6 +210,35 @@ export interface BookingResult {
   rooms?: BookingRoomLine[];
   cancellationReason?: string;
   receiptDownloadUrl?: string;
+  refund?: BookingRefund;
+}
+
+export interface BookingRefund {
+  id?: number;
+  amount?: number;
+  percent?: number;
+  status?: string;
+  channel?: string;
+  cancelledBy?: string;
+  hoursBeforeCheckIn?: number;
+  initiatedAt?: string;
+  completedAt?: string;
+  note?: string;
+  failureReason?: string;
+  paymentRefunded?: boolean;
+}
+
+export interface CancellationQuote {
+  bookingId: number;
+  bookingCode: string;
+  paidAmount?: number;
+  refundPercent?: number;
+  refundAmount?: number;
+  hoursBeforeCheckIn?: number;
+  matchedMinHoursBeforeCheckIn?: number;
+  cancelledBy?: string;
+  note?: string;
+  refundable?: boolean;
 }
 
 interface ApiResponse<T> {
@@ -292,6 +321,13 @@ export async function fetchPublicBooking(accessToken: string): Promise<BookingRe
     cache: "no-store",
   });
   return parseResponse<BookingResult>(response);
+}
+
+export async function fetchCancellationQuote(accessToken: string): Promise<CancellationQuote> {
+  const response = await fetch(apiUrl(`/public/bookings/${accessToken}/cancellation-quote`), {
+    cache: "no-store",
+  });
+  return parseResponse<CancellationQuote>(response);
 }
 
 export async function requestCancelOtp(accessToken: string, email: string): Promise<void> {
