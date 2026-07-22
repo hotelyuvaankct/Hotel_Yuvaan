@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import {
   cancelPublicBooking,
+  fetchCancellationQuote,
   fetchPublicBooking,
   requestCancelOtp,
   type BookingResult,
@@ -52,6 +53,40 @@ const BOOKING_STATUS: Record<number, string> = {
   5: "Checked out",
   6: "Cancelled",
 };
+
+type RefundStepState = "done" | "active" | "todo";
+
+function getRefundSteps(refund: {
+  status?: string;
+  paymentRefunded?: boolean;
+}): Array<{ key: string; label: string; state: RefundStepState }> {
+  const refundStatus = (refund.status ?? "").toUpperCase();
+  const isRefundSuccess =
+    refundStatus === "SUCCESS" || Boolean(refund.paymentRefunded);
+  const isRefundProcessing =
+    !isRefundSuccess &&
+    (refundStatus === "PENDING" ||
+      refundStatus === "PROCESSING" ||
+      refundStatus === "");
+
+  return [
+    { key: "cancelled", label: "Cancelled confirmed", state: "done" },
+    {
+      key: "processing",
+      label: "Refund in process",
+      state: isRefundSuccess
+        ? "done"
+        : isRefundProcessing
+          ? "active"
+          : "done",
+    },
+    {
+      key: "success",
+      label: "Success",
+      state: isRefundSuccess ? "done" : "todo",
+    },
+  ];
+}
 
 const BookingView = ({
   initialBooking,
@@ -76,6 +111,20 @@ const BookingView = ({
     enabled: Boolean(token),
     initialData: initialBooking ?? undefined,
     staleTime: 30_000,
+    refetchInterval: (query) => {
+      const status = query.state.data?.refund?.status;
+      return status === "PENDING" || status === "PROCESSING" ? 15_000 : false;
+    },
+  });
+
+  const quoteQuery = useQuery({
+    queryKey: ["cancellationQuote", token],
+    queryFn: () => fetchCancellationQuote(token!),
+    enabled:
+      Boolean(token) &&
+      showCancelForm &&
+      bookingQuery.data?.bookingStatus !== 6,
+    staleTime: 60_000,
   });
 
   const otpMutation = useMutation({
@@ -311,6 +360,95 @@ const BookingView = ({
                       ? "Booking cancelled successfully."
                       : "This booking is cancelled."}
                   </p>
+                </div>
+              ) : null}
+              {isCancelled && booking.refund ? (
+                <div className="px-3.5 min-[380px]:px-6 sm:px-8 py-4 border-b border-[#4b3621]/10 bg-[#faf7f2]">
+                  <p className="text-[10px] min-[380px]:text-[11px] uppercase tracking-[0.16em] text-[#8b7355] font-semibold mb-2">
+                    Refund status
+                  </p>
+                  <p className="font-sans text-lg min-[380px]:text-xl font-semibold text-[#4b3621]">
+                    {formatRoomPrice(Number(booking.refund.amount ?? 0))}
+                  </p>
+
+                  <ol className="mt-4 flex items-start w-full">
+                    {getRefundSteps(booking.refund).map((step, index, steps) => {
+                      const isLast = index === steps.length - 1;
+                      const isSuccessStep = step.key === "success";
+                      const nextDone = steps[index + 1]?.state === "done";
+                      const connectorActive =
+                        step.state === "done" &&
+                        (nextDone || steps[index + 1]?.state === "active");
+
+                      return (
+                        <li
+                          key={step.key}
+                          className={cn(
+                            "flex items-start min-w-0",
+                            isLast ? "flex-none" : "flex-1"
+                          )}
+                        >
+                          <div className="flex flex-col items-center w-[4.5rem] min-[380px]:w-[5.5rem] shrink-0">
+                            <span
+                              className={cn(
+                                "flex h-8 w-8 min-[380px]:h-9 min-[380px]:w-9 items-center justify-center rounded-full border-2 text-xs min-[380px]:text-sm font-bold font-sans",
+                                isSuccessStep && step.state === "done"
+                                  ? "border-green-600 bg-green-600 text-white"
+                                  : step.state === "done"
+                                    ? "border-[#4b3621] bg-[#4b3621] text-white"
+                                    : step.state === "active"
+                                      ? "border-[#4b3621] bg-white text-[#4b3621]"
+                                      : "border-neutral-300 bg-white text-neutral-400"
+                              )}
+                              aria-current={
+                                step.state === "active" ? "step" : undefined
+                              }
+                            >
+                              {step.state === "done" ? (
+                                <CheckCircle2 className="h-4 w-4 min-[380px]:h-5 min-[380px]:w-5" />
+                              ) : step.state === "active" ? (
+                                <Loader2 className="h-4 w-4 min-[380px]:h-5 min-[380px]:w-5 animate-spin" />
+                              ) : (
+                                index + 1
+                              )}
+                            </span>
+                            <span
+                              className={cn(
+                                "mt-2 text-center text-[10px] min-[380px]:text-xs font-sans font-semibold leading-tight",
+                                isSuccessStep && step.state === "done"
+                                  ? "text-green-700"
+                                  : step.state === "todo"
+                                    ? "text-neutral-400"
+                                    : "text-[#4b3621]"
+                              )}
+                            >
+                              {step.label}
+                            </span>
+                          </div>
+                          {!isLast ? (
+                            <div
+                              className={cn(
+                                "mt-4 min-[380px]:mt-[1.125rem] h-0.5 flex-1 mx-1 min-[380px]:mx-2",
+                                connectorActive
+                                  ? nextDone &&
+                                    steps[index + 1]?.key === "success"
+                                    ? "bg-green-600"
+                                    : "bg-[#4b3621]"
+                                  : "bg-neutral-300"
+                              )}
+                              aria-hidden
+                            />
+                          ) : null}
+                        </li>
+                      );
+                    })}
+                  </ol>
+
+                  {booking.refund.note ? (
+                    <p className="mt-3 text-[11px] min-[380px]:text-sm text-neutral-600 leading-relaxed font-sans">
+                      {booking.refund.note}
+                    </p>
+                  ) : null}
                 </div>
               ) : null}
               <div className="p-3.5 min-[380px]:p-6 sm:p-8">
@@ -575,6 +713,22 @@ const BookingView = ({
                           </span>
                         ) : null}
                       </p>
+                      {quoteQuery.data ? (
+                        <div className="mb-3 rounded-lg border border-[#4b3621]/15 bg-[#faf7f2] px-3 py-2.5 text-[11px] min-[380px]:text-sm text-[#4b3621]">
+                          <p className="font-semibold">
+                            Estimated refund:{" "}
+                            {formatRoomPrice(Number(quoteQuery.data.refundAmount ?? 0))}
+                            {quoteQuery.data.refundPercent != null
+                              ? ` (${quoteQuery.data.refundPercent}%)`
+                              : ""}
+                          </p>
+                          {quoteQuery.data.note ? (
+                            <p className="mt-1 text-neutral-600 leading-relaxed">
+                              {quoteQuery.data.note}
+                            </p>
+                          ) : null}
+                        </div>
+                      ) : null}
                       <div className="space-y-2.5 min-[380px]:space-y-4">
                         <div className="min-w-0">
                           <Label
@@ -707,6 +861,15 @@ const BookingView = ({
                 </>
               ) : null}{" "}
               will be cancelled permanently.
+              {quoteQuery.data ? (
+                <span className="mt-2 block font-medium text-red-900">
+                  Estimated refund:{" "}
+                  {formatRoomPrice(Number(quoteQuery.data.refundAmount ?? 0))}
+                  {quoteQuery.data.refundPercent != null
+                    ? ` (${quoteQuery.data.refundPercent}%)`
+                    : ""}
+                </span>
+              ) : null}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex flex-col-reverse gap-2 sm:flex-col-reverse sm:justify-stretch">
