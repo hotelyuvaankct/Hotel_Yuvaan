@@ -10,11 +10,14 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+.next
+out
 *.local
 
-# Personal env overrides (committed: .env.dev, .env.prod, .env.localhost)
+# Personal env overrides (committed: .env.dev, .env.prod, .env.localhost, .env.development, .env.production)
 .env
 .env.*.local
+.env.local
 
 # Editor directories and files
 .vscode/*
@@ -26,6 +29,14 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# TypeScript incremental build cache
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# Accidental pnpm artifacts (this repo uses npm / package-lock.json)
+pnpm-lock.yaml
+pnpm-workspace.yaml
 
 # Graphify output
 graphify-out/
@@ -40,3 +51,4 @@ graphify-out/
 # Git worktrees
 .worktrees/
 worktrees/
+.superpowers/
