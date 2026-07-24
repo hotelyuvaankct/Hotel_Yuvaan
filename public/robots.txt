@@ -13,4 +13,9 @@ Allow: /
 User-agent: *
 Allow: /
 
+# Block non-public / tooling paths if ever exposed
+Disallow: /api/
+Disallow: /.env
+Disallow: /node_modules/
+
 Sitemap: https://hotelyuvaan.com/sitemap.xml
