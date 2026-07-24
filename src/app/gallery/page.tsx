@@ -1,11 +1,16 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import Gallery from "@/views/Gallery";
+import { createPageMetadata, OG_IMAGES } from "@/lib/seo";
 
-export const metadata = {
-  title: "Gallery | Hotel Yuvaan",
+export const metadata: Metadata = createPageMetadata({
+  title: "Photo Gallery",
   description:
-    "Explore photos of rooms, restaurant, and amenities at Hotel Yuvaan, Kuchaman City.",
-};
+    "Browse photos of rooms, restaurant, events, and amenities at Hotel Yuvaan, Kuchaman City — see your stay before you book.",
+  path: "/gallery",
+  image: OG_IMAGES.gallery,
+  imageAlt: "Night view of Hotel Yuvaan, Kuchaman City",
+});
 
 type GalleryPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

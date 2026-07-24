@@ -1,6 +1,8 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SiteContentPage from "@/components/SiteContentPage";
 import { getSitePage, SITE_PAGES } from "@/data/sitePages";
+import { createPageMetadata, OG_IMAGES } from "@/lib/seo";
 
 type SiteSlugPageProps = {
   params: Promise<{ slug: string }>;
@@ -12,14 +14,26 @@ export function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: SiteSlugPageProps) {
+export async function generateMetadata({
+  params,
+}: SiteSlugPageProps): Promise<Metadata> {
   const { slug } = await params;
   const page = getSitePage(`/${slug}`);
-  if (!page) return { title: "Not Found | Hotel Yuvaan" };
-  return {
-    title: `${page.title} | Hotel Yuvaan`,
+  if (!page) {
+    return createPageMetadata({
+      title: "Page Not Found",
+      description: "The page you are looking for is not available on Hotel Yuvaan.",
+      path: `/${slug}`,
+      noIndex: true,
+    });
+  }
+  return createPageMetadata({
+    title: page.title,
     description: page.subtitle,
-  };
+    path: page.path,
+    image: OG_IMAGES.home,
+    imageAlt: `${page.title} — Hotel Yuvaan`,
+  });
 }
 
 export default async function SiteSlugPage({ params }: SiteSlugPageProps) {

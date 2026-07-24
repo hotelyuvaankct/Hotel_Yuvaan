@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import Book from "@/views/Book";
 import {
@@ -7,11 +8,16 @@ import {
 } from "@/services/bookingService";
 import { fetchPublicRoomTypes, type PublicRoomType } from "@/services/roomService";
 import { shouldPrefetchBookingData } from "@/lib/bookingPrefetch";
+import { createPageMetadata, OG_IMAGES } from "@/lib/seo";
 
-export const metadata = {
-  title: "Book Rooms | Hotel Yuvaan",
-  description: "Search availability and book rooms at Hotel Yuvaan, Kuchaman City.",
-};
+export const metadata: Metadata = createPageMetadata({
+  title: "Book Rooms",
+  description:
+    "Search live availability and book AC rooms at Hotel Yuvaan, Kuchaman City. Transparent rates, secure Razorpay checkout, and instant confirmation.",
+  path: "/book",
+  image: OG_IMAGES.book,
+  imageAlt: "Book a comfortable room at Hotel Yuvaan",
+});
 
 type BookPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

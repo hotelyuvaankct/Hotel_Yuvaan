@@ -2,6 +2,12 @@ import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
+import {
+  createPageMetadata,
+  OG_IMAGES,
+  SITE_NAME_FULL,
+  SITE_URL,
+} from "@/lib/seo";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -23,57 +29,31 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Hotel Yuvaan | Best Hotel & Pure Veg Restaurant in Kuchaman City",
-  description:
-    "Book your stay at Hotel Yuvaan in Kuchaman City. Enjoy luxury AC rooms, 24-hour service, banquet hall, and our famous Pure Veg Restaurant. Get the best rates today!",
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://hotelyuvaan.com"
-  ),
-  keywords: [
-    "HOTEL YUVAAN",
-    "Kuchaman City hotel",
-    "pure veg restaurant",
-    "Rajasthan hotels",
-  ],
-  openGraph: {
-    title: "HOTEL YUVAAN, Kuchaman, India - Photos, Room Rates & Reviews",
+  metadataBase: new URL(SITE_URL),
+  applicationName: SITE_NAME_FULL,
+  ...createPageMetadata({
+    title: "Hotel Yuvaan | Best Hotel & Pure Veg Restaurant in Kuchaman City",
     description:
-      "Compare hotel prices and book Hotel Yuvaan in Kuchaman, India. Enjoy full AC rooms, 24-Hour Housekeeping, Cook & Butler Service, and our Pure veg restaurant.",
-    url: "https://hotelyuvaan.com/",
-    siteName: "Hotel Yuvaan and Restaurant Kuchaman City",
-    locale: "en_IN",
-    type: "website",
-    images: [
-      {
-        url: "https://hotelyuvaan.com/image/Gallery/Hotel_Reception_Area.png",
-        width: 1200,
-        height: 630,
-        alt: "Hotel Yuvaan Reception Area in Kuchaman City",
-      },
+      "Book your stay at Hotel Yuvaan in Kuchaman City. Enjoy luxury AC rooms, 24-hour service, banquet hall, and our famous Pure Veg Restaurant. Best rates for a comfortable Rajasthan stay.",
+    path: "/",
+    image: OG_IMAGES.home,
+    imageAlt: "Hotel Yuvaan reception area in Kuchaman City",
+    keywords: [
+      "Hotel Yuvaan",
+      "Kuchaman City hotel",
+      "pure veg restaurant Kuchaman",
+      "Rajasthan hotels",
+      "AC rooms Kuchaman",
+      "banquet hall Kuchaman City",
     ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "HOTEL YUVAAN AND RESTAURANT (@hotelyuvaan) | Kuchaman, India",
-    description:
-      "Book Hotel Yuvaan in Kuchaman. Spacious and elegantly designed rooms, full AC Rooms with Pure veg restaurant, Banquet Hall, Cook & Butler Service, 24-Hour Housekeeping.",
-    images: ["https://hotelyuvaan.com/image/Gallery/Hotel_Reception_Area.png"],
-    site: "@hotelyuvaan",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-  alternates: {
-    canonical: "https://hotelyuvaan.com/",
-  },
+  }),
 };
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Hotel",
   name: "Hotel Yuvaan and Restaurant",
-  image: "https://hotelyuvaan.com/image/Gallery/Hotel_Reception_Area.png",
+  image: `${SITE_URL}${OG_IMAGES.home}`,
   address: {
     "@type": "PostalAddress",
     streetAddress: "Station Road, Marudar Vihar, Ward No. 12",
@@ -87,7 +67,7 @@ const jsonLd = {
     latitude: 27.1475,
     longitude: 74.8567,
   },
-  url: "https://hotelyuvaan.com/",
+  url: `${SITE_URL}/`,
   priceRange: "INR 1600 - 2500",
 };
 
