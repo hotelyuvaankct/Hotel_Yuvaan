@@ -26,7 +26,7 @@ export default function RoomImageCarousel({
 
   if (images.length === 0) {
     return (
-      <div className="relative h-full bg-gradient-to-br from-[#4b3621] via-[#6b4f33] to-[#c9a227] flex items-end p-6">
+      <div className="relative h-full bg-gradient-to-br from-brand via-brand-muted to-gold flex items-end p-6">
         <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top_right,_white,_transparent_60%)]" />
       </div>
     );

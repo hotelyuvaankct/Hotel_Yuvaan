@@ -22,10 +22,10 @@ const LeaveGuardDialog = ({
       aria-modal="true"
       aria-labelledby="leave-guard-title"
     >
-      <div className="w-full max-w-[min(100%,22rem)] min-[380px]:max-w-md rounded-xl border border-[#e8dfd0] bg-white p-4 min-[380px]:p-5 sm:p-6 shadow-xl">
+      <div className="w-full max-w-[min(100%,22rem)] min-[380px]:max-w-md rounded-xl border border-gold-border bg-white p-4 min-[380px]:p-5 sm:p-6 shadow-xl">
         <h2
           id="leave-guard-title"
-          className="font-playfair text-lg min-[380px]:text-xl font-bold text-[#4b3621] leading-snug"
+          className="font-playfair text-lg min-[380px]:text-xl font-bold text-brand leading-snug"
         >
           Leave booking?
         </h2>

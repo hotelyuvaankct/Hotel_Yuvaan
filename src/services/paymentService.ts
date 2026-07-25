@@ -1,5 +1,6 @@
 import { apiUrl } from "@/config/env";
 import type { BookingResult, CheckoutPayload, CheckoutRoomSelection } from "@/services/bookingService";
+import { getBrandHex } from "@/theme/colors";
 
 export interface CreateOrderResult {
   orderId: string;
@@ -239,7 +240,7 @@ export function openRazorpayCheckout(
       description: options.description ?? "Booking payment",
       order_id: options.order.orderId,
       prefill: options.prefill ?? {},
-      theme: { color: "#4b3621" },
+      theme: { color: getBrandHex() },
       modal: {
         ondismiss: () => {
           if (!settled) {

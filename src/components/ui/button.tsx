@@ -23,15 +23,15 @@ const buttonVariants = cva(
           "bg-primary text-primary-foreground hover:bg-primary/90",
         /** Cream fill + gold border/text */
         outline:
-          "border-[1.5px] border-primary bg-[#fff8ee] text-primary hover:bg-primary/10",
+          "border-[1.5px] border-primary bg-surface text-primary hover:bg-primary/10",
         /** Hotel brown fill */
-        dark: "bg-[#4b3621] text-white hover:bg-[#3d2b1a]",
+        dark: "bg-brand text-white hover:bg-brand-hover",
         /** Transparent on dark imagery */
         ghost:
           "border-[1.5px] border-white/40 bg-transparent text-white hover:border-white hover:bg-white/10",
         /** Quiet secondary on light surfaces */
-        soft: "bg-[#f3ebe0] text-[#4b3621] hover:bg-[#ebe1d2]",
-        secondary: "bg-[#f3ebe0] text-[#4b3621] hover:bg-[#ebe1d2]",
+        soft: "bg-surface-elevated text-brand hover:bg-gold-border",
+        secondary: "bg-surface-elevated text-brand hover:bg-gold-border",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         /** Text-only; height not forced */

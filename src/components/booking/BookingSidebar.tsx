@@ -158,7 +158,7 @@ const BookingSidebar = ({
 
   return (
     <aside className="w-full min-w-0 bg-white border border-neutral-200 rounded-xl shadow-sm p-3.5 min-[380px]:p-5 sm:p-7">
-      <h2 className="text-base min-[380px]:text-lg sm:text-xl font-semibold text-[#4b3621] tracking-tight leading-tight mb-3 min-[380px]:mb-4">
+      <h2 className="text-base min-[380px]:text-lg sm:text-xl font-semibold text-brand tracking-tight leading-tight mb-3 min-[380px]:mb-4">
         {title}
       </h2>
 
@@ -291,7 +291,7 @@ const BookingSidebar = ({
                       className={`min-w-0 flex-1 rounded border px-2.5 py-1.5 min-[380px]:px-3 min-[380px]:py-2 text-xs min-[380px]:text-sm uppercase tracking-wider placeholder:normal-case placeholder:tracking-normal focus:outline-none ${
                         couponError
                           ? "border-red-400 focus:border-red-500"
-                          : "border-neutral-300 focus:border-[#4b3621]"
+                          : "border-neutral-300 focus:border-brand"
                       }`}
                     />
                     <Button
@@ -413,7 +413,7 @@ const BookingSidebar = ({
                     </>
                   );
                 })()}
-                <div className="flex justify-between gap-3 font-semibold text-[#4b3621] text-sm min-[380px]:text-base pt-1">
+                <div className="flex justify-between gap-3 font-semibold text-brand text-sm min-[380px]:text-base pt-1">
                   <span>Total</span>
                   <span className="font-sans tabular-nums shrink-0">
                     {total != null ? formatRoomPrice(total) : "—"}

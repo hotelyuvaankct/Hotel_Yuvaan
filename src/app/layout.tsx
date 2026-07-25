@@ -159,6 +159,11 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
     >
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{document.documentElement.classList.remove('dark');localStorage.removeItem('yuvaan-theme');}catch(e){}})();`,
+          }}
+        />
         <link rel="dns-prefetch" href="https://tnsgutyphkdfcfonujvf.storage.supabase.co" />
         <link
           rel="preconnect"

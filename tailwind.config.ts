@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -63,30 +62,37 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				gold: {
-					50: '#fefcf3',
-					100: '#fef7e0',
-					200: '#fcecc0',
-					300: '#f9d895',
-					400: '#f5c068',
-					500: '#f2a944',
-					600: '#e39429',
-					700: '#bc7b1f',
-					800: '#976220',
-					900: '#7a511e',
+				/* Brand palette — values live in globals.css (:root / .dark) */
+				brand: {
+					DEFAULT: 'hsl(var(--brand))',
+					foreground: 'hsl(var(--brand-foreground))',
+					hover: 'hsl(var(--brand-hover))',
+					muted: 'hsl(var(--brand-muted))',
 				},
-				bronze: {
-					50: '#faf8f3',
-					100: '#f4ede0',
-					200: '#e7d8c0',
-					300: '#d7bd95',
-					400: '#c59d68',
-					500: '#b88244',
-					600: '#a66d39',
-					700: '#8a5730',
-					800: '#70472b',
-					900: '#5c3c26',
-				}
+				gold: {
+					DEFAULT: 'hsl(var(--gold))',
+					strong: 'hsl(var(--gold-strong))',
+					bright: 'hsl(var(--gold-bright))',
+					deep: 'hsl(var(--gold-deep))',
+					border: 'hsl(var(--gold-border))',
+					muted: 'hsl(var(--gold-muted))',
+					/* Legacy numeric aliases → semantic tokens */
+					300: 'hsl(var(--gold-border))',
+					400: 'hsl(var(--gold-bright))',
+					500: 'hsl(var(--gold))',
+					600: 'hsl(var(--gold-strong))',
+					700: 'hsl(var(--gold-deep))',
+				},
+				surface: {
+					DEFAULT: 'hsl(var(--surface))',
+					elevated: 'hsl(var(--surface-elevated))',
+				},
+				success: {
+					DEFAULT: 'hsl(var(--success))',
+					foreground: 'hsl(var(--success-foreground))',
+				},
+				warning: 'hsl(var(--warning))',
+				overlay: 'hsl(var(--overlay))',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

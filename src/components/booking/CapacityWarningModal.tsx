@@ -30,13 +30,13 @@ const CapacityWarningModal = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg rounded-none">
         <DialogHeader>
-          <DialogTitle className="font-playfair text-xl text-[#4b3621]">
+          <DialogTitle className="font-playfair text-xl text-brand">
             Not enough room for all guests
           </DialogTitle>
         </DialogHeader>
         <p className="text-sm text-neutral-600">
           Your selected rooms can fit {accommodatedGuests} of {totalGuests} guests.{" "}
-          <span className="font-medium text-[#4b3621]">
+          <span className="font-medium text-brand">
             {unaccommodated} guest{unaccommodated === 1 ? "" : "s"} still need a room.
           </span>{" "}
           Please add more rooms before continuing.

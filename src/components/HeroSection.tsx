@@ -39,7 +39,7 @@ export default function HeroSection() {
 
         <div className="relative">
           <div className="pointer-events-none absolute inset-0 -z-10 scale-150 rounded-full bg-black/50 blur-[60px]" />
-          <h1 className="mb-8 font-playfair text-5xl font-normal leading-tight tracking-wide text-white drop-shadow-[0_10px_20px_rgba(0,0,0,0.9)] sm:text-6xl md:text-8xl lg:text-[7.5rem]">
+          <h1 className="mb-8 font-playfair text-5xl font-normal leading-tight tracking-wide text-white drop-shadow-[0_10px_20px_hsl(var(--overlay)/0.9)] sm:text-6xl md:text-8xl lg:text-[7.5rem]">
             HOTEL <span className="font-semibold text-primary">YUVAAN</span>
           </h1>
         </div>

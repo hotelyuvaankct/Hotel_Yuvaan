@@ -3,7 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Premium Hotel Color Scheme */
+/* Premium Hotel Color Scheme
+   Edit tokens here only — light (:root) and dark (.dark).
+   All UI colors should reference these via Tailwind (bg-brand, text-gold, …)
+   or src/theme/colors.ts for JS/inline. */
 @layer base {
   :root {
     /* ── Page canvas (change this one value for the whole site) ── */
@@ -39,9 +42,39 @@
     --ring: 35 65% 45%;
 
     --radius: 0.75rem;
+
+    /* ── Brand tokens (HSL components; use with hsl(var(--token)) / opacity) ── */
+    --brand: 30 39% 21%;              /* #4b3621 */
+    --brand-foreground: 36 33% 97%;   /* cream on brand */
+    --brand-hover: 29 40% 17%;        /* #3d2b1a */
+    --brand-muted: 33 24% 44%;        /* #8b7355 */
+
+    --gold: 46 68% 47%;               /* #c9a227 */
+    --gold-strong: 39 59% 45%;        /* #b8892f */
+    --gold-bright: 35 87% 61%;        /* #f2a944 */
+    --gold-deep: 35 72% 43%;          /* #bc7b1f */
+    --gold-border: 43 60% 77%;        /* #e8d5a3 */
+    --gold-muted: 40 69% 87%;         /* #f5e6c8 */
+
+    --surface: 36 33% 97%;            /* #faf8f5 */
+    --surface-elevated: 35 44% 92%;   /* #f3ebe0 */
+
+    --success: 161 94% 30%;           /* emerald-600 */
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+
+    --overlay: 0 0% 0%;
+    --white: 0 0% 100%;
+    --black: 0 0% 0%;
+
+    /* Hex fallbacks for third-party APIs that require #rrggbb (Razorpay, etc.) */
+    --brand-hex: #4b3621;
+    --gold-hex: #c9a227;
   }
 
   .dark {
+    --page-bg: 20 14% 4%;
+
     --background: 20 14% 4%;
     --foreground: 45 25% 95%;
 
@@ -69,6 +102,32 @@
     --border: 20 10% 15%;
     --input: 20 10% 15%;
     --ring: 35 65% 55%;
+
+    --brand: 32 30% 68%;
+    --brand-foreground: 40 30% 96%;
+    --brand-hover: 28 38% 12%;
+    --brand-muted: 35 16% 68%;
+
+    --gold: 45 70% 55%;
+    --gold-strong: 39 65% 58%;
+    --gold-bright: 35 90% 65%;
+    --gold-deep: 35 72% 50%;
+    --gold-border: 35 25% 28%;
+    --gold-muted: 35 30% 22%;
+
+    --surface: 20 14% 8%;
+    --surface-elevated: 20 12% 12%;
+
+    --success: 160 84% 39%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 55%;
+
+    --overlay: 0 0% 0%;
+    --white: 0 0% 100%;
+    --black: 0 0% 0%;
+
+    --brand-hex: #4b3621;
+    --gold-hex: #d4b84a;
   }
 }
 
@@ -101,8 +160,9 @@ body,
   min-height: 100dvh;
 }
 
+/* Home hero wrapper uses a black canvas behind the hero image */
 .page-background.bg-black {
-  background-color: #000;
+  background-color: hsl(var(--black));
 }
 
 /* Custom Scrollbar */
@@ -302,15 +362,27 @@ body {
 
 /* Premium gradient overlays */
 .gradient-overlay {
-  background: linear-gradient(135deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 100%);
+  background: linear-gradient(
+    135deg,
+    hsl(var(--overlay) / 0.5) 0%,
+    hsl(var(--overlay) / 0.3) 100%
+  );
 }
 
 .gold-gradient {
-  background: linear-gradient(135deg, #f2a944 0%, #bc7b1f 100%);
+  background: linear-gradient(
+    135deg,
+    hsl(var(--gold-bright)) 0%,
+    hsl(var(--gold-deep)) 100%
+  );
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, #f2a944 0%, #bc7b1f 100%);
+  background: linear-gradient(
+    135deg,
+    hsl(var(--gold-bright)) 0%,
+    hsl(var(--gold-deep)) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -319,10 +391,10 @@ body {
 @keyframes find-room-pulse {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.45);
+    box-shadow: 0 0 0 0 hsl(var(--gold) / 0.45);
   }
   50% {
-    box-shadow: 0 0 0 10px rgba(201, 162, 39, 0);
+    box-shadow: 0 0 0 10px hsl(var(--gold) / 0);
   }
 }
 
@@ -337,17 +409,17 @@ body {
 
 .premium-hover:hover {
   transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  box-shadow: 0 20px 40px hsl(var(--overlay) / 0.2);
 }
 
 /* Glass morphism effect */
 .glass {
-  background: rgba(255, 255, 255, 0.1);
+  background: hsl(var(--white) / 0.1);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid hsl(var(--white) / 0.2);
 }
 
 .dark .glass {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: hsl(var(--overlay) / 0.3);
+  border: 1px solid hsl(var(--white) / 0.1);
 }

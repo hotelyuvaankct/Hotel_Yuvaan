@@ -194,10 +194,10 @@ const BookingView = ({
 
       <section
         ref={cancelBannerRef}
-        className="relative overflow-hidden pt-28 min-[380px]:pt-32 md:pt-36 pb-12 min-[380px]:pb-16 md:pb-20 bg-[#4b3621] scroll-mt-4"
+        className="relative overflow-hidden pt-28 min-[380px]:pt-32 md:pt-36 pb-12 min-[380px]:pb-16 md:pb-20 bg-brand scroll-mt-4"
       >
-        <div className="absolute inset-0 opacity-[0.18] bg-[radial-gradient(ellipse_at_top_right,_#c9a227,_transparent_55%)]" />
-        <div className="absolute inset-0 opacity-10 bg-[linear-gradient(135deg,transparent_40%,#000_100%)]" />
+        <div className="absolute inset-0 opacity-[0.18] bg-[radial-gradient(ellipse_at_top_right,_hsl(var(--gold)),_transparent_55%)]" />
+        <div className="absolute inset-0 opacity-10 bg-[linear-gradient(135deg,transparent_40%,hsl(var(--overlay))_100%)]" />
 
         <div className="relative container mx-auto px-3 min-[380px]:px-4 max-w-3xl">
           {bookingQuery.isLoading ? (
@@ -207,7 +207,7 @@ const BookingView = ({
             </div>
           ) : bookingQuery.isError ? (
             <div className="pt-4 pb-2">
-              <p className="text-[10px] min-[380px]:text-[11px] font-semibold uppercase tracking-[0.22em] text-[#e8d5a3] mb-3">
+              <p className="text-[10px] min-[380px]:text-[11px] font-semibold uppercase tracking-[0.22em] text-gold-border mb-3">
                 Booking
               </p>
               <h1 className="font-playfair text-2xl min-[380px]:text-3xl md:text-4xl text-white mb-2 leading-snug">
@@ -222,7 +222,7 @@ const BookingView = ({
               {isCancelled ? (
                 <>
                   <div className="flex flex-wrap items-center gap-1.5 min-[380px]:gap-3 mb-3 min-[380px]:mb-5">
-                    <p className="text-[10px] min-[380px]:text-[11px] font-semibold uppercase tracking-[0.16em] min-[380px]:tracking-[0.22em] text-[#e8d5a3]">
+                    <p className="text-[10px] min-[380px]:text-[11px] font-semibold uppercase tracking-[0.16em] min-[380px]:tracking-[0.22em] text-gold-border">
                       Booking cancellation
                     </p>
                     <span className="inline-flex items-center gap-1 rounded-full bg-red-500/20 px-2 py-0.5 min-[380px]:gap-1.5 min-[380px]:px-2.5 min-[380px]:py-1 text-[10px] min-[380px]:text-xs font-semibold text-red-100 ring-1 ring-red-300/35">
@@ -274,7 +274,7 @@ const BookingView = ({
               ) : (
                 <>
                   <div className="flex flex-wrap items-center gap-2 min-[380px]:gap-3 mb-4 min-[380px]:mb-5">
-                    <p className="text-[10px] min-[380px]:text-[11px] font-semibold uppercase tracking-[0.18em] min-[380px]:tracking-[0.22em] text-[#e8d5a3]">
+                    <p className="text-[10px] min-[380px]:text-[11px] font-semibold uppercase tracking-[0.18em] min-[380px]:tracking-[0.22em] text-gold-border">
                       Booking confirmation
                     </p>
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-400/20 px-2.5 py-1 text-[10px] min-[380px]:text-xs font-semibold text-emerald-50 ring-1 ring-emerald-200/35">
@@ -312,7 +312,7 @@ const BookingView = ({
                     Thank you — your stay at Hotel Yuvaan is confirmed.
                   </p>
 
-                  <div className="mt-4 min-[380px]:mt-5 flex flex-wrap items-center gap-x-3 gap-y-1.5 min-[380px]:gap-x-4 min-[380px]:gap-y-2 text-xs min-[380px]:text-sm text-[#f5e6c8]/90">
+                  <div className="mt-4 min-[380px]:mt-5 flex flex-wrap items-center gap-x-3 gap-y-1.5 min-[380px]:gap-x-4 min-[380px]:gap-y-2 text-xs min-[380px]:text-sm text-gold-muted/90">
                     <span className="inline-flex items-center gap-1.5">
                       <Moon className="h-3.5 w-3.5 opacity-80" />
                       {nights} night{nights === 1 ? "" : "s"}
@@ -343,7 +343,7 @@ const BookingView = ({
             <div className="rounded-xl min-[380px]:rounded-2xl border border-neutral-200/80 bg-white px-4 min-[380px]:px-6 py-6 min-[380px]:py-8 shadow-lg text-center">
               <Link
                 href="/book"
-                className="inline-flex items-center gap-2 text-sm text-[#4b3621] font-semibold hover:underline underline-offset-2"
+                className="inline-flex items-center gap-2 text-sm text-brand font-semibold hover:underline underline-offset-2"
               >
                 Make a new booking
                 <ArrowRight className="h-4 w-4" />
@@ -352,7 +352,7 @@ const BookingView = ({
           )}
 
           {booking && (
-            <article className="rounded-xl min-[380px]:rounded-2xl border border-[#4b3621]/10 bg-white shadow-[0_18px_50px_-28px_rgba(75,54,33,0.45)] overflow-hidden">
+            <article className="rounded-xl min-[380px]:rounded-2xl border border-brand/10 bg-white shadow-[0_18px_50px_-28px_hsl(var(--brand)/0.45)] overflow-hidden">
               {isCancelled ? (
                 <div className="px-3.5 min-[380px]:px-6 sm:px-8 py-3 min-[380px]:py-4 border-b bg-red-100 border-red-300">
                   <p className="text-xs min-[380px]:text-sm font-semibold text-red-800 leading-snug">
@@ -363,11 +363,11 @@ const BookingView = ({
                 </div>
               ) : null}
               {isCancelled && booking.refund ? (
-                <div className="px-3.5 min-[380px]:px-6 sm:px-8 py-4 border-b border-[#4b3621]/10 bg-[#faf7f2]">
-                  <p className="text-[10px] min-[380px]:text-[11px] uppercase tracking-[0.16em] text-[#8b7355] font-semibold mb-2">
+                <div className="px-3.5 min-[380px]:px-6 sm:px-8 py-4 border-b border-brand/10 bg-surface">
+                  <p className="text-[10px] min-[380px]:text-[11px] uppercase tracking-[0.16em] text-brand-muted font-semibold mb-2">
                     Refund status
                   </p>
-                  <p className="font-sans text-lg min-[380px]:text-xl font-semibold text-[#4b3621]">
+                  <p className="font-sans text-lg min-[380px]:text-xl font-semibold text-brand">
                     {formatRoomPrice(Number(booking.refund.amount ?? 0))}
                   </p>
 
@@ -395,9 +395,9 @@ const BookingView = ({
                                 isSuccessStep && step.state === "done"
                                   ? "border-green-600 bg-green-600 text-white"
                                   : step.state === "done"
-                                    ? "border-[#4b3621] bg-[#4b3621] text-white"
+                                    ? "border-brand bg-brand text-white"
                                     : step.state === "active"
-                                      ? "border-[#4b3621] bg-white text-[#4b3621]"
+                                      ? "border-brand bg-white text-brand"
                                       : "border-neutral-300 bg-white text-neutral-400"
                               )}
                               aria-current={
@@ -419,7 +419,7 @@ const BookingView = ({
                                   ? "text-green-700"
                                   : step.state === "todo"
                                     ? "text-neutral-400"
-                                    : "text-[#4b3621]"
+                                    : "text-brand"
                               )}
                             >
                               {step.label}
@@ -433,7 +433,7 @@ const BookingView = ({
                                   ? nextDone &&
                                     steps[index + 1]?.key === "success"
                                     ? "bg-green-600"
-                                    : "bg-[#4b3621]"
+                                    : "bg-brand"
                                   : "bg-neutral-300"
                               )}
                               aria-hidden
@@ -453,24 +453,24 @@ const BookingView = ({
               ) : null}
               <div className="p-3.5 min-[380px]:p-6 sm:p-8">
                 <div className="grid grid-cols-2 gap-2 min-[380px]:gap-3 sm:gap-4">
-                  <div className="min-w-0 rounded-lg min-[380px]:rounded-xl bg-gradient-to-br from-[#faf7f2] to-[#f3ebe0] px-2.5 py-2.5 min-[380px]:px-4 min-[380px]:py-4 border border-[#4b3621]/15">
-                    <div className="flex items-center gap-1.5 min-[380px]:gap-2 text-[#8b7355] text-[9px] min-[380px]:text-[11px] uppercase tracking-[0.12em] min-[380px]:tracking-[0.16em] font-semibold mb-1 min-[380px]:mb-2">
+                  <div className="min-w-0 rounded-lg min-[380px]:rounded-xl bg-gradient-to-br from-surface to-surface-elevated px-2.5 py-2.5 min-[380px]:px-4 min-[380px]:py-4 border border-brand/15">
+                    <div className="flex items-center gap-1.5 min-[380px]:gap-2 text-brand-muted text-[9px] min-[380px]:text-[11px] uppercase tracking-[0.12em] min-[380px]:tracking-[0.16em] font-semibold mb-1 min-[380px]:mb-2">
                       <CalendarDays className="h-3 w-3 min-[380px]:h-3.5 min-[380px]:w-3.5 shrink-0" />
                       Check-in
                     </div>
-                    <p className="font-playfair text-sm min-[380px]:text-xl sm:text-2xl text-[#4b3621] leading-tight">
+                    <p className="font-playfair text-sm min-[380px]:text-xl sm:text-2xl text-brand leading-tight">
                       {format(parseISO(booking.checkIn), "d MMM yyyy")}
                     </p>
                     <p className="text-[10px] min-[380px]:text-xs text-neutral-500 mt-1 min-[380px]:mt-1.5 truncate">
                       {format(parseISO(booking.checkIn), "EEEE")}
                     </p>
                   </div>
-                  <div className="min-w-0 rounded-lg min-[380px]:rounded-xl bg-gradient-to-br from-[#faf7f2] to-[#f3ebe0] px-2.5 py-2.5 min-[380px]:px-4 min-[380px]:py-4 border border-[#4b3621]/15">
-                    <div className="flex items-center gap-1.5 min-[380px]:gap-2 text-[#8b7355] text-[9px] min-[380px]:text-[11px] uppercase tracking-[0.12em] min-[380px]:tracking-[0.16em] font-semibold mb-1 min-[380px]:mb-2">
+                  <div className="min-w-0 rounded-lg min-[380px]:rounded-xl bg-gradient-to-br from-surface to-surface-elevated px-2.5 py-2.5 min-[380px]:px-4 min-[380px]:py-4 border border-brand/15">
+                    <div className="flex items-center gap-1.5 min-[380px]:gap-2 text-brand-muted text-[9px] min-[380px]:text-[11px] uppercase tracking-[0.12em] min-[380px]:tracking-[0.16em] font-semibold mb-1 min-[380px]:mb-2">
                       <CalendarDays className="h-3 w-3 min-[380px]:h-3.5 min-[380px]:w-3.5 shrink-0" />
                       Check-out
                     </div>
-                    <p className="font-playfair text-sm min-[380px]:text-xl sm:text-2xl text-[#4b3621] leading-tight">
+                    <p className="font-playfair text-sm min-[380px]:text-xl sm:text-2xl text-brand leading-tight">
                       {format(parseISO(booking.checkOut), "d MMM yyyy")}
                     </p>
                     <p className="text-[10px] min-[380px]:text-xs text-neutral-500 mt-1 min-[380px]:mt-1.5 truncate">
@@ -484,7 +484,7 @@ const BookingView = ({
                     <p className="text-[10px] min-[380px]:text-[11px] uppercase tracking-[0.16em] text-neutral-500 font-semibold mb-1 min-[380px]:mb-1.5">
                       Guest
                     </p>
-                    <p className="text-xs min-[380px]:text-base font-medium text-[#4b3621] break-words leading-snug">
+                    <p className="text-xs min-[380px]:text-base font-medium text-brand break-words leading-snug">
                       {guestFullName}
                     </p>
                     {booking.guestEmail ? (
@@ -497,14 +497,14 @@ const BookingView = ({
                     <p className="text-[10px] min-[380px]:text-[11px] uppercase tracking-[0.16em] text-neutral-500 font-semibold mb-1 min-[380px]:mb-1.5">
                       Hotel
                     </p>
-                    <p className="text-xs min-[380px]:text-base font-medium text-[#4b3621] break-words leading-snug">
+                    <p className="text-xs min-[380px]:text-base font-medium text-brand break-words leading-snug">
                       {booking.hotelName}
                     </p>
                   </div>
                 </div>
 
                 {booking.rooms && booking.rooms.length > 0 ? (
-                  <div className="mt-5 min-[380px]:mt-7 pt-4 min-[380px]:pt-6 border-t border-[#4b3621]/8">
+                  <div className="mt-5 min-[380px]:mt-7 pt-4 min-[380px]:pt-6 border-t border-brand/8">
                     <p className="text-[10px] min-[380px]:text-[11px] uppercase tracking-[0.16em] text-neutral-500 font-semibold mb-2.5 min-[380px]:mb-3">
                       Stay details
                     </p>
@@ -515,7 +515,7 @@ const BookingView = ({
                           className="flex items-start justify-between gap-2 min-[380px]:gap-4 text-xs min-[380px]:text-sm"
                         >
                           <div className="min-w-0 pr-1">
-                            <p className="font-medium text-[#4b3621] leading-snug break-words">
+                            <p className="font-medium text-brand leading-snug break-words">
                               {line.roomTypeName}
                             </p>
                             <p className="text-neutral-500 text-[10px] min-[380px]:text-xs mt-0.5">
@@ -525,7 +525,7 @@ const BookingView = ({
                               {line.totalNights === 1 ? "" : "s"}
                             </p>
                           </div>
-                          <p className="tabular-nums font-medium text-[#4b3621] shrink-0 text-right text-[11px] min-[380px]:text-sm">
+                          <p className="tabular-nums font-medium text-brand shrink-0 text-right text-[11px] min-[380px]:text-sm">
                             {formatRoomPrice(
                               line.pricePerNight *
                                 line.quantity *
@@ -538,10 +538,10 @@ const BookingView = ({
                   </div>
                 ) : null}
 
-                <div className="mt-4 min-[380px]:mt-6 space-y-2 border-t border-[#4b3621]/10 pt-4 min-[380px]:pt-5 text-[11px] min-[380px]:text-sm">
+                <div className="mt-4 min-[380px]:mt-6 space-y-2 border-t border-brand/10 pt-4 min-[380px]:pt-5 text-[11px] min-[380px]:text-sm">
                   <div className="flex items-start justify-between gap-2 min-[380px]:gap-3 text-neutral-700">
                     <span className="min-w-0">Room total</span>
-                    <span className="tabular-nums font-medium text-[#4b3621] shrink-0">
+                    <span className="tabular-nums font-medium text-brand shrink-0">
                       {formatRoomPrice(booking.subtotalAmount)}
                     </span>
                   </div>
@@ -619,7 +619,7 @@ const BookingView = ({
                     </div>
                   ) : null}
 
-                  <div className="flex items-end justify-between gap-2 min-[380px]:gap-3 border-t border-[#4b3621]/10 pt-3">
+                  <div className="flex items-end justify-between gap-2 min-[380px]:gap-3 border-t border-brand/10 pt-3">
                     <div className="min-w-0">
                       <p className="text-[10px] min-[380px]:text-[11px] font-semibold uppercase tracking-[0.14em] min-[380px]:tracking-[0.16em] text-neutral-500">
                         Total paid
@@ -628,7 +628,7 @@ const BookingView = ({
                         Including taxes & fees
                       </p>
                     </div>
-                    <p className="font-sans text-lg min-[360px]:text-xl min-[380px]:text-2xl font-semibold tabular-nums leading-none text-[#4b3621] sm:text-3xl shrink-0">
+                    <p className="font-sans text-lg min-[360px]:text-xl min-[380px]:text-2xl font-semibold tabular-nums leading-none text-brand sm:text-3xl shrink-0">
                       {formatRoomPrice(booking.totalAmount)}
                     </p>
                   </div>
@@ -662,14 +662,14 @@ const BookingView = ({
               </div>
 
               {!isCancelled ? (
-                <div className="border-t border-[#4b3621]/8 bg-[#faf8f5] px-3 min-[380px]:px-6 sm:px-8 py-3 min-[380px]:py-4">
+                <div className="border-t border-brand/8 bg-surface px-3 min-[380px]:px-6 sm:px-8 py-3 min-[380px]:py-4">
                   {!showCancelForm ? (
                     <div className="flex flex-col gap-2 min-[380px]:gap-2.5">
                       <p className="text-[11px] min-[380px]:text-sm text-neutral-600 leading-snug">
                         Need to change plans?{" "}
                         <Link
                           href="/cancellation"
-                          className="font-medium text-[#4b3621] underline underline-offset-2"
+                          className="font-medium text-brand underline underline-offset-2"
                         >
                           View policy
                         </Link>
@@ -687,7 +687,7 @@ const BookingView = ({
                   ) : (
                     <div className="min-w-0">
                       <div className="flex items-start justify-between gap-2 min-[380px]:gap-3 mb-2.5 min-[380px]:mb-3">
-                        <h2 className="font-playfair text-base min-[380px]:text-xl text-[#4b3621] leading-snug">
+                        <h2 className="font-playfair text-base min-[380px]:text-xl text-brand leading-snug">
                           Cancel booking
                         </h2>
                         <Button
@@ -699,7 +699,7 @@ const BookingView = ({
                             setOtpCode("");
                             setEmailError(null);
                           }}
-                          className="h-auto shrink-0 p-0 text-[11px] min-[380px]:text-sm text-neutral-500 hover:text-[#4b3621]"
+                          className="h-auto shrink-0 p-0 text-[11px] min-[380px]:text-sm text-neutral-500 hover:text-brand"
                         >
                           Close
                         </Button>
@@ -714,7 +714,7 @@ const BookingView = ({
                         ) : null}
                       </p>
                       {quoteQuery.data ? (
-                        <div className="mb-3 rounded-lg border border-[#4b3621]/15 bg-[#faf7f2] px-3 py-2.5 text-[11px] min-[380px]:text-sm text-[#4b3621]">
+                        <div className="mb-3 rounded-lg border border-brand/15 bg-surface px-3 py-2.5 text-[11px] min-[380px]:text-sm text-brand">
                           <p className="font-semibold">
                             Estimated refund:{" "}
                             {formatRoomPrice(Number(quoteQuery.data.refundAmount ?? 0))}

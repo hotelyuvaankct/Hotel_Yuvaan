@@ -11,18 +11,18 @@ const LostKeyIllustration = () => (
     className="mx-auto w-full max-w-sm sm:max-w-md"
     aria-hidden="true"
   >
-    <ellipse cx="210" cy="262" rx="130" ry="14" fill="#4b3621" opacity="0.08" />
-    <rect x="250" y="40" width="120" height="200" rx="8" fill="#4b3621" />
-    <rect x="260" y="50" width="100" height="180" rx="4" fill="#6b4f33" />
-    <rect x="268" y="58" width="84" height="164" rx="2" fill="#fff8ee" />
-    <circle cx="332" cy="140" r="7" fill="#c9a227" />
-    <path d="M332 140h16" stroke="#c9a227" strokeWidth="3" strokeLinecap="round" />
-    <rect x="288" y="84" width="44" height="26" rx="4" fill="#4b3621" />
+    <ellipse cx="210" cy="262" rx="130" ry="14" fill="hsl(var(--brand))" opacity="0.08" />
+    <rect x="250" y="40" width="120" height="200" rx="8" fill="hsl(var(--brand))" />
+    <rect x="260" y="50" width="100" height="180" rx="4" fill="hsl(var(--brand-muted))" />
+    <rect x="268" y="58" width="84" height="164" rx="2" fill="hsl(var(--surface))" />
+    <circle cx="332" cy="140" r="7" fill="hsl(var(--gold))" />
+    <path d="M332 140h16" stroke="hsl(var(--gold))" strokeWidth="3" strokeLinecap="round" />
+    <rect x="288" y="84" width="44" height="26" rx="4" fill="hsl(var(--brand))" />
     <text
       x="310"
       y="102"
       textAnchor="middle"
-      fill="#f2a944"
+      fill="hsl(var(--gold-bright))"
       fontFamily="Georgia, serif"
       fontSize="13"
       fontWeight="700"
@@ -31,17 +31,17 @@ const LostKeyIllustration = () => (
     </text>
     <path
       d="M70 170c20-40 70-55 110-30 25 15 35 40 30 65"
-      stroke="#c9a227"
+      stroke="hsl(var(--gold))"
       strokeWidth="10"
       strokeLinecap="round"
       fill="none"
       opacity="0.85"
     />
-    <circle cx="70" cy="170" r="28" fill="#fff8ee" stroke="#c9a227" strokeWidth="8" />
-    <circle cx="70" cy="170" r="10" fill="#4b3621" />
-    <rect x="95" y="160" width="55" height="18" rx="4" fill="#c9a227" />
-    <rect x="140" y="155" width="14" height="28" rx="3" fill="#4b3621" />
-    <rect x="158" y="155" width="14" height="22" rx="3" fill="#4b3621" />
+    <circle cx="70" cy="170" r="28" fill="hsl(var(--surface))" stroke="hsl(var(--gold))" strokeWidth="8" />
+    <circle cx="70" cy="170" r="10" fill="hsl(var(--brand))" />
+    <rect x="95" y="160" width="55" height="18" rx="4" fill="hsl(var(--gold))" />
+    <rect x="140" y="155" width="14" height="28" rx="3" fill="hsl(var(--brand))" />
+    <rect x="158" y="155" width="14" height="22" rx="3" fill="hsl(var(--brand))" />
   </svg>
 );
 

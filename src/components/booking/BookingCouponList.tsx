@@ -98,11 +98,11 @@ const BookingCouponList = ({
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-1.5">
-                      <Tag className="h-3.5 w-3.5 shrink-0 text-[#4b3621]" />
-                      <span className="font-mono text-xs font-semibold tracking-wider text-[#4b3621]">
+                      <Tag className="h-3.5 w-3.5 shrink-0 text-brand" />
+                      <span className="font-mono text-xs font-semibold tracking-wider text-brand">
                         {coupon.code}
                       </span>
-                      <span className="rounded-full bg-[#4b3621]/10 px-2 py-0.5 text-[10px] font-medium text-[#4b3621]">
+                      <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[10px] font-medium text-brand">
                         {formatCouponDiscount(coupon)}
                       </span>
                     </div>
@@ -121,7 +121,7 @@ const BookingCouponList = ({
 
                   <div className="shrink-0 pt-0.5">
                     {isApplying ? (
-                      <Loader2 className="h-4 w-4 animate-spin text-[#4b3621]" />
+                      <Loader2 className="h-4 w-4 animate-spin text-brand" />
                     ) : isApplied ? (
                       <Button
                         type="button"

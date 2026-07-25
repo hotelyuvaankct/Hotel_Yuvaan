@@ -65,7 +65,7 @@ const GuestCheckoutForm = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md rounded-none">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-[#4b3621]">
+          <DialogTitle className="text-xl font-semibold text-brand">
             Guest details
           </DialogTitle>
         </DialogHeader>

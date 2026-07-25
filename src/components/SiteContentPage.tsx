@@ -29,12 +29,12 @@ export default function SiteContentPage({
         <Navigation />
       </Suspense>
 
-      <section className="relative overflow-hidden bg-[#4b3621] pt-40 sm:pt-44 md:pt-48 pb-20 md:pb-24">
+      <section className="relative overflow-hidden bg-brand pt-40 sm:pt-44 md:pt-48 pb-20 md:pb-24">
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.07]"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 20% 20%, #fff 0.8px, transparent 1px), radial-gradient(circle at 80% 60%, #fff 0.8px, transparent 1px)",
+              "radial-gradient(circle at 20% 20%, hsl(var(--white)) 0.8px, transparent 1px), radial-gradient(circle at 80% 60%, hsl(var(--white)) 0.8px, transparent 1px)",
             backgroundSize: "28px 28px",
           }}
           aria-hidden
@@ -57,7 +57,7 @@ export default function SiteContentPage({
 
       <main className="flex-1 relative z-10 -mt-10 md:-mt-12">
         <div className="container mx-auto px-4 sm:px-6 max-w-3xl pb-14 md:pb-20">
-          <article className="bg-white border border-[#e8e0d4] rounded-xl shadow-[0_12px_40px_-12px_rgba(75,54,33,0.18)] p-6 sm:p-8 md:p-11">
+          <article className="bg-white border border-gold-border rounded-xl shadow-[0_12px_32px_hsl(var(--brand)/0.18)] p-6 sm:p-8 md:p-11">
             <div className="space-y-9 md:space-y-10">
               {sections.map((section, index) => (
                 <section
@@ -65,10 +65,10 @@ export default function SiteContentPage({
                   className={
                     index === 0
                       ? "space-y-3.5"
-                      : "space-y-3.5 pt-9 md:pt-10 border-t border-[#efe8de]"
+                      : "space-y-3.5 pt-9 md:pt-10 border-t border-surface-elevated"
                   }
                 >
-                  <h2 className="font-playfair text-xl md:text-[1.35rem] text-[#4b3621] leading-snug">
+                  <h2 className="font-playfair text-xl md:text-[1.35rem] text-brand leading-snug">
                     {section.heading}
                   </h2>
                   {section.paragraphs.map((text) => (
@@ -80,7 +80,7 @@ export default function SiteContentPage({
                     </p>
                   ))}
                   {section.bullets && section.bullets.length > 0 ? (
-                    <ul className="list-disc pl-5 space-y-2 text-sm md:text-[0.9375rem] text-neutral-700 leading-relaxed marker:text-[#4b3621]/80">
+                    <ul className="list-disc pl-5 space-y-2 text-sm md:text-[0.9375rem] text-neutral-700 leading-relaxed marker:text-brand/80">
                       {section.bullets.map((item) => (
                         <li key={item} className="pl-1">
                           {item}
@@ -92,19 +92,19 @@ export default function SiteContentPage({
               ))}
             </div>
 
-            <div className="mt-10 md:mt-12 pt-7 border-t border-[#efe8de]">
+            <div className="mt-10 md:mt-12 pt-7 border-t border-surface-elevated">
               <p className="text-sm text-neutral-600 leading-relaxed">
                 Questions?{" "}
                 <Link
                   href="/contact"
-                  className="text-[#4b3621] font-medium underline underline-offset-2 hover:text-[#3a2918]"
+                  className="text-brand font-medium underline underline-offset-2 hover:text-brand-hover"
                 >
                   Contact us
                 </Link>{" "}
                 or email{" "}
                 <a
                   href="mailto:support@hotelyuvaan.com"
-                  className="text-[#4b3621] font-medium underline underline-offset-2 hover:text-[#3a2918]"
+                  className="text-brand font-medium underline underline-offset-2 hover:text-brand-hover"
                 >
                   support@hotelyuvaan.com
                 </a>

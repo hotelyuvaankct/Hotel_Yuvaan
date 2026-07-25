@@ -441,7 +441,7 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
       />
       <Navigation />
 
-      <section className="relative pt-24 md:pt-28 pb-6 md:pb-8 bg-[#4b3621]">
+      <section className="relative pt-24 md:pt-28 pb-6 md:pb-8 bg-brand">
         <div className="container mx-auto px-4">
           <div className="text-center m-5 md:mb-6">
             <h1 className="font-playfair text-3xl md:text-4xl text-white mb-2">
@@ -454,9 +454,9 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
 
       <div
         ref={roomsSectionRef}
-        className="bg-[#fff3e6] border-b border-orange-100 scroll-mt-24"
+        className="bg-surface border-b border-orange-100 scroll-mt-24"
       >
-        <div className="container mx-auto px-4 py-3 flex flex-wrap items-center justify-center gap-4 text-xs md:text-sm text-[#4b3621]">
+        <div className="container mx-auto px-4 py-3 flex flex-wrap items-center justify-center gap-4 text-xs md:text-sm text-brand">
           <span className="font-semibold tracking-wider">BOOK AT BEST PRICE!</span>
           {["Direct reservations", "Price match guarantee", "Your information is secure"].map(
             (item) => (
@@ -471,8 +471,8 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
 
       <main className="flex-1 container mx-auto px-3 sm:px-4 pt-4 sm:pt-5 pb-8 sm:pb-10 min-w-0 overflow-x-hidden">
         {!hasSearch && (
-          <div className="text-center text-[#8b7355] max-w-xl mx-auto py-8">
-            <Loader2 className="h-6 w-6 animate-spin mx-auto mb-3 text-[#b8892f]" />
+          <div className="text-center text-brand-muted max-w-xl mx-auto py-8">
+            <Loader2 className="h-6 w-6 animate-spin mx-auto mb-3 text-gold-strong" />
             <p>Loading availability…</p>
           </div>
         )}
@@ -482,7 +482,7 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
               {stayLoading && (
                 <div className="flex flex-col items-center justify-center gap-3 py-16">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                  <p className="text-sm text-[#8b7355]">Loading availability…</p>
+                  <p className="text-sm text-brand-muted">Loading availability…</p>
                 </div>
               )}
 
@@ -525,10 +525,10 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
       </main>
 
       {cart.length > 0 ? (
-        <div className="sticky bottom-0 z-40 border-t border-neutral-200 bg-white/95 backdrop-blur-sm shadow-[0_-4px_20px_rgba(0,0,0,0.06)] pb-[env(safe-area-inset-bottom)]">
+        <div className="sticky bottom-0 z-40 border-t border-neutral-200 bg-white/95 backdrop-blur-sm shadow-[0_-4px_20px_hsl(var(--overlay)/0.06)] pb-[env(safe-area-inset-bottom)]">
           <div className="container mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex flex-col min-[400px]:flex-row min-[400px]:items-center min-[400px]:justify-between gap-2 sm:gap-3">
             <div className="text-[11px] min-[380px]:text-sm text-neutral-700 leading-snug min-w-0">
-              <span className="font-medium text-[#4b3621]">
+              <span className="font-medium text-brand">
                 {cart.reduce((sum, item) => sum + item.quantity, 0)} room
                 {cart.reduce((sum, item) => sum + item.quantity, 0) === 1 ? "" : "s"} selected
               </span>
@@ -700,7 +700,7 @@ const RoomCard = ({
 
       <div className="px-3 sm:px-5 py-3.5 sm:py-4 flex flex-col justify-center gap-1.5 sm:gap-2 md:min-h-[200px] min-w-0">
         <div className="flex flex-wrap items-start justify-between gap-1.5">
-          <h2 className="text-lg sm:text-xl font-playfair font-semibold text-[#4b3621] leading-snug break-words">
+          <h2 className="text-lg sm:text-xl font-playfair font-semibold text-brand leading-snug break-words">
             {room.name}
           </h2>
           {room.soldOut && (
@@ -738,7 +738,7 @@ const RoomCard = ({
                   key={amenity}
                   className="inline-flex items-center gap-1 text-[10px] sm:text-xs bg-neutral-100 px-1.5 sm:px-2 py-0.5 rounded text-neutral-600 max-w-full"
                 >
-                  <Icon className="h-3 w-3 text-[#b8892f] shrink-0" />
+                  <Icon className="h-3 w-3 text-gold-strong shrink-0" />
                   <span className="truncate">{formatAmenity(amenity)}</span>
                 </li>
               );
@@ -788,7 +788,7 @@ const RoomCard = ({
                                 key={feature}
                                 className="inline-flex items-start gap-1 text-[11px] sm:text-xs text-neutral-500 min-w-0"
                               >
-                                <Icon className="h-3 w-3 text-[#b8892f] shrink-0 mt-0.5" />
+                                <Icon className="h-3 w-3 text-gold-strong shrink-0 mt-0.5" />
                                 <span className="break-words leading-snug">{feature}</span>
                               </li>
                             );
@@ -834,7 +834,7 @@ const RoomCard = ({
                             >
                               <Minus className="h-3 w-3 min-[360px]:h-3.5 min-[360px]:w-3.5" />
                             </Button>
-                            <span className="h-7 min-[360px]:h-8 sm:h-9 min-w-[2.25rem] min-[360px]:min-w-[3.25rem] px-1 flex items-center justify-center border-x border-neutral-300 text-xs min-[360px]:text-sm tabular-nums text-[#4b3621]">
+                            <span className="h-7 min-[360px]:h-8 sm:h-9 min-w-[2.25rem] min-[360px]:min-w-[3.25rem] px-1 flex items-center justify-center border-x border-neutral-300 text-xs min-[360px]:text-sm tabular-nums text-brand">
                               {qty}
                             </span>
                             <Button

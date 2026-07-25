@@ -35,8 +35,8 @@ type RoomUpgradeCardProps = {
 export default function RoomUpgradeCard({
   upgrade,
   fromRoomName,
-  fromRoomLabel,
-  nights,
+  fromRoomLabel: _fromRoomLabel,
+  nights: _nights,
   onUpgrade,
   upgrading = false,
 }: RoomUpgradeCardProps) {
@@ -51,23 +51,22 @@ export default function RoomUpgradeCard({
   return (
     <section className="space-y-3">
       <div className="flex items-center gap-2">
-        <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-[#5c3d2e] text-white">
+        <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-brand-hover text-white">
           <ArrowUpRight className="h-4 w-4" />
         </span>
-        <h3 className="text-base font-semibold text-[#4b3621]">Room upgrade</h3>
+        <h3 className="text-base font-semibold text-brand">Room upgrade</h3>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-[#e8d5a3] bg-white shadow-sm transition-shadow duration-200 hover:shadow-md">
+      <div className="overflow-hidden rounded-xl border border-gold-border bg-white shadow-sm transition-shadow duration-200 hover:shadow-md">
         {/* Replacement banner */}
-        <div className="border-b border-[#e8d5a3]/60 bg-[#fffaf0] px-3 py-2.5 sm:px-4">
+        <div className="border-b border-gold-border/60 bg-surface px-3 py-2.5 sm:px-4">
           <p className="text-xs leading-snug text-neutral-600">
             Replaces{" "}
-            <span className="font-semibold text-[#4b3621]">
-              {fromRoomLabel ? `${fromRoomLabel}: ` : ""}
+            <span className="font-semibold text-brand">
               {fromRoomName}
             </span>
             {" → "}
-            <span className="font-semibold text-[#4b3621]">{upgrade.name}</span>
+            <span className="font-semibold text-brand">{upgrade.name}</span>
           </p>
         </div>
 
@@ -85,7 +84,7 @@ export default function RoomUpgradeCard({
 
           <div className="min-w-0 space-y-2.5">
             <div className="min-w-0">
-              <p className="truncate font-semibold text-[#4b3621]">
+              <p className="truncate font-semibold text-brand">
                 {upgrade.name}
               </p>
               <p className="mt-1 inline-flex items-center gap-1.5 text-xs text-neutral-600">
@@ -108,7 +107,7 @@ export default function RoomUpgradeCard({
                       key={amenity}
                       className="inline-flex items-center gap-1 rounded-md border border-neutral-200 bg-neutral-50 px-2 py-1 text-[11px] text-neutral-700"
                     >
-                      <Icon className="h-3 w-3 shrink-0 text-[#b8892f]" />
+                      <Icon className="h-3 w-3 shrink-0 text-gold-strong" />
                       <span className="truncate max-w-[7rem]">
                         {getAmenityLabel(amenity)}
                       </span>
@@ -127,18 +126,16 @@ export default function RoomUpgradeCard({
 
         {/* Price + CTA */}
         <div className="flex flex-col gap-3 border-t border-neutral-100 px-3 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-2 sm:px-4">
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-[#4b3621]">
-              Upgrade for {formatRoomPrice(Math.round(Number(upgrade.upgradePrice ?? 0)))} extra
-            </p>
-            <p className="text-xs text-neutral-600">
-              Total for your stay
-              {nights > 1 ? ` · ${nights} nights` : ""}
-            </p>
-          </div>
+          <p className="min-w-0 text-sm text-brand-muted">
+            Upgrade for{" "}
+            <span className="font-semibold tabular-nums text-success">
+              {formatRoomPrice(Math.round(Number(upgrade.upgradePrice ?? 0)))}
+            </span>{" "}
+            <span className="font-medium text-success">extra</span>
+          </p>
           <Button
             type="button"
-            className="h-9 w-full rounded-md bg-[#5c3d2e] px-3 text-xs font-semibold uppercase tracking-wide text-white transition-colors hover:bg-[#4b3621] disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
+            className="h-9 w-full rounded-md bg-brand-hover px-3 text-xs font-semibold uppercase tracking-wide text-white transition-colors hover:bg-brand disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
             onClick={onUpgrade}
             disabled={upgrading}
           >

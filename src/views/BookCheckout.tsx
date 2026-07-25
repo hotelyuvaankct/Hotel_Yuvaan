@@ -613,7 +613,7 @@ const BookCheckout = () => {
         }
       />
 
-      <section className="relative pt-24 min-[380px]:pt-28 pb-6 min-[380px]:pb-8 bg-[#4b3621]">
+      <section className="relative pt-24 min-[380px]:pt-28 pb-6 min-[380px]:pb-8 bg-brand">
         <div className="container mx-auto px-3 min-[380px]:px-4">
           <h1 className="text-xl min-[380px]:text-2xl sm:text-3xl md:text-4xl font-semibold text-white mt-4 min-[380px]:mt-6 mb-1.5 min-[380px]:mb-2 leading-snug">
             Complete your booking
@@ -632,7 +632,7 @@ const BookCheckout = () => {
       <main className="flex-1 container mx-auto px-3 min-[380px]:px-4 py-5 min-[380px]:py-8 md:py-10">
         <Link
           href={backToRoomsUrl}
-          className="inline-flex items-center gap-1.5 min-[380px]:gap-2 text-xs min-[380px]:text-sm font-medium text-[#4b3621] hover:underline mb-4 min-[380px]:mb-5"
+          className="inline-flex items-center gap-1.5 min-[380px]:gap-2 text-xs min-[380px]:text-sm font-medium text-brand hover:underline mb-4 min-[380px]:mb-5"
         >
           <ArrowLeft className="h-3.5 w-3.5 min-[380px]:h-4 min-[380px]:w-4" />
           Edit room selection
@@ -641,12 +641,12 @@ const BookCheckout = () => {
         <div className="grid lg:grid-cols-[1fr_340px] gap-4 min-[380px]:gap-6 lg:gap-8 items-start">
           <div className="space-y-4 min-[380px]:space-y-5 min-w-0">
             {/* Stay summary — single source of truth */}
-            <section className="relative overflow-hidden rounded-xl border border-[#4b3621]/15 bg-gradient-to-br from-[#4b3621] via-[#5c4330] to-[#3d2b1a] text-white shadow-lg">
-              <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top_right,_#c9a227,_transparent_55%)]" />
+            <section className="relative overflow-hidden rounded-xl border border-brand/15 bg-gradient-to-br from-brand via-brand-hover to-brand-hover text-white shadow-lg">
+              <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top_right,_hsl(var(--gold)),_transparent_55%)]" />
               <div className="relative p-3.5 min-[380px]:p-5 sm:p-7">
                 <div className="flex flex-wrap items-start justify-between gap-2 min-[380px]:gap-3 mb-4 min-[380px]:mb-5">
                   <div className="min-w-0">
-                    <p className="text-[10px] min-[380px]:text-[11px] font-semibold uppercase tracking-[0.18em] min-[380px]:tracking-[0.22em] text-[#e8d5a3]">
+                    <p className="text-[10px] min-[380px]:text-[11px] font-semibold uppercase tracking-[0.18em] min-[380px]:tracking-[0.22em] text-gold-border">
                       Your stay
                     </p>
                     <h2 className="mt-1 font-playfair text-xl min-[380px]:text-2xl font-bold leading-tight sm:text-3xl md:text-[2rem]">
@@ -656,7 +656,7 @@ const BookCheckout = () => {
                       <span className="text-gradient">Hotel Yuvaan</span>
                     </h2>
                   </div>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[10px] min-[380px]:text-xs font-medium text-[#f5e6c8] ring-1 ring-white/15">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[10px] min-[380px]:text-xs font-medium text-gold-muted ring-1 ring-white/15">
                     <Moon className="h-3.5 w-3.5" />
                     {nights} night{nights === 1 ? "" : "s"}
                   </span>
@@ -664,7 +664,7 @@ const BookCheckout = () => {
 
                 <div className="grid grid-cols-1 min-[360px]:grid-cols-2 gap-2.5 min-[380px]:gap-3 sm:gap-4 mb-4 min-[380px]:mb-5">
                   <div className="rounded-lg bg-white/10 backdrop-blur-sm px-3 py-2.5 min-[380px]:px-4 min-[380px]:py-3 ring-1 ring-white/10">
-                    <div className="flex items-center gap-2 text-[#e8d5a3] text-[10px] min-[380px]:text-[11px] uppercase tracking-wider font-semibold mb-1">
+                    <div className="flex items-center gap-2 text-gold-border text-[10px] min-[380px]:text-[11px] uppercase tracking-wider font-semibold mb-1">
                       <CalendarDays className="h-3.5 w-3.5 shrink-0" />
                       Check-in
                     </div>
@@ -679,7 +679,7 @@ const BookCheckout = () => {
                     ) : null}
                   </div>
                   <div className="rounded-lg bg-white/10 backdrop-blur-sm px-3 py-2.5 min-[380px]:px-4 min-[380px]:py-3 ring-1 ring-white/10">
-                    <div className="flex items-center gap-2 text-[#e8d5a3] text-[10px] min-[380px]:text-[11px] uppercase tracking-wider font-semibold mb-1">
+                    <div className="flex items-center gap-2 text-gold-border text-[10px] min-[380px]:text-[11px] uppercase tracking-wider font-semibold mb-1">
                       <CalendarDays className="h-3.5 w-3.5 shrink-0" />
                       Check-out
                     </div>
@@ -696,7 +696,7 @@ const BookCheckout = () => {
                 </div>
 
                 <div className="border-t border-white/15 pt-3 min-[380px]:pt-4 space-y-2 min-[380px]:space-y-2.5">
-                  <p className="text-[10px] min-[380px]:text-[11px] font-semibold uppercase tracking-[0.18em] text-[#e8d5a3]">
+                  <p className="text-[10px] min-[380px]:text-[11px] font-semibold uppercase tracking-[0.18em] text-gold-border">
                     Guests
                   </p>
                   <p className="text-sm min-[380px]:text-base text-white font-medium">
@@ -715,7 +715,7 @@ const BookCheckout = () => {
                       more rooms before payment.
                     </p>
                   ) : null}
-                  <p className="text-[10px] min-[380px]:text-[11px] font-semibold uppercase tracking-[0.18em] text-[#e8d5a3] pt-2">
+                  <p className="text-[10px] min-[380px]:text-[11px] font-semibold uppercase tracking-[0.18em] text-gold-border pt-2">
                     Selected rooms
                   </p>
                   <ul className="space-y-2">
@@ -733,7 +733,7 @@ const BookCheckout = () => {
                             {item.ratePlanLabel}
                           </p>
                         </div>
-                        <p className="tabular-nums text-[#f5e6c8] font-medium shrink-0 text-right">
+                        <p className="tabular-nums text-gold-muted font-medium shrink-0 text-right">
                           {formatRoomPrice(
                             item.pricePerNight * item.quantity * item.totalNights
                           )}
@@ -758,7 +758,7 @@ const BookCheckout = () => {
             {/* Guest details */}
             <section className="bg-white border border-neutral-200 rounded-xl shadow-sm p-3.5 min-[380px]:p-5 sm:p-7">
               <div className="mb-4 min-[380px]:mb-5">
-                <h2 className="text-xl min-[380px]:text-2xl font-semibold text-[#4b3621]">
+                <h2 className="text-xl min-[380px]:text-2xl font-semibold text-brand">
                   Guest details
                 </h2>
                 <p className="text-xs min-[380px]:text-sm text-neutral-600 mt-1">
@@ -993,8 +993,8 @@ function CoupleStayPolicyConfirm({
   onCheckedChange,
 }: CoupleStayPolicyConfirmProps) {
   return (
-    <div className="rounded-sm border border-[#4b3621]/20 bg-[#faf7f2] px-3 py-3 min-[380px]:px-4 min-[380px]:py-3.5 space-y-2.5 min-[380px]:space-y-3">
-      <p className="text-xs min-[380px]:text-sm text-[#4b3621] leading-relaxed">
+    <div className="rounded-sm border border-brand/20 bg-surface px-3 py-3 min-[380px]:px-4 min-[380px]:py-3.5 space-y-2.5 min-[380px]:space-y-3">
+      <p className="text-xs min-[380px]:text-sm text-brand leading-relaxed">
         Hotel Yuvaan has a couple stay policy: couple bookings are for{" "}
         <span className="font-semibold">married couples only</span>. Unmarried
         couples are not permitted. See our{" "}
@@ -1011,7 +1011,7 @@ function CoupleStayPolicyConfirm({
           id={id}
           checked={checked}
           onCheckedChange={(value) => onCheckedChange(value === true)}
-          className="mt-0.5 border-[#4b3621] data-[state=checked]:bg-[#4b3621] data-[state=checked]:border-[#4b3621]"
+          className="mt-0.5 border-brand data-[state=checked]:bg-brand data-[state=checked]:border-brand"
         />
         <Label
           htmlFor={id}
