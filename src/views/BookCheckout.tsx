@@ -749,11 +749,6 @@ const BookCheckout = () => {
               <RoomUpgradeCard
                 upgrade={upgradeOffer}
                 fromRoomName={upgradeFromItem.roomTypeName}
-                fromRoomLabel={`Room ${
-                  cart.findIndex(
-                    (item) => item.roomTypeId === upgradeFromItem.roomTypeId
-                  ) + 1
-                }`}
                 nights={upgradeFromItem.totalNights}
                 onUpgrade={applyUpgrade}
                 upgrading={upgrading}
