@@ -26,23 +26,23 @@ export interface AvailableRoomType {
   roomTypeId: number;
   name: string;
   description: string | null;
-  maxAdults: number;
-  maxChildren: number;
   maxGuests: number;
   availableRooms: number;
-  totalRooms: number;
-  basePricePerNight: number;
-  fromPrice: number;
-  originalPrice?: number;
-  discountPercent?: number;
-  totalNights: number;
+  sortOrder?: number | null;
   primaryImageUrl?: string;
-  images?: string[];
   amenities: string[];
-  badges?: string[];
   soldOut?: boolean;
-  canAccommodateSingleRoom?: boolean;
   ratePlans?: RatePlan[];
+  /** @deprecated stay payload no longer includes these; kept optional for older caches */
+  maxAdults?: number;
+  maxChildren?: number;
+  totalRooms?: number;
+  basePricePerNight?: number;
+  fromPrice?: number;
+  totalNights?: number;
+  images?: string[];
+  badges?: string[];
+  canAccommodateSingleRoom?: boolean;
 }
 
 export interface ExtraService {
@@ -63,7 +63,7 @@ export interface StayResult {
   totalNights: number;
   config: BookingConfig;
   rooms: AvailableRoomType[];
-  extraServices: ExtraService[];
+  extraServices?: ExtraService[];
 }
 
 export interface RatePlan {
@@ -71,10 +71,11 @@ export interface RatePlan {
   label: string;
   features: string[];
   pricePerNight: number;
-  totalPrice: number;
+  sortOrder?: number | null;
+  totalPrice?: number;
   originalPrice?: number;
   discountPercent?: number;
-  totalNights: number;
+  totalNights?: number;
 }
 
 export interface BookingRoomLine {
@@ -121,43 +122,61 @@ export interface CheckoutRoomSelection {
 }
 
 export function buildOccupancySelections(
-  cart: Array<{ roomTypeId: number; ratePlanCode: string; quantity: number }>,
+  cart: Array<{
+    roomTypeId: number;
+    ratePlanCode: string;
+    quantity: number;
+    maxGuests?: number;
+  }>,
   roomGuests: RoomGuestConfig[]
 ): CheckoutRoomSelection[] {
-  const totalRooms = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const requestedOccupancies = roomGuests.map((room) =>
-    Math.min(Math.max(room.adults + room.children, 1), 2)
+  const physicalRooms: Array<{ roomTypeId: number; ratePlanCode: string; maxGuests: number }> =
+    [];
+  for (const item of cart) {
+    const maxGuests = Math.max(1, item.maxGuests ?? 2);
+    for (let i = 0; i < item.quantity; i += 1) {
+      physicalRooms.push({
+        roomTypeId: item.roomTypeId,
+        ratePlanCode: item.ratePlanCode,
+        maxGuests,
+      });
+    }
+  }
+
+  let remainingGuests = roomGuests.reduce(
+    (sum, room) => sum + Math.max(room.adults + room.children, 0),
+    0
   );
-  const totalGuests = requestedOccupancies.reduce((sum, count) => sum + count, 0);
-  const occupancies =
-    requestedOccupancies.length === totalRooms
-      ? requestedOccupancies
-      : Array.from({ length: totalRooms }, (_, index) => {
-          const remainingRooms = totalRooms - index;
-          const assigned = requestedOccupancies
-            .slice(0, index)
-            .reduce((sum, count) => sum + count, 0);
-          const remainingGuests = Math.max(totalGuests - assigned, remainingRooms);
-          return Math.min(Math.max(remainingGuests - (remainingRooms - 1), 1), 2);
-        });
+  if (remainingGuests < 1) remainingGuests = 1;
 
   const grouped = new Map<string, CheckoutRoomSelection>();
-  let occupancyIndex = 0;
-  for (const item of cart) {
-    for (let room = 0; room < item.quantity; room += 1) {
-      const guestCount = occupancies[occupancyIndex++] ?? 1;
-      const key = `${item.roomTypeId}:${item.ratePlanCode}:${guestCount}`;
-      const current = grouped.get(key);
-      if (current) {
-        current.quantity += 1;
-      } else {
-        grouped.set(key, {
-          roomTypeId: item.roomTypeId,
-          ratePlanCode: item.ratePlanCode,
-          quantity: 1,
-          guestCount,
-        });
-      }
+  for (let index = 0; index < physicalRooms.length; index += 1) {
+    const room = physicalRooms[index];
+    const roomsLeft = physicalRooms.length - index;
+    const maxForThisRoom = room.maxGuests;
+    // Leave at least 1 guest slot for each remaining room when possible.
+    const minForThisRoom = Math.min(
+      maxForThisRoom,
+      Math.max(1, remainingGuests - (roomsLeft - 1) * maxForThisRoom)
+    );
+    const ideal = Math.ceil(remainingGuests / roomsLeft);
+    const guestCount = Math.min(
+      maxForThisRoom,
+      Math.max(minForThisRoom, Math.min(ideal, remainingGuests))
+    );
+    remainingGuests = Math.max(0, remainingGuests - guestCount);
+
+    const key = `${room.roomTypeId}:${room.ratePlanCode}:${guestCount}`;
+    const current = grouped.get(key);
+    if (current) {
+      current.quantity += 1;
+    } else {
+      grouped.set(key, {
+        roomTypeId: room.roomTypeId,
+        ratePlanCode: room.ratePlanCode,
+        quantity: 1,
+        guestCount,
+      });
     }
   }
   return Array.from(grouped.values());

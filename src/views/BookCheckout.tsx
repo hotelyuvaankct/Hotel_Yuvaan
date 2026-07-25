@@ -11,6 +11,10 @@ import Footer from "@/components/Footer";
 import PageBackground from "@/components/PageBackground";
 import ProcessingOverlay from "@/components/ProcessingOverlay";
 import BookingSidebar, { type CartItem } from "@/components/booking/BookingSidebar";
+import CapacityWarningModal from "@/components/booking/CapacityWarningModal";
+import RoomUpgradeCard, {
+  type CheckoutRoomUpgrade,
+} from "@/components/booking/RoomUpgradeCard";
 import {
   buildOccupancySelections,
   computeGuestCapacity,
@@ -31,7 +35,7 @@ import {
   fetchPublicCoupons,
   type CouponValidation,
 } from "@/services/couponService";
-import { buildBookUrl, formatRoomPrice } from "@/services/roomService";
+import { buildBookUrl, formatRoomPrice, normalizeStorageUrl } from "@/services/roomService";
 import { formatTime12h } from "@/lib/formatTime";
 import {
   bookingSession,
@@ -79,6 +83,8 @@ const BookCheckout = () => {
   const [fieldErrors, setFieldErrors] = useState<GuestFieldErrors>({});
   const [marriedCoupleConfirmed, setMarriedCoupleConfirmed] = useState(false);
   const [allowLeave, setAllowLeave] = useState(false);
+  const [upgrading, setUpgrading] = useState(false);
+  const [capacityModalOpen, setCapacityModalOpen] = useState(false);
   const allowLeaveRef = useRef(false);
 
   const leaveGuard = useLeaveGuard({
@@ -92,6 +98,9 @@ const BookCheckout = () => {
       // Confirmation / back to room selection stay in the booking flow
       if (isBookingFlowPath(nextPathname)) return false;
       return true;
+    },
+    onConfirmLeave: () => {
+      bookingSession.clear();
     },
   });
 
@@ -122,7 +131,18 @@ const BookCheckout = () => {
       return;
     }
 
-    setDraft(saved);
+    const guestsFromRooms = saved.roomGuests?.length
+      ? {
+          adults: saved.roomGuests.reduce((sum, room) => sum + room.adults, 0),
+          children: saved.roomGuests.reduce((sum, room) => sum + room.children, 0),
+        }
+      : null;
+
+    setDraft({
+      ...saved,
+      adults: guestsFromRooms?.adults ?? saved.adults,
+      children: guestsFromRooms?.children ?? saved.children,
+    });
     setGuest(saved.guest ?? emptyGuest);
     setAppliedCoupon(saved.appliedCoupon ?? null);
     setPendingCouponCode(saved.pendingCouponCode?.trim().toUpperCase() ?? "");
@@ -139,8 +159,10 @@ const BookCheckout = () => {
   });
 
   const cart = draft?.cart ?? [];
+  const availableRooms = draft?.availableRooms ?? [];
   const totalGuests = (draft?.adults ?? 0) + (draft?.children ?? 0);
   const accommodatedGuests = useMemo(() => computeGuestCapacity(cart), [cart]);
+  const capacityOk = accommodatedGuests >= totalGuests;
 
   const backToRoomsUrl = draft
     ? buildBookUrl({
@@ -148,11 +170,128 @@ const BookCheckout = () => {
         checkOut: draft.checkOut,
         adults: draft.adults,
         children: draft.children,
-        rooms: draft.roomGuests.length,
+        rooms: draft.roomGuests?.length || 1,
         roomGuests: draft.roomGuests,
         promo: appliedCoupon?.code ?? (pendingCouponCode || undefined),
       })
     : "/book";
+
+  const isCapacityError = (message: string) =>
+    /accommodat|add more rooms|guest count|insufficient/i.test(message);
+
+  const upgradeSelection = useMemo(() => {
+    if (cart.length === 0 || availableRooms.length === 0) return null;
+
+    const selectedIds = new Set(cart.map((item) => item.roomTypeId));
+
+    for (const fromItem of cart) {
+      const fromOrder = fromItem.sortOrder;
+      if (fromOrder == null) continue;
+
+      // sortOrder 1 = top room; lower number = better. Offer the next step up.
+      const nextRoom = availableRooms
+        .filter((room) => !selectedIds.has(room.roomTypeId))
+        .filter((room) => !room.soldOut && (room.availableRooms ?? 0) > 0)
+        .filter((room) => room.sortOrder != null && room.sortOrder < fromOrder)
+        .filter((room) => (room.maxGuests ?? 0) >= fromItem.guestCount)
+        .sort((a, b) => (b.sortOrder ?? 0) - (a.sortOrder ?? 0))[0];
+
+      if (!nextRoom) continue;
+
+      const matchedPlan =
+        nextRoom.ratePlans?.find((plan) => plan.code === fromItem.ratePlanCode) ??
+        nextRoom.ratePlans?.[0];
+      const upgradePricePerNight =
+        matchedPlan?.pricePerNight ??
+        nextRoom.ratePlans?.[0]?.pricePerNight ??
+        nextRoom.fromPrice ??
+        nextRoom.basePricePerNight ??
+        fromItem.pricePerNight;
+      const nights = fromItem.totalNights || nextRoom.totalNights || 1;
+      const currentTotal =
+        fromItem.pricePerNight * fromItem.quantity * nights;
+      const upgradeTotal =
+        upgradePricePerNight * fromItem.quantity * nights;
+
+      const upgrade: CheckoutRoomUpgrade = {
+        roomTypeId: nextRoom.roomTypeId,
+        name: nextRoom.name,
+        description: nextRoom.description,
+        maxGuests: nextRoom.maxGuests,
+        availableRooms: nextRoom.availableRooms,
+        sortOrder: nextRoom.sortOrder,
+        upgradePrice: Math.max(0, upgradeTotal - currentTotal),
+        primaryImageUrl: nextRoom.primaryImageUrl,
+        images: nextRoom.images,
+        amenities: nextRoom.amenities ?? [],
+        ratePlanCode: matchedPlan?.code ?? fromItem.ratePlanCode,
+        ratePlanLabel: matchedPlan?.label ?? fromItem.ratePlanLabel,
+        pricePerNight: upgradePricePerNight,
+        totalNights: nights,
+      };
+
+      return { fromItem, upgrade, sourceRoom: nextRoom };
+    }
+
+    return null;
+  }, [cart, availableRooms]);
+
+  const upgradeOffer = upgradeSelection?.upgrade ?? null;
+  const upgradeFromItem = upgradeSelection?.fromItem ?? null;
+
+  const applyUpgrade = () => {
+    if (!draft || !upgradeFromItem || !upgradeOffer) return;
+    setUpgrading(true);
+    try {
+      const imageUrl = upgradeOffer.primaryImageUrl
+        ? normalizeStorageUrl(upgradeOffer.primaryImageUrl)
+        : undefined;
+      const images = (upgradeOffer.images ?? [])
+        .map((url) => normalizeStorageUrl(url))
+        .filter(Boolean);
+
+      const nextCart: CartItem[] = cart.map((item) => {
+        if (item.roomTypeId !== upgradeFromItem.roomTypeId) return item;
+        return {
+          ...item,
+          key: `${upgradeOffer.roomTypeId}-${upgradeOffer.ratePlanCode}`,
+          roomTypeId: upgradeOffer.roomTypeId,
+          roomTypeName: upgradeOffer.name,
+          ratePlanCode: upgradeOffer.ratePlanCode,
+          ratePlanLabel: upgradeOffer.ratePlanLabel,
+          pricePerNight: upgradeOffer.pricePerNight,
+          maxGuests: upgradeOffer.maxGuests,
+          sortOrder: upgradeOffer.sortOrder ?? null,
+          imageUrl,
+          images,
+          amenities: upgradeOffer.amenities ?? [],
+          totalNights: upgradeOffer.totalNights || item.totalNights,
+        };
+      });
+
+      const saved = bookingSession.saveRoomSelection({
+        hotelId: draft.hotelId,
+        checkIn: draft.checkIn,
+        checkOut: draft.checkOut,
+        adults: draft.adults,
+        children: draft.children,
+        roomGuests: draft.roomGuests,
+        cart: nextCart,
+        availableRooms: draft.availableRooms,
+        pendingCouponCode: pendingCouponCode || draft.pendingCouponCode,
+      });
+      setDraft(saved);
+      toast.success(
+        `Replaced ${upgradeFromItem.roomTypeName} with ${upgradeOffer.name}`
+      );
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Unable to apply room upgrade."
+      );
+    } finally {
+      setUpgrading(false);
+    }
+  };
 
   const persistGuest = (
     nextGuest: GuestDetails,
@@ -276,6 +415,9 @@ const BookCheckout = () => {
             }
           } else {
             setQuote(null);
+            if (isCapacityError(message)) {
+              setCapacityModalOpen(true);
+            }
           }
         } finally {
           if (!cancelled) {
@@ -343,6 +485,13 @@ const BookCheckout = () => {
   const handleContinueToPayment = async (event: FormEvent) => {
     event.preventDefault();
     if (!draft || !validateGuestForm()) return;
+    if (!capacityOk) {
+      setCapacityModalOpen(true);
+      setFormError(
+        `Selected rooms fit ${accommodatedGuests} of ${totalGuests} guests. Please add more rooms.`
+      );
+      return;
+    }
     if (couponError) {
       toast.error(couponError);
       return;
@@ -405,11 +554,15 @@ const BookCheckout = () => {
       router.push(`/booking/${booking.accessToken ?? booking.bookingCode}`);
     } catch (error) {
       const message = (error as Error).message;
+      if (isCapacityError(message)) {
+        setCapacityModalOpen(true);
+        setFormError(message);
+      }
       if (message === "Payment cancelled") {
         toast.message("Payment cancelled");
       } else {
         toast.error(
-          /fail|unable|invalid|error/i.test(message)
+          /fail|unable|invalid|error|accommodat/i.test(message)
             ? message
             : "Payment failed. Try again."
         );
@@ -544,6 +697,25 @@ const BookCheckout = () => {
 
                 <div className="border-t border-white/15 pt-3 min-[380px]:pt-4 space-y-2 min-[380px]:space-y-2.5">
                   <p className="text-[10px] min-[380px]:text-[11px] font-semibold uppercase tracking-[0.18em] text-[#e8d5a3]">
+                    Guests
+                  </p>
+                  <p className="text-sm min-[380px]:text-base text-white font-medium">
+                    {draft.adults} adult{draft.adults === 1 ? "" : "s"}
+                    {draft.children > 0
+                      ? ` · ${draft.children} child${draft.children === 1 ? "" : "ren"}`
+                      : ""}
+                    <span className="text-white/70">
+                      {" "}
+                      · {totalGuests} total
+                    </span>
+                  </p>
+                  {!capacityOk ? (
+                    <p className="text-xs text-amber-200/95 leading-relaxed">
+                      Rooms can fit {accommodatedGuests} of {totalGuests} guests — add
+                      more rooms before payment.
+                    </p>
+                  ) : null}
+                  <p className="text-[10px] min-[380px]:text-[11px] font-semibold uppercase tracking-[0.18em] text-[#e8d5a3] pt-2">
                     Selected rooms
                   </p>
                   <ul className="space-y-2">
@@ -572,6 +744,21 @@ const BookCheckout = () => {
                 </div>
               </div>
             </section>
+
+            {upgradeOffer && upgradeFromItem ? (
+              <RoomUpgradeCard
+                upgrade={upgradeOffer}
+                fromRoomName={upgradeFromItem.roomTypeName}
+                fromRoomLabel={`Room ${
+                  cart.findIndex(
+                    (item) => item.roomTypeId === upgradeFromItem.roomTypeId
+                  ) + 1
+                }`}
+                nights={upgradeFromItem.totalNights}
+                onUpgrade={applyUpgrade}
+                upgrading={upgrading}
+              />
+            ) : null}
 
             {/* Guest details */}
             <section className="bg-white border border-neutral-200 rounded-xl shadow-sm p-3.5 min-[380px]:p-5 sm:p-7">
@@ -713,7 +900,7 @@ const BookCheckout = () => {
                   <Button
                     type="submit"
                     variant="dark"
-                    disabled={submitting || verifying || quoteLoading}
+                    disabled={submitting || verifying || quoteLoading || !capacityOk}
                     className="h-9 min-[380px]:h-10 w-full px-3 text-[11px] min-[380px]:text-xs tracking-wide uppercase"
                   >
                     {submitting ? "Opening payment…" : "Continue to payment"}
@@ -770,7 +957,7 @@ const BookCheckout = () => {
                 type="submit"
                 form="checkout-guest-form"
                 variant="dark"
-                disabled={submitting || verifying || quoteLoading}
+                disabled={submitting || verifying || quoteLoading || !capacityOk}
                 className="h-9 min-[380px]:h-10 w-full px-3 text-[11px] min-[380px]:text-xs tracking-wide uppercase"
               >
                 {submitting ? "Opening payment…" : "Continue to payment"}
@@ -779,6 +966,18 @@ const BookCheckout = () => {
           </div>
         </div>
       </main>
+
+      <CapacityWarningModal
+        open={capacityModalOpen}
+        onOpenChange={setCapacityModalOpen}
+        totalGuests={totalGuests}
+        accommodatedGuests={accommodatedGuests}
+        cart={cart as CartItem[]}
+        onSelectMore={() => {
+          setCapacityModalOpen(false);
+          router.push(backToRoomsUrl);
+        }}
+      />
 
       <Footer />
     </PageBackground>

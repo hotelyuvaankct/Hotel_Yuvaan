@@ -18,7 +18,10 @@ export type CartItem = {
   guestCount: number;
   pricePerNight: number;
   maxGuests: number;
+  sortOrder?: number | null;
   imageUrl?: string;
+  images?: string[];
+  amenities?: string[];
   totalNights: number;
 };
 

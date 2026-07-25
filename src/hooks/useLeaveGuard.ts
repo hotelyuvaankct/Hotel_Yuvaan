@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const DEFAULT_MESSAGE =
   "You have an unfinished booking. Are you sure you want to leave this page?";
@@ -14,40 +14,57 @@ type LeaveGuardOptions = {
     nextPathname: string;
     nextSearch: string;
   }) => boolean;
+  /** Called when user confirms leave (e.g. clear booking session). */
+  onConfirmLeave?: () => void;
 };
 
 /**
  * Warns on browser close/refresh and intercepts in-app <a> navigations
  * while `when` is true (e.g. booking in progress).
+ *
+ * Custom dialog for in-app links; native beforeunload only for tab close/refresh.
+ * Confirming the custom dialog uses client navigation so the browser prompt
+ * does not appear a second time.
  */
 export function useLeaveGuard({
   when,
   message = DEFAULT_MESSAGE,
   shouldBlock,
+  onConfirmLeave,
 }: LeaveGuardOptions) {
   const [pendingLeave, setPendingLeave] = useState(false);
   const pendingHref = useRef<string | null>(null);
-  const pathname = usePathname();
-  const search =
-    typeof window !== "undefined" ? window.location.search : "";
+  const allowUnloadRef = useRef(false);
+  const whenRef = useRef(when);
+  const shouldBlockRef = useRef(shouldBlock);
+  const router = useRouter();
 
+  whenRef.current = when;
+  shouldBlockRef.current = shouldBlock;
+
+  useEffect(() => {
+    if (!when) {
+      allowUnloadRef.current = false;
+    }
+  }, [when]);
+
+  // Native prompt only for tab close / refresh — not for in-app Leave anyway.
   useEffect(() => {
     if (!when) return;
 
     const onBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (allowUnloadRef.current) return;
       event.preventDefault();
-      event.returnValue = message;
-      return message;
+      event.returnValue = "";
     };
 
     window.addEventListener("beforeunload", onBeforeUnload);
     return () => window.removeEventListener("beforeunload", onBeforeUnload);
-  }, [when, message]);
+  }, [when]);
 
   useEffect(() => {
-    if (!when) return;
-
     const onClick = (event: MouseEvent) => {
+      if (!whenRef.current) return;
       if (event.defaultPrevented) return;
       if (event.button !== 0) return;
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -61,16 +78,19 @@ export function useLeaveGuard({
       const url = new URL(anchor.href, window.location.href);
       if (url.origin !== window.location.origin) return;
 
+      const currentPathname = window.location.pathname;
+      const currentSearch = window.location.search;
       const nextPathname = url.pathname;
       const nextSearch = url.search;
-      const block = shouldBlock
-        ? shouldBlock({
-            currentPathname: pathname,
-            currentSearch: search,
+
+      const block = shouldBlockRef.current
+        ? shouldBlockRef.current({
+            currentPathname,
+            currentSearch,
             nextPathname,
             nextSearch,
           })
-        : pathname !== nextPathname || search !== nextSearch;
+        : currentPathname !== nextPathname || currentSearch !== nextSearch;
 
       if (!block) return;
 
@@ -82,20 +102,28 @@ export function useLeaveGuard({
 
     document.addEventListener("click", onClick, true);
     return () => document.removeEventListener("click", onClick, true);
-  }, [when, pathname, search, shouldBlock]);
+  }, []);
 
   const confirmLeave = useCallback(() => {
     const href = pendingHref.current;
     pendingHref.current = null;
     setPendingLeave(false);
+    onConfirmLeave?.();
+    // Client navigation does not fire beforeunload — no second browser prompt.
+    allowUnloadRef.current = true;
     if (href) {
-      window.location.href = href;
+      router.push(href);
     }
-  }, []);
+    // Re-arm native guard if we somehow stay on a guarded page.
+    window.setTimeout(() => {
+      allowUnloadRef.current = false;
+    }, 0);
+  }, [onConfirmLeave, router]);
 
   const cancelLeave = useCallback(() => {
     pendingHref.current = null;
     setPendingLeave(false);
+    allowUnloadRef.current = false;
   }, []);
 
   return {

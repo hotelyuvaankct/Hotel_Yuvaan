@@ -85,19 +85,19 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
 
   const checkIn = searchParams.get("checkIn") ?? "";
   const checkOut = searchParams.get("checkOut") ?? "";
-  const adults = Number(searchParams.get("adults") ?? "2");
-  const children = Number(searchParams.get("children") ?? "0");
+  const adultsParam = Number(searchParams.get("adults") ?? "2");
+  const childrenParam = Number(searchParams.get("children") ?? "0");
+  const roomsParam = Math.max(1, Number(searchParams.get("rooms") ?? "1"));
   const roomGuests =
     decodeRoomGuests(searchParams.get("roomGuests")) ??
-    Array.from({ length: Number(searchParams.get("rooms") ?? "1") }, () => ({
-      adults: Math.max(1, Math.floor(adults / Number(searchParams.get("rooms") ?? "1"))),
+    Array.from({ length: roomsParam }, () => ({
+      adults: Math.max(1, Math.floor(adultsParam / roomsParam)),
       children: 0,
     }));
+  // roomGuests is source of truth (avoids stale adults/children URL params)
+  const adults = roomGuests.reduce((sum, room) => sum + room.adults, 0);
+  const children = roomGuests.reduce((sum, room) => sum + room.children, 0);
   const totalGuests = adults + children;
-  const pricingGuestCount = Math.min(
-    Math.max(...roomGuests.map((room) => room.adults + room.children), 1),
-    2
-  );
   const hasSearch = Boolean(checkIn && checkOut);
   const roomGuestsKey = JSON.stringify(roomGuests);
 
@@ -121,7 +121,6 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
   const [quote, setQuote] = useState<BookingQuote | null>(null);
   const [quoteLoading, setQuoteLoading] = useState(false);
   const roomsSectionRef = useRef<HTMLDivElement>(null);
-  const lastScrolledSearchRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!checkIn || !checkOut) {
@@ -186,29 +185,8 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
     staleTime: 60_000,
   });
 
-  // After a search finishes, scroll to the first room listing
-  useEffect(() => {
-    if (!hasSearch || !stayQuery.isSuccess || stayQuery.isFetching) return;
-
-    const searchKey = `${checkIn}|${checkOut}|${roomGuestsKey}`;
-    if (lastScrolledSearchRef.current === searchKey) return;
-    lastScrolledSearchRef.current = searchKey;
-
-    const frame = window.requestAnimationFrame(() => {
-      roomsSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, [
-    hasSearch,
-    stayQuery.isSuccess,
-    stayQuery.isFetching,
-    stayQuery.dataUpdatedAt,
-    checkIn,
-    checkOut,
-    roomGuestsKey,
-  ]);
-
   const stay = stayQuery.data;
+  const stayLoading = stayQuery.isLoading || stayQuery.isFetching;
 
   const roomsWithImages = useMemo(() => {
     const catalog = roomTypesQuery.data ?? [];
@@ -243,6 +221,7 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
       children,
       roomGuests,
       cart: nextCart,
+      availableRooms: roomsWithImages,
       pendingCouponCode: couponCode,
     });
   };
@@ -252,6 +231,13 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
   useEffect(() => {
     if (!cartRestored || !hotelId || cart.length === 0 || !checkIn || !checkOut) {
       setQuote(null);
+      return;
+    }
+
+    // Capacity shortfall is validated only on Continue — don't call summary / toast yet.
+    if (accommodatedGuests < totalGuests) {
+      setQuote(null);
+      setQuoteLoading(false);
       return;
     }
 
@@ -294,6 +280,12 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
         } catch (error) {
           if (cancelled) return;
           const message = (error as Error).message;
+          const isCapacityError =
+            /accommodat|add more rooms|guest count|insufficient/i.test(message);
+          if (isCapacityError) {
+            setQuote(null);
+            return;
+          }
           if (couponCode) {
             setCouponError(message);
             setAppliedCoupon(null);
@@ -341,9 +333,11 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
     checkOut,
     adults,
     children,
-    pricingGuestCount,
     cart,
     pendingCouponCode,
+    roomGuestsKey,
+    accommodatedGuests,
+    totalGuests,
   ]);
 
   const updateCartQuantity = (
@@ -374,13 +368,18 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
                 ratePlanCode: plan.code,
                 ratePlanLabel: plan.label,
                 quantity: nextQty,
-                guestCount: pricingGuestCount,
+                guestCount: Math.min(room.maxGuests, Math.max(totalGuests, 1)),
                 pricePerNight: plan.pricePerNight,
                 maxGuests: room.maxGuests,
+                sortOrder: room.sortOrder ?? null,
                 imageUrl: room.primaryImageUrl
                   ? normalizeStorageUrl(room.primaryImageUrl)
                   : undefined,
-                totalNights: room.totalNights,
+                images: (room.images ?? [])
+                  .map((url) => normalizeStorageUrl(url))
+                  .filter(Boolean),
+                amenities: room.amenities ?? [],
+                totalNights: stay?.totalNights ?? room.totalNights ?? 1,
               } satisfies CartItem,
             ];
       persistCart(nextCart);
@@ -406,6 +405,7 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
       children,
       roomGuests,
       cart,
+      availableRooms: roomsWithImages,
       pendingCouponCode,
     });
     router.push("/book/checkout");
@@ -420,14 +420,15 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
     goToCheckout();
   };
 
-  const displayCheckIn = checkIn ? format(parseISO(checkIn), "dd MMM yyyy") : "";
-  const displayCheckOut = checkOut ? format(parseISO(checkOut), "dd MMM yyyy") : "";
-
   const leaveGuard = useLeaveGuard({
     when: cart.length > 0,
     message:
       "You have rooms selected. Leaving now may lose your booking progress.",
     shouldBlock: ({ nextPathname }) => !isBookingFlowPath(nextPathname),
+    onConfirmLeave: () => {
+      bookingSession.clear();
+      setCart([]);
+    },
   });
 
   return (
@@ -446,16 +447,6 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
             <h1 className="font-playfair text-3xl md:text-4xl text-white mb-2">
               Select rooms
             </h1>
-            {hasSearch && (
-              <p className="text-white/80 text-sm">
-                {displayCheckIn} → {displayCheckOut} · {adults} adult
-                {adults === 1 ? "" : "s"}
-                {children > 0
-                  ? `, ${children} child${children === 1 ? "" : "ren"}`
-                  : ""}{" "}
-                · {roomGuests.length} room{roomGuests.length === 1 ? "" : "s"}
-              </p>
-            )}
           </div>
           <BookingSearchBar />
         </div>
@@ -488,19 +479,20 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
 
         {hasSearch && (
           <div className="min-w-0 w-full max-w-5xl mx-auto">
-              {stayQuery.isLoading && (
-                <div className="flex justify-center py-16">
+              {stayLoading && (
+                <div className="flex flex-col items-center justify-center gap-3 py-16">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                  <p className="text-sm text-[#8b7355]">Loading availability…</p>
                 </div>
               )}
 
-              {stayQuery.isError && (
+              {!stayLoading && stayQuery.isError && (
                 <p className="text-center text-destructive">
                   {(stayQuery.error as Error).message}
                 </p>
               )}
 
-              {stayQuery.isSuccess && (
+              {!stayLoading && stayQuery.isSuccess && (
                 <div className="space-y-5">
                   {(roomsWithImages.length ?? 0) === 0 ? (
                     <div className="text-center py-16 bg-white rounded-lg border">
@@ -568,10 +560,9 @@ const Book = ({ initialStay = null, initialRoomTypes }: BookProps) => {
         totalGuests={totalGuests}
         accommodatedGuests={accommodatedGuests}
         cart={cart}
-        onSelectMore={() => setCapacityModalOpen(false)}
-        onContinueAnyway={() => {
+        onSelectMore={() => {
           setCapacityModalOpen(false);
-          goToCheckout();
+          roomsSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
         }}
       />
 

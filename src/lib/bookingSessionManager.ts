@@ -1,4 +1,5 @@
 import type { CartItem } from "@/components/booking/BookingSidebar";
+import type { AvailableRoomType } from "@/services/bookingService";
 import type { CouponValidation } from "@/services/couponService";
 
 export interface GuestDetails {
@@ -16,6 +17,8 @@ export interface BookingSession {
   children: number;
   roomGuests: { adults: number; children: number }[];
   cart: CartItem[];
+  /** Snapshot from book page — used for upgrade offers on checkout */
+  availableRooms?: AvailableRoomType[];
   pendingCouponCode?: string;
   guest?: GuestDetails;
   appliedCoupon?: CouponValidation | null;
@@ -24,6 +27,23 @@ export interface BookingSession {
 
 const STORAGE_KEY = "hotel-yuvaan-booking-session";
 const MAX_AGE_MS = 24 * 60 * 60 * 1000;
+
+/** Hard reload wipes the cart — user must re-select rooms. Soft SPA navigations keep it. */
+function clearOnHardReload(): void {
+  if (typeof window === "undefined") return;
+  try {
+    const nav = performance.getEntriesByType("navigation")[0] as
+      | PerformanceNavigationTiming
+      | undefined;
+    if (nav?.type === "reload") {
+      sessionStorage.removeItem(STORAGE_KEY);
+    }
+  } catch {
+    // ignore
+  }
+}
+
+clearOnHardReload();
 
 function isValidSession(value: unknown): value is BookingSession {
   if (!value || typeof value !== "object") return false;
@@ -118,6 +138,7 @@ export const bookingSession = {
     children: number;
     roomGuests: { adults: number; children: number }[];
     cart: CartItem[];
+    availableRooms?: AvailableRoomType[];
     pendingCouponCode?: string;
   }): BookingSession {
     const existing = readRaw();
@@ -133,6 +154,10 @@ export const bookingSession = {
       children: input.children,
       roomGuests: input.roomGuests,
       cart: input.cart,
+      availableRooms:
+        input.availableRooms !== undefined
+          ? input.availableRooms
+          : existing?.availableRooms,
       pendingCouponCode: nextPending,
       guest: existing?.guest,
       appliedCoupon:

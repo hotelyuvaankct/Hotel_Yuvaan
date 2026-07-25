@@ -88,11 +88,11 @@
 }
 
 /* Owned by <PageBackground /> — single site canvas.
-   Default canvas is dark so the home hero doesn't flash cream/white before paint. */
+   Default matches page cream so navigations don't flash a black screen. */
 html,
 body,
 #root {
-  background-color: #000;
+  background-color: hsl(var(--page-bg));
 }
 
 .page-background {
@@ -314,6 +314,20 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+@keyframes find-room-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(201, 162, 39, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(201, 162, 39, 0);
+  }
+}
+
+.find-room-pulse {
+  animation: find-room-pulse 1.4s ease-in-out 3;
 }
 
 /* Premium hover effects */

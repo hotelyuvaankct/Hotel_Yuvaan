@@ -9,6 +9,9 @@ export { apiUrl, env, getBackendBaseUrl } from "@/config/env";
 /** Maximum nights between check-in and check-out. */
 export const MAX_STAY_DAYS = 60;
 
+/** Soft cap on adults + children selectable in the booking search UI. */
+export const MAX_TOTAL_GUESTS = 100;
+
 export function getReviewsApiUrl(): string {
   return apiUrl("/reviews");
 }
