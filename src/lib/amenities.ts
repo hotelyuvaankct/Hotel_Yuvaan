@@ -1,6 +1,5 @@
 import {
   Bath,
-  BedDouble,
   Coffee,
   ConciergeBell,
   Croissant,
@@ -60,7 +59,6 @@ const AMENITY_META: Record<string, AmenityMeta> = {
   ROOM_SERVICE: { label: "Room service", icon: ConciergeBell },
   SAFE: { label: "Safe", icon: Lock },
   FREE_PARKING: { label: "Free parking", icon: ParkingCircle },
-  EXTRA_BED: { label: "Extra bed available", icon: BedDouble },
 };
 
 // Legacy / alternate spellings that should resolve to a canonical code.

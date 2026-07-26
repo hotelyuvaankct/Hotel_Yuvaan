@@ -45,16 +45,6 @@ export interface AvailableRoomType {
   canAccommodateSingleRoom?: boolean;
 }
 
-export interface ExtraService {
-  id: number;
-  hotelId?: number;
-  name: string;
-  description?: string;
-  price: number;
-  free: boolean;
-  forAllGuests: boolean;
-}
-
 export interface StayResult {
   hotelId: number;
   hotelName?: string;
@@ -63,7 +53,6 @@ export interface StayResult {
   totalNights: number;
   config: BookingConfig;
   rooms: AvailableRoomType[];
-  extraServices?: ExtraService[];
 }
 
 export interface RatePlan {

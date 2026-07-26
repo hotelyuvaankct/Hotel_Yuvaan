@@ -49,9 +49,9 @@ export default function RoomsSection({ rooms }: RoomsSectionProps) {
                   ? room.amenities!.slice(0, 4)
                   : [
                       `${room.maxAdults} Adults`,
-                      room.maxChildren > 0
-                        ? `${room.maxChildren} Children`
-                        : "No Extra Bed",
+                      ...(room.maxChildren > 0
+                        ? [`${room.maxChildren} Children`]
+                        : []),
                     ];
 
               return (
