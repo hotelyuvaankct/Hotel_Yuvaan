@@ -196,6 +196,10 @@ export interface BookingResult {
   bookingStatus: number;
   checkIn: string;
   checkOut: string;
+  /** Display-ready check-in clock time (e.g. "2:00 PM"). */
+  checkInTime?: string;
+  /** Display-ready check-out clock time (e.g. "11:00 AM"). */
+  checkOutTime?: string;
   guestName: string;
   guestLastName?: string;
   guestEmail?: string;

@@ -10,6 +10,7 @@ import {
   CalendarDays,
   CheckCircle2,
   ChevronDown,
+  Clock3,
   Download,
   Loader2,
   Moon,
@@ -36,12 +37,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import {
   cancelPublicBooking,
+  fetchBookingConfig,
   fetchCancellationQuote,
   fetchPublicBooking,
   requestCancelOtp,
   type BookingResult,
 } from "@/services/bookingService";
 import { formatRoomPrice } from "@/services/roomService";
+import { formatTime12h } from "@/lib/formatTime";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -117,6 +120,12 @@ const BookingView = ({
     },
   });
 
+  const bookingConfigQuery = useQuery({
+    queryKey: ["bookingConfig"],
+    queryFn: fetchBookingConfig,
+    staleTime: 5 * 60_000,
+  });
+
   const quoteQuery = useQuery({
     queryKey: ["cancellationQuote", token],
     queryFn: () => fetchCancellationQuote(token!),
@@ -174,6 +183,10 @@ const BookingView = ({
   }, [justCancelled]);
 
   const booking = bookingQuery.data;
+  const checkInTime =
+    booking?.checkInTime ?? bookingConfigQuery.data?.checkInTime;
+  const checkOutTime =
+    booking?.checkOutTime ?? bookingConfigQuery.data?.checkOutTime;
   const isCancelled = booking?.bookingStatus === 6 || justCancelled;
   const nights = booking
     ? Math.max(
@@ -464,6 +477,12 @@ const BookingView = ({
                     <p className="text-[10px] min-[380px]:text-xs text-neutral-500 mt-1 min-[380px]:mt-1.5 truncate">
                       {format(parseISO(booking.checkIn), "EEEE")}
                     </p>
+                    {checkInTime ? (
+                      <p className="text-[10px] min-[380px]:text-xs text-neutral-600 mt-1 min-[380px]:mt-1.5 inline-flex items-center gap-1 truncate">
+                        <Clock3 className="h-3 w-3 min-[380px]:h-3.5 min-[380px]:w-3.5 shrink-0" />
+                        From {formatTime12h(checkInTime)}
+                      </p>
+                    ) : null}
                   </div>
                   <div className="min-w-0 rounded-lg min-[380px]:rounded-xl bg-gradient-to-br from-surface to-surface-elevated px-2.5 py-2.5 min-[380px]:px-4 min-[380px]:py-4 border border-brand/15">
                     <div className="flex items-center gap-1.5 min-[380px]:gap-2 text-brand-muted text-[9px] min-[380px]:text-[11px] uppercase tracking-[0.12em] min-[380px]:tracking-[0.16em] font-semibold mb-1 min-[380px]:mb-2">
@@ -476,6 +495,12 @@ const BookingView = ({
                     <p className="text-[10px] min-[380px]:text-xs text-neutral-500 mt-1 min-[380px]:mt-1.5 truncate">
                       {format(parseISO(booking.checkOut), "EEEE")}
                     </p>
+                    {checkOutTime ? (
+                      <p className="text-[10px] min-[380px]:text-xs text-neutral-600 mt-1 min-[380px]:mt-1.5 inline-flex items-center gap-1 truncate">
+                        <Clock3 className="h-3 w-3 min-[380px]:h-3.5 min-[380px]:w-3.5 shrink-0" />
+                        Till {formatTime12h(checkOutTime)}
+                      </p>
+                    ) : null}
                   </div>
                 </div>
 
