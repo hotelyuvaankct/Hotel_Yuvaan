@@ -219,22 +219,16 @@ const RestaurantSection = () => {
             ))}
           </div>
         </motion.div>
-        <a
-          href="https://drive.google.com/file/d/1o3e9A316SvHd_okVKtFU9J4hAEHLK-xH/view?usp=sharing"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <div className="flex justify-center mt-12">
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 bg-gold-500/10 border border-gold-300 text-gold-600 px-8 py-3 rounded-full font-medium hover:shadow-md transition-all
-            hover:bg-gold-500/20 "
-            >
-              View Full Menu
-              <ChevronRight className="w-5 h-5" />
-            </motion.button>
-          </div>
-        </a>
+        <div className="flex justify-center mt-12">
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate("/menu")}
+            className="flex items-center gap-2 bg-gold-500/10 border border-gold-300 text-gold-600 px-8 py-3 rounded-full font-medium hover:shadow-md transition-all hover:bg-gold-500/20"
+          >
+            View Full Menu
+            <ChevronRight className="w-5 h-5" />
+          </motion.button>
+        </div>
       </div>
     </section>
   );
